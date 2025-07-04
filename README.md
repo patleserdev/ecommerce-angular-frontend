@@ -1,6 +1,6 @@
 # 🛒 E-commerce
 
-[Version démo](https://ecommerce-nest-frontend.vercel.app/)
+## Reproduction de mon frontend E-Commerce Next en Angular
 
 ---
 
@@ -10,9 +10,8 @@
 - Admin :
   - CRUD **catégorie** OK
 - Affichage de la page liste des **catégories**
-- Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)*
-
-
+- Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)
+  
 ---
 
 ## 🚧 Objectifs suivants
