@@ -1,0 +1,17 @@
+<li class="flex justify-between items-center py-2">
+  <div *ngIf="!isEditing">{{ task }}</div>
+
+  <input
+    *ngIf="isEditing"
+    [value]="editableTaskText"
+    (input)="onInputChange($event)"
+    class="border px-2 py-1 rounded flex-grow"
+  />
+
+  <div class="ml-2 flex gap-2">
+    <button *ngIf="!isEditing" (click)="startEditing()" class="bg-yellow-400 text-white px-3 rounded">Modifier</button>
+    <button *ngIf="isEditing" (click)="saveEditing()" class="bg-green-500 text-white px-3 rounded">Sauvegarder</button>
+    <button *ngIf="isEditing" (click)="cancelEditing()" class="bg-gray-300 px-3 rounded">Annuler</button>
+    <button (click)="deleteTask()" class="bg-red-500 text-white px-3 rounded">Supprimer</button>
+  </div>
+</li>

@@ -1,0 +1,24 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full flex flex-col gap-5 mt-5">
+  <div *ngFor="let field of fields" class="flex flex-row items-center justify-start gap-5">
+
+      <label class="text-md w-1/4">{{ field.label }}</label>
+
+      <input class="border border-gray-500 w-1/2 p-1" *ngIf="field.type !== 'textarea'" [type]="field.type"
+        [formControlName]="field.name" />
+
+      <textarea class="border border-gray-500 w-1/2 p-1" *ngIf="field.type === 'textarea'"
+        [formControlName]="field.name"></textarea>
+
+    <div *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched" class="text-red-500">
+      Ce champ est requis
+    </div>
+
+  </div>
+
+  <button type="submit" class="font-bold bg-indigo-500 text-white self-center w-1/4 p-2">Valider</button>
+
+  <div *ngIf="errorMessage$ | async as error" class="error-message text-red-500">
+    {{ error }}
+  </div>
+
+</form>

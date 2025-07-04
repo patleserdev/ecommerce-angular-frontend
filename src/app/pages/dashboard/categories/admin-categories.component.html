@@ -1,0 +1,15 @@
+<p>Ajouter une catégorie , modifier supprimer catégorie</p>
+<button (click)="addCategory()"
+  class="border p-2 px-4 my-2 bg-indigo-500 font-bold text-white hover:bg-indigo-800 transition-all">Ajouter une
+  catégorie</button>
+
+  <ul class="space-y-2">
+    <li *ngFor="let cat of categories" class="p-3 border rounded shadow-sm capitalize flex flex-row items-center justify-between">
+      <div>{{ cat.name }}</div>
+      <div class="flex flex-row gap-5">
+        <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all">edit</span>
+        <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all">delete</span>
+      </div>
+
+    </li>
+  </ul>

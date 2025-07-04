@@ -1,0 +1,13 @@
+<div *ngIf="visible" class="modal-overlay">
+  <div class="modal-box min-w-[50%] relative">
+    <div class="absolute top-0 right-0 m-2">
+      <button (click)="close()"><span class="material-icons">close</span></button>
+    </div>
+    <h2>{{ title }}</h2>
+
+    <!-- <ng-container *ngComponentOutlet="dynamicComponent"></ng-container> -->
+    <ng-content></ng-content> <!-- Permet d'afficher le contenu -->
+
+
+  </div>
+</div>

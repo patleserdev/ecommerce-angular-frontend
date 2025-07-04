@@ -65,10 +65,12 @@
               "buildTarget": "ecommerce-angular-frontend:build:production"
             },
             "development": {
-              "buildTarget": "ecommerce-angular-frontend:build:development"
+              "buildTarget": "ecommerce-angular-frontend:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
+
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

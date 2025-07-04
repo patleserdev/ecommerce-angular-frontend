@@ -1,0 +1,18 @@
+<app-header></app-header>
+
+<main class="min-h-screen flex flex-row bg-gray-50 p-6">
+  <aside class="w-1/6 flex flex-col p-5 gap-5">
+    <a *ngFor="let link of links" [routerLink]="link.path" [ngClass]="getLinkClasses(link.path)"
+      class="block px-4 py-2 rounded-lg transition-colors">
+      {{ link.label }}
+    </a>
+
+  </aside>
+  <div class="border w-5/6 bg-white shadow-lg rounded-xl p-6">
+    <h1 class="text-2xl font-bold mb-4">{{ currentLabel }}</h1>
+
+    <router-outlet></router-outlet>
+  </div>
+</main>
+
+<app-footer></app-footer>

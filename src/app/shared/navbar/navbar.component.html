@@ -1,0 +1,15 @@
+<nav class="bg-indigo-600 text-white px-6 py-4 flex justify-between items-center">
+
+  <h1 class="text-xl font-bold">Mon App Angular 🧠</h1>
+  <div class="space-x-4 z-56">
+    <a routerLink="/tasks" routerLinkActive="underline">Tâches</a>
+    <a routerLink="/categories" routerLinkActive="underline">Catégories</a>
+    <!-- <a routerLink="/auth/login" routerLinkActive="underline">Se connecter</a> -->
+
+
+    <a *ngIf="!(authService.isLoggedIn$ | async)" routerLink="/auth/login">Se connecter</a>
+    <a *ngIf="authService.isLoggedIn$ | async" (click)="logout()" class="cursor-pointer">Se déconnecter</a>
+    <a *ngIf="authService.isLoggedIn$ | async" routerLink="/dashboard">Dashboard</a>
+
+  </div>
+</nav>
