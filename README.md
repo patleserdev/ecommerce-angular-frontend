@@ -1,27 +1,81 @@
-# EcommerceAngularFrontend
+# 🛒 E-commerce
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.6.
+[Version démo](https://ecommerce-nest-frontend.vercel.app/)
 
-## Development server
+---
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## ✅ Objectifs atteints
 
-## Code scaffolding
+- Connexion et session **OK**
+- Admin :
+  - CRUD **catégorie** OK
+- Affichage de la page liste des **catégories**
+- Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)*
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+---
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## 🚧 Objectifs suivants
 
-## Running unit tests
+- Mise en production (Frontend **Next.js**, Backend **Nest.js**, DB **MySQL Railway**)
+- Thème dark **OK** – Thème clair par défaut
+- Routage par **slug**
+- Redux : **CART**
+- Redux Persist
+- Admin :
+  - CRUD **marque** OK
+  - CRUD **produit** OK
+- Affichage des **produits** d'une catégorie *(via slug)*
+- Affichage d'une **fiche produit** *(via slug)*
+- Dans la fiche produit :
+  - Sélecteur de produit *(quantité, taille, genre)*
+  - Carousel Framer des produits de la même catégorie
+- Panier dynamique dans la **navbar**
+- Optimisation des temps de réponse *(SSG)*
+- Nav responsive avec comportements distincts **mobile / desktop**
+- Optimisation des requêtes backend
+- **Test des rôles** *(Admin / Customer)*
+- Validation des **quantités** par **variation** (et non globalement)
+- Gestion des **rôles** pour l’accès à l’admin
+- Ajout d’**icônes** aux catégories
+- Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)*
+- Ajouter une **recherche dans la navbar** avec autocomplete
+- Créer un module **médiathèque** (front / back)
+- Implémenter le **checkout** (validation du panier)
+- Sécuriser le panier : **persistance sans session**
+  
+### Tunnel d’achat à mettre en place
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- Validation du panier
+- Création de compte
+- Création de commande *(adresse de livraison)*
+- Paiement
+- Page de confirmation
 
-## Running end-to-end tests
+### Module de mailing
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- Inscription avec lien de validation
+- Inscription à la newsletter
+- Bienvenue avec offre spéciale (-10 %)
+- Relance panier abandonné avec réduction
+- Confirmation de commande
+- Confirmation de paiement
+- Génération de facture
+- Suivi de l’état de la commande
+- Suivi de livraison
+- Confirmation de livraison
+- Demande d’avis
+- SAV :
+  - Confirmation de demande
+  - Réponse à une réclamation
+- Retour :
+  - Confirmation de demande de retour
+  - Suivi du remboursement
 
-## Further help
+---
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## ❌ Objectifs manquants
+
+- Gestion des **codes promotionnels**
+
+---
