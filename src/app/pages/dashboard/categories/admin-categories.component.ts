@@ -50,7 +50,7 @@ export class AdminCategoriesComponent {
       .get<any[]>('/api/categories', { withCredentials: true })
       .subscribe({
         next: (data) => {
-          this.categories = data;
+          this.categories = data.sort((a, b) => a.name.localeCompare(b.name));
           console.log(data);
         },
         error: (err) => {
@@ -59,7 +59,7 @@ export class AdminCategoriesComponent {
       });
   }
 
-  addCategorie(datas: CategoryType) {
+  addCategorieAction(datas: CategoryType) {
     this.http
       .post<any[]>('/api/categories', datas, { withCredentials: true })
       .subscribe({
@@ -87,10 +87,60 @@ export class AdminCategoriesComponent {
       ],
       onSubmit: async (data) => {
         console.log('Catégorie reçue :', data);
-        const response = await this.addCategorie(data);
-
+        const response = await this.addCategorieAction(data);
         console.log('response', response);
+        this.fetchCategories();
+        this.modalService.close();
+        this.formModalService.close();
       },
     });
+  }
+
+  editCategory(cat: CategoryType) {
+    this.modalService.open('Modifier une catégorie');
+    this.formModalService.openFormModal({
+      title: 'Modifier une catégorie',
+      fields: [
+        {
+          label: 'Nom',
+          name: 'name',
+          type: 'text',
+          required: true,
+          value: cat.name,
+        },
+      ],
+      onSubmit: (data) => {
+        const updated = { ...cat, ...data };
+        this.http
+          .patch(`/api/categories/${cat.id}`, updated, {
+            withCredentials: true,
+          })
+          .subscribe({
+            next: () => {
+              this.fetchCategories();
+              this.modalService.close();
+              this.formModalService.close();
+            },
+            error: (err) => {
+              const msg =
+                err?.error?.message || 'Erreur lors de la mise à jour.';
+              this.formModalService.setError(msg);
+            },
+          });
+      },
+    });
+  }
+
+  deleteCategory(cat: CategoryType) {
+    if (confirm(`Supprimer la catégorie "${cat.name}" ?`)) {
+      this.http
+        .delete(`/api/categories/${cat.id}`, { withCredentials: true })
+        .subscribe({
+          next: () => this.fetchCategories(),
+          error: (err) => {
+            console.error('Erreur suppression', err);
+          },
+        });
+    }
   }
 }

@@ -15,8 +15,13 @@ export class NavbarComponent {
 
   logout() {
     this.authService.logout().subscribe(() => {
-      console.log('Déconnexion réussie');
-      this.router.navigate(['/auth/login']);
+      const result=confirm("Etes-vous sûr de vouloir vous déconnecter ?")
+      if(result)
+      {
+        console.log('Déconnexion réussie');
+        this.router.navigate(['/auth/login']);
+      }
+
     });
   }
 }

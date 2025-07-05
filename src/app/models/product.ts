@@ -1,4 +1,5 @@
-import { CategoryType } from "./categorie.js";
+import { BrandType } from "./brands";
+import { CategoryType } from "./categorie";
 
 export type ProductVariationsType = {
   id?: number;
@@ -44,12 +45,7 @@ export interface UpdateProductType {
   variations?: ProductVariationsType[];
 }
 
-export interface BrandType {
-  id?: number;
-  name: string;
-  slug?: string;
 
-}
 
 export interface Child {
   id: number;

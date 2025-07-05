@@ -20,8 +20,10 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     canActivate: [authGuard], // protège tout le dashboard
-    loadChildren: () => import('./pages/dashboard/dashboard-routing.module')
-      .then(m => m.DashboardRoutingModule)
+    loadChildren: () =>
+      import('./pages/dashboard/dashboard-routing.module').then(
+        (m) => m.DashboardRoutingModule
+      ),
   },
 
   {
@@ -32,6 +34,14 @@ export const routes: Routes = [
       { path: 'tasks', component: TasksComponent },
       { path: 'categories', component: CategoriesComponent },
       // autres routes...
+      /** routes spécifiques */
+      {
+        path: 'categories/:slug',
+        loadComponent: () =>
+          import('./pages/categories/category-detail.component').then(
+            (m) => m.CategoryDetailComponent
+          ),
+      },
     ],
   },
   {
@@ -42,7 +52,12 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent },
     ],
   },
-  // Route 404 à la toute fin
-  { path: 'not-found',component: MainLayoutComponent,  children: [{path: '**' ,component: PageNotFoundComponent}  ]},
+
+  /** Route par défault -- 404  */
+  {
+    path: 'not-found',
+    component: MainLayoutComponent,
+    children: [{ path: '**', component: PageNotFoundComponent }],
+  },
   { path: '**', redirectTo: 'not-found' },
 ];

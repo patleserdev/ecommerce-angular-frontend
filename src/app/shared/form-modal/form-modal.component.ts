@@ -4,6 +4,7 @@ import { FormModalService } from '../form-modal.service.js';
 
 interface FormField {
   label: string;
+  value?:string
   name: string;
   type: string;
   required?: boolean;
@@ -39,7 +40,7 @@ export class FormModalComponent implements OnInit {
 
     this.fields.forEach(field => {
       group[field.name] = [
-        '',
+        field.value || '',
         field.required ? Validators.required : [],
       ];
     });
