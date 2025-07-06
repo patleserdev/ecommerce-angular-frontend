@@ -1,6 +1,5 @@
 require('dotenv').config(); // ← Ajoute ceci au début
 
-console.log("env",process.env.BACKEND_URL)
 
 module.exports = {
   "/api": {
