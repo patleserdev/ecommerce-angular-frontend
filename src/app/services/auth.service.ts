@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
@@ -8,7 +9,7 @@ import { catchError, tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = '/api'; // ton backend
+  private baseUrl = environment.apiUrl; // ton backend
 
   private loggedIn$ = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.loggedIn$.asObservable();
@@ -31,7 +32,7 @@ export class AuthService {
   // }
 
   checkAuth() {
-    return this.http.get<{ role: string }>('/api/users/check').pipe(
+    return this.http.get<{ role: string }>(`${this.baseUrl}/users/check`).pipe(
       tap(user => {
         this.loggedIn$.next(true);
         this.role$.next(user.role);

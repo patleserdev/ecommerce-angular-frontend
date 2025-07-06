@@ -4,6 +4,7 @@ import { FormModalService } from '../../../shared/form-modal.service.js';
 import { HttpClient } from '@angular/common/http';
 import { BrandType } from '../../../models/brands.js';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-admin-brands',
   standalone: true,
@@ -44,7 +45,7 @@ export class AdminBrandsComponent {
 
   fetchCBrands() {
     this.http
-      .get<any[]>('/api/brands', { withCredentials: true })
+      .get<any[]>(`${environment.apiUrl}/brands`, { withCredentials: true })
       .subscribe({
         next: (data) => {
           this.brands = data.sort((a, b) => a.name.localeCompare(b.name));
@@ -58,7 +59,7 @@ export class AdminBrandsComponent {
 
   addBrandAction(datas: BrandType) {
     this.http
-      .post<any[]>('/api/brands', datas, { withCredentials: true })
+      .post<any[]>(`${environment.apiUrl}/brands`, datas, { withCredentials: true })
       .subscribe({
         next: (data) => {
           return data;
@@ -109,7 +110,7 @@ export class AdminBrandsComponent {
       onSubmit: (data) => {
         const updated = { ...brand, ...data };
         this.http
-          .patch(`/api/brands/${brand.id}`, updated, {
+          .patch(`${environment.apiUrl}/brands/${brand.id}`, updated, {
             withCredentials: true,
           })
           .subscribe({
@@ -131,7 +132,7 @@ export class AdminBrandsComponent {
   deleteBrand(brand: BrandType) {
     if (confirm(`Supprimer la catégorie "${brand.name}" ?`)) {
       this.http
-        .delete(`/api/categories/${brand.id}`, { withCredentials: true })
+        .delete(`${environment.apiUrl}/categories/${brand.id}`, { withCredentials: true })
         .subscribe({
           next: () => this.fetchCBrands(),
           error: (err) => {

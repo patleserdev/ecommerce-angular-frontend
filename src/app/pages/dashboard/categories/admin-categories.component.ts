@@ -4,7 +4,7 @@ import { FormModalService } from '../../../shared/form-modal.service';
 import { CategoryType } from '../../../models/categorie';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
@@ -47,7 +47,7 @@ export class AdminCategoriesComponent {
 
   fetchCategories() {
     this.http
-      .get<any[]>('/api/categories', { withCredentials: true })
+      .get<any[]>(`${environment.apiUrl}/categories`, { withCredentials: true })
       .subscribe({
         next: (data) => {
           this.categories = data.sort((a, b) => a.name.localeCompare(b.name));
@@ -61,7 +61,7 @@ export class AdminCategoriesComponent {
 
   addCategorieAction(datas: CategoryType) {
     this.http
-      .post<any[]>('/api/categories', datas, { withCredentials: true })
+      .post<any[]>(`${environment.apiUrl}/categories`, datas, { withCredentials: true })
       .subscribe({
         next: (data) => {
           return data;
@@ -112,7 +112,7 @@ export class AdminCategoriesComponent {
       onSubmit: (data) => {
         const updated = { ...cat, ...data };
         this.http
-          .patch(`/api/categories/${cat.id}`, updated, {
+          .patch(`${environment.apiUrl}/categories/${cat.id}`, updated, {
             withCredentials: true,
           })
           .subscribe({
@@ -134,7 +134,7 @@ export class AdminCategoriesComponent {
   deleteCategory(cat: CategoryType) {
     if (confirm(`Supprimer la catégorie "${cat.name}" ?`)) {
       this.http
-        .delete(`/api/categories/${cat.id}`, { withCredentials: true })
+        .delete(`${environment.apiUrl}/categories/${cat.id}`, { withCredentials: true })
         .subscribe({
           next: () => this.fetchCategories(),
           error: (err) => {

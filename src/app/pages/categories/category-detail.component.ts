@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-category-detail',
   standalone: true,
@@ -25,7 +25,7 @@ export class CategoryDetailComponent {
 
   ngOnInit() {
     const slug = this.route.snapshot.paramMap.get('slug');
-    this.http.get(`/api/categories/slug/${slug}`, { withCredentials: true }).subscribe({
+    this.http.get(`${environment.apiUrl}/categories/slug/${slug}`, { withCredentials: true }).subscribe({
       next: (data) => {
         this.category = data;
         console.log(data)
