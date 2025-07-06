@@ -12,3 +12,5 @@ module.exports = {
     }
   }
 }
+
+console.log("env",process.env.BACKEND_URL)
