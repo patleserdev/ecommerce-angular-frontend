@@ -1,1 +1,32 @@
-<p>category-detail works!</p>
+<div *ngIf="isLoading && !hasError" class="p-4 text-center text-gray-400">
+  ⏳ Chargement de la catégorie...
+</div>
+
+<div *ngIf="hasError && !isLoading" class="p-4 text-red-600 text-center">
+  ❌ Catégorie introuvable ou erreur serveur.
+</div>
+
+<div *ngIf="!isLoading && !hasError">
+  <h2 class="text-2xl font-bold mb-4 capitalize align-baseline ">{{ category.name }} ({{ category.products?.length || 0
+    }})</h2>
+  <!-- <p>Slug: {{ category.slug }}</p> -->
+  <!-- <p>Produits: {{ category.products?.length || 0 }}</p> -->
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
+
+
+    <div *ngFor="let product of category.products"
+      class="p-4 border rounded-xl shadow hover:shadow-md transition-all cursor-pointer bg-white flex flex-row justify-between">
+      <a [routerLink]="['/products', product.slug]">
+        <div class="flex flex-col w-[50%]">
+          <h3 class="capitalize">{{product.name}}</h3>
+          <h3 class="text-2xl font-bold">{{product?.price}} €</h3>
+        </div>
+        <div><img src="https://placehold.co/300x200" class="object-cover" /></div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="!category">Chargement ou catégorie introuvable...</div>

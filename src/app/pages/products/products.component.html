@@ -1,0 +1,22 @@
+<div class="flex flex-col gap-2">
+<h3 class="text-xl capitalize bg-indigo-100 p-2">{{product.brand.name}}</h3>
+<h2 class="text-2xl capitalize">{{product.name}}</h2>
+
+<p class="capitalize italic">{{product.category.name}}</p>
+<p>{{product.description}}</p>
+<hr class="my-5">
+<p class="font-semibold mt-5">Modèles disponibles</p>
+
+<div *ngFor="let variation of product.variations" class="flex flex-row mb-2 border rounded p-1"
+[class.opacity-50]="variation.stock === 0"
+[class.pointer-events-none]="variation.stock === 0"
+>
+  <span class="capitalize w-20">{{variation.gender}}</span>
+  <span class="uppercase w-20">{{variation.size}}</span>
+  <span class="uppercase px-5" [style.backgroundColor]="variation.color"></span>
+
+  <span class="uppercase px-2">{{variation.stock >= 1 ? "Disponible" : "" }}</span>
+</div>
+
+<p class="text-3xl">{{product?.price}} €</p>
+</div>

@@ -1,15 +1,101 @@
-<nav class="bg-indigo-600 text-white px-6 py-4 flex justify-between items-center h-[10vh]">
+<nav class="bg-indigo-600 text-white px-6 py-4 flex justify-between items-center h-[10vh] relative z-10">
+  <div class="nav-brand">
+    <h1 class="text-xl font-bold">Mon App Angular 🧠</h1>
+  </div>
 
-  <h1 class="text-xl font-bold">Mon App Angular 🧠</h1>
-  <div class="space-x-4 z-56">
-    <a routerLink="/tasks" routerLinkActive="underline">Tâches</a>
-    <a routerLink="/categories" routerLinkActive="underline">Catégories</a>
+
+  <!-- Bouton hamburger (mobile) -->
+  <button class="relative w-6 h-6 md:hidden focus:outline-none" (click)="toggleMenu()" aria-label="Menu">
+    <!-- Ligne 1 -->
+    <span [ngClass]="{
+      'rotate-45': isMenuOpen,
+      'translate-y-[-8px]': !isMenuOpen
+    }"
+      class="absolute left-0 top-1/2 w-full h-0.5 bg-white transform transition-all duration-300 ease-in-out origin-center"></span>
+
+    <!-- Ligne 2 -->
+    <span [ngClass]="{
+      'opacity-0': isMenuOpen,
+      'opacity-100': !isMenuOpen
+    }"
+      class="absolute mt-[1px] left-0 top-1/2 w-full h-0.5 bg-white transform -translate-y-1/2 transition-opacity duration-200 ease-in-out"></span>
+
+    <!-- Ligne 3 -->
+    <span [ngClass]="{
+      '-rotate-45': isMenuOpen,
+      'translate-y-[8px]': !isMenuOpen
+    }"
+      class="absolute left-0 top-1/2 w-full h-0.5 bg-white transform transition-all duration-300 ease-in-out origin-center"></span>
+  </button>
+
+
+  <!-- Version mobile -->
+  <div *ngIf="isMenuOpen || isAnimating" [ngClass]="
+  'absolute top-full left-0 w-full bg-indigo-600 p-4 flex flex-col md:flex-row md:static md:flex md:w-auto md:space-x-4 md:p-0 ' + menuAnimationClass">
+    <a routerLink="/tasks" routerLinkActive="underline font-semibold" class="py-2">Tâches</a>
+    <!-- <a routerLink="/categories" routerLinkActive="underline font-semibold" class="py-2">Catégories</a> -->
     <!-- <a routerLink="/auth/login" routerLinkActive="underline">Se connecter</a> -->
+    <div class="relative group">
+      <button class="py-2 hover:underline"     (click)="isCategoryMobileOpen = !isCategoryMobileOpen"
+      >
+        Catégories
+      </button>
 
+      <div *ngIf="isCategoryMobileOpen" class="pl-4 space-y-1 my-4">
+        <a
+          *ngFor="let cat of categories"
+          [routerLink]="['/categories', cat.slug]"
+          routerLinkActive="bg-white text-indigo-600 font-semibold"
+          class="flex flex-row border items-center justify-between capitalize px-4 py-2"
+          (click)="closeMobileMenu()"
+        >
+        {{ cat.name }}
+        <span class="material-icons no-underline">chevron_right</span>
+        </a>
 
-    <a *ngIf="!(authService.isLoggedIn$ | async)" routerLink="/auth/login">Se connecter</a>
-    <a *ngIf="authService.isLoggedIn$ | async" (click)="logout()" class="cursor-pointer">Se déconnecter</a>
-    <a *ngIf="authService.isLoggedIn$ | async" routerLink="/dashboard">Dashboard</a>
+      </div>
+    </div>
+<hr>
+    <a *ngIf="!(authService.isLoggedIn$ | async)" routerLink="/auth/login" class="py-2">Se connecter</a>
+    <a *ngIf="authService.isLoggedIn$ | async" (click)="logout()" class="cursor-pointer py-2">Se déconnecter</a>
+    <a *ngIf="authService.isLoggedIn$ | async" routerLink="/dashboard" class="py-2">Dashboard</a>
 
   </div>
+
+  <!-- Version Desktop -->
+  <div class="absolute top-full left-0 w-full bg-indigo-600 p-4 hidden md:flex-row md:static md:flex md:w-auto md:space-x-4 md:p-0">
+
+    <a routerLink="/tasks" routerLinkActive="underline font-semibold" class="py-2">Tâches</a>
+
+    <!-- <a routerLink="/categories" routerLinkActive="underline font-semibold" class="py-2">Catégories</a> -->
+
+    <div class="relative group">
+      <button class="py-2 px-4 hover:underline">
+        Catégories
+      </button>
+
+      <div
+        class="absolute left-0 mt-2 w-48 bg-white text-black rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transform -translate-y-2 transition-all duration-200 z-50"
+      >
+        <a
+          *ngFor="let cat of categories"
+          [routerLink]="['/categories', cat.slug]"
+          class="block px-4 py-2 hover:bg-indigo-100 capitalize"
+        >
+          {{ cat.name }}
+        </a>
+      </div>
+    </div>
+
+    <a *ngIf="authService.isLoggedIn$ | async" routerLink="/dashboard" routerLinkActive="underline font-semibold"
+      class="py-2">Administration</a>
+
+    <a *ngIf="!(authService.isLoggedIn$ | async)" routerLink="/auth/login" routerLinkActive="underline font-semibold"
+      class="py-2">Se connecter</a>
+    <a *ngIf="authService.isLoggedIn$ | async" (click)="logout()" routerLinkActive="underline font-semibold"
+      class="cursor-pointer py-2">Se déconnecter</a>
+
+  </div>
+
+
 </nav>

@@ -5,7 +5,7 @@
       <section class="flex-1 flex flex-col space-y-4">
         <h2 class="text-xl font-semibold text-gray-800">Version <span
             class="font-bold text-indigo-600">Formsmodule</span></h2>
-        <form (ngSubmit)="addTaskFormsModule()" #form="ngForm" class="flex gap-3">
+        <form (ngSubmit)="addTaskFormsModule()" #form="ngForm" class="flex flex-col md:flex-row gap-3">
           <input type="text" name="task" [(ngModel)]="newTask" placeholder="Nouvelle tâche" required
             class="flex-grow border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
           <button type="submit" class="bg-indigo-600 text-white px-5 py-2 rounded-md hover:bg-indigo-700 transition">
@@ -18,7 +18,7 @@
       <section class="flex-1 flex flex-col space-y-4">
         <h2 class="text-xl font-semibold text-gray-800">Version <span class="font-bold text-pink-600">Reactive
             Forms</span></h2>
-        <form (ngSubmit)="addTaskReactiveFormsModule()" #form="ngForm" class="flex gap-3">
+        <form (ngSubmit)="addTaskReactiveFormsModule()" #form="ngForm" class="flex flex-col md:flex-row gap-3">
           <input type="text" [formControl]="taskControl" placeholder="Nouvelle tâche" required
             class="flex-grow border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500" />
           <button type="submit" class="bg-pink-600 text-white px-5 py-2 rounded-md hover:bg-pink-700 transition">
@@ -30,7 +30,7 @@
 
     <hr class="border-gray-300" />
 
-    <ul class="divide-y divide-gray-300 max-w-lg mx-auto mt-6">
+    <ul class="divide-y divide-gray-300 w-full md:px-4 mx-auto mt-6">
 
       <app-task *ngFor="let item of tasks; index as i" [task]="item" [index]="i"
         (delete)="deleteTask($event)"   (edit)="onEditTask($event)"></app-task>

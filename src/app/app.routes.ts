@@ -7,6 +7,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { authGuard } from './guards/auth.guard';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ProductsComponent } from './pages/products/products.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component.js';
 export const routes: Routes = [
   // {
@@ -40,6 +41,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/categories/category-detail.component').then(
             (m) => m.CategoryDetailComponent
+          ),
+      },
+      {
+        path: 'products/:slug',
+        loadComponent: () =>
+          import('./pages/products/products.component').then(
+            (m) => m.ProductsComponent
           ),
       },
     ],
