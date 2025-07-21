@@ -35,7 +35,17 @@ export class AppComponent {
   title = 'ecommerce-angular-frontend';
 
 
+  // ngOnInit() {
+  //   this.authService.checkAuth();
+  // }
   ngOnInit() {
-    this.authService.checkAuth();
+    this.authService.checkAuth().subscribe();
+
+    this.authService.fetchUserProfile().subscribe({
+      next: () => {},
+      error: () => {
+        // Non connecté, peut rediriger ou faire autre chose
+      }
+    });
   }
 }

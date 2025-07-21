@@ -5,7 +5,7 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
-import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/auth.guard';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component.js';
@@ -21,7 +21,7 @@ export const routes: Routes = [
   // },
   {
     path: 'dashboard',
-    canActivate: [authGuard], // protège tout le dashboard
+    // canActivate: [adminGuard],
     loadChildren: () =>
       import('./pages/dashboard/dashboard-routing.module').then(
         (m) => m.DashboardRoutingModule

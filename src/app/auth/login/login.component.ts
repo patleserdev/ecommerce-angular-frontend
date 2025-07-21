@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service.js';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterOutlet,ReactiveFormsModule,CommonModule],
+  imports: [RouterOutlet,ReactiveFormsModule,CommonModule,RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -25,7 +25,10 @@ export class LoginComponent {
     });
   }
 
+  errorMessage:string[]=[]
+
   onSubmit() {
+    this.errorMessage=[]
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -33,7 +36,10 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.auth.login(this.loginForm.value).subscribe({
         next: () => this.router.navigate(['/dashboard']),
-        error: err => alert('Login failed')
+        error: err => {
+          //alert('Login failed')
+          this.errorMessage.push("Connexion échouée")
+        }
       });
     }
   }

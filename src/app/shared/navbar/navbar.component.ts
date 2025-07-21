@@ -29,10 +29,13 @@ export class NavbarComponent {
     public authService: AuthService,
     private router: Router,
     private http: HttpClient,
-    private cartService:CartService
+    private cartService: CartService
   ) {
     this.cartLength$ = this.cartService.cartLength$;
+  }
 
+  getUsername(): string {
+    return this.username.charAt(0).toUpperCase() + this.username.slice(1);
   }
 
   cartLength$: Observable<number>;
@@ -41,8 +44,13 @@ export class NavbarComponent {
 
   cartQuantity: number = 0;
 
+  username: string = '';
+
   ngOnInit() {
     this.fetchCategories();
+    this.authService.fetchUserProfile().subscribe((user) => {
+      this.username = user.username;
+    });
   }
 
   fetchCategories() {
@@ -62,7 +70,6 @@ export class NavbarComponent {
   isMenuOpen = false;
   isAnimating = false;
   menuAnimationClass = '';
-
 
   closeMobileMenu() {
     this.isMenuOpen = false;
@@ -95,6 +102,4 @@ export class NavbarComponent {
       }
     });
   }
-
-
 }

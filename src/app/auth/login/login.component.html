@@ -1,7 +1,10 @@
-
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
   <div class="flex flex-col gap-5 items-center justify-center border min-h-[25vh]">
+    <div class="w-full p-2 flex flex-row justify-end">
+      <a [routerLink]="['/auth/register']"
+        class="opacity-50 hover:underline hover:opacity-100 transition-all">S'inscrire</a>
+    </div>
     <h1 class="text-3xl my-5">Se connecter</h1>
     <div class="flex flex-col md:w-1/2">
       <div class="flex flex-col md:flex-row gap-2  md:gap-10">
@@ -16,16 +19,26 @@
 
     <div class="flex flex-col md:w-1/2">
       <div class="flex flex-col md:flex-row gap-2  md:gap-10">
-      <label class="w-1/3 font-semibold">Password</label>
-      <input formControlName="password" type="password" required class="border border-gray-300 md:w-200 p-2" />
+        <label class="w-1/3 font-semibold">Password</label>
+        <input formControlName="password" type="password" required class="border border-gray-300 md:w-200 p-2" />
       </div>
-      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-red-500 text-sm">
+      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+        class="text-red-500 text-sm">
         Mot de passe invalide ou requis
       </div>
     </div>
 
     <div class="my-5"><button
         class="p-2 border px-8 bg-indigo-600 text-white font-bold hover:bg-indigo-900 transition-all"
-        type="submit">Login</button></div>
+        type="submit">Valider la connexion</button></div>
+
+    <div *ngIf="errorMessage" class="p-2">
+      <ul>
+        <li *ngFor="let error of errorMessage" class="text-red-500">
+          {{error}}
+        </li>
+      </ul>
+
+    </div>
   </div>
 </form>

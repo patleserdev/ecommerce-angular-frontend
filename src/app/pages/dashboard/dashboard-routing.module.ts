@@ -8,6 +8,7 @@ import { AdminInvoicesComponent } from './invoices/admin-invoices.component.js';
 import { AdminMediasComponent } from './medias/admin-medias.component.js';
 import { DashboardComponent } from './dashboard.component.js';
 import { DashboardHomeComponent } from './home/home.component.js';
+import { adminGuard } from '../../guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -15,12 +16,12 @@ const routes: Routes = [
     component: DashboardComponent, // Ton layout principal (sidebar, header, etc.)
     children: [
       { path: '', component:DashboardHomeComponent },
-      { path: 'categories', component: AdminCategoriesComponent },
-      { path: 'products', component: AdminProductsComponent },
-      { path: 'brands', component: AdminBrandsComponent },
-      { path: 'orders', component: AdminOrdersComponent },
-      { path: 'invoices', component: AdminInvoicesComponent },
-      { path: 'medias', component: AdminMediasComponent }
+      { path: 'categories', component: AdminCategoriesComponent, canActivate: [adminGuard] },
+      { path: 'products', component: AdminProductsComponent, canActivate: [adminGuard] },
+      { path: 'brands', component: AdminBrandsComponent, canActivate: [adminGuard] },
+      { path: 'orders', component: AdminOrdersComponent, canActivate: [adminGuard] },
+      { path: 'invoices', component: AdminInvoicesComponent, canActivate: [adminGuard] },
+      { path: 'medias', component: AdminMediasComponent, canActivate: [adminGuard] }
     ]
   }
 ];

@@ -99,6 +99,11 @@
         matBadgeOverlap="false">
         shopping_cart
       </span></a>
+
+    <a *ngIf="authService.isLoggedIn$ | async" (click)="logout()" routerLinkActive="underline font-semibold"
+      class="cursor-pointer pl-2 py-2"> <span class="material-icons" [title]=getUsername()>
+        account_circle
+      </span></a>
   </div>
 
 
