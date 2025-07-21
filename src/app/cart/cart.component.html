@@ -1,0 +1,22 @@
+<div *ngIf="(cart$ | async) as cart">
+  <ng-container *ngIf="cart.length === 0; else notEmpty">
+    <p class="text-gray-500 italic">Votre panier est vide.</p>
+  </ng-container>
+
+  <ng-template #notEmpty>
+    <h2 class="text-xl font-semibold mb-2">Mon Panier</h2>
+    <div *ngFor="let item of cart; let i = index" class="p-2 border mb-2 rounded flex flex-row items-center justify-between gap-5">
+      <div class="flex flex-row gap-5">
+        <span class="capitalize">{{ item.product.name }} </span>–
+        <span class="capitalize">{{ item.variation.gender }}</span>
+        <span class="uppercase">{{ item.variation.size }}</span>
+        <span class="uppercase px-5" [style.backgroundColor]="item.variation.color"></span>
+        <span class="font-bold">{{ item.product.price }} €</span>
+      </div>
+
+
+      <button (click)="remove(i)" class="text-red-500 ml-4">Supprimer</button>
+    </div>
+    <button (click)="clear()" class="mt-4 bg-red-100 px-4 py-2 rounded">Vider le panier</button>
+  </ng-template>
+</div>

@@ -6,4 +6,9 @@ export interface CategoryType {
   products: [];
 }
 
+export interface CategoryToSelectType {
+  label: string;
+  value: number;
+}
+
 export type CategoryWithChildren = CategoryType & { children?: CategoryType[] };

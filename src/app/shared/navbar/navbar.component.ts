@@ -4,11 +4,23 @@ import { AuthService } from '../../services/auth.service.js';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
+import { CartService } from '../../services/cart.service.js';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, CommonModule, RouterLinkActive],
+  imports: [
+    RouterLink,
+    CommonModule,
+    RouterLinkActive,
+    MatBadgeModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
@@ -16,10 +28,18 @@ export class NavbarComponent {
   constructor(
     public authService: AuthService,
     private router: Router,
-    private http: HttpClient
-  ) {}
+    private http: HttpClient,
+    private cartService:CartService
+  ) {
+    this.cartLength$ = this.cartService.cartLength$;
+
+  }
+
+  cartLength$: Observable<number>;
 
   categories: any[] = [];
+
+  cartQuantity: number = 0;
 
   ngOnInit() {
     this.fetchCategories();
@@ -42,6 +62,7 @@ export class NavbarComponent {
   isMenuOpen = false;
   isAnimating = false;
   menuAnimationClass = '';
+
 
   closeMobileMenu() {
     this.isMenuOpen = false;
@@ -74,4 +95,6 @@ export class NavbarComponent {
       }
     });
   }
+
+
 }

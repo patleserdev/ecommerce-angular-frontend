@@ -1,24 +1,48 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full flex flex-col gap-5 mt-5">
-  <div *ngFor="let field of fields" class="flex flex-row items-center justify-start gap-5">
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div *ngFor="let field of fields" class="mb-4">
+    <label class="block font-bold mb-1">{{ field.label }}</label>
 
-      <label class="text-md w-1/4">{{ field.label }}</label>
+    <!-- Text / Number / String Inputs -->
+    <input
+      *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'string'"
+      [type]="field.type"
+      [formControlName]="field.name"
+      class="border p-2 w-full rounded"
+    />
 
-      <input class="border border-gray-500 w-1/2 p-1" *ngIf="field.type !== 'textarea'" [type]="field.type"
-        [formControlName]="field.name" />
+    <!-- Textarea -->
+    <textarea
+      *ngIf="field.type === 'textarea'"
+      [formControlName]="field.name"
+      class="border p-2 w-full rounded"
+    ></textarea>
 
-      <textarea class="border border-gray-500 w-1/2 p-1" *ngIf="field.type === 'textarea'"
-        [formControlName]="field.name"></textarea>
+    <!-- Select -->
+    <select
+      *ngIf="field.type === 'select'"
+      [formControlName]="field.name"
+      class="border p-2 w-full rounded"
+    >
+      <option value="">-- Sélectionnez --</option>
+      <option
+        *ngFor="let option of field.options"
+        [value]="option.value"
+        class="capitalize"
+      >
+        {{ option.label }}
+      </option>
+    </select>
 
-    <div *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched" class="text-red-500">
+    <!-- Validation Error Message -->
+    <div
+      class="text-red-600 text-sm mt-1"
+      *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched"
+    >
       Ce champ est requis
     </div>
-
   </div>
 
-  <button type="submit" class="font-bold bg-indigo-500 text-white self-center w-1/4 p-2">Valider</button>
-
-  <div *ngIf="errorMessage$ | async as error" class="error-message text-red-500">
-    {{ error }}
-  </div>
-
+  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+    Valider
+  </button>
 </form>

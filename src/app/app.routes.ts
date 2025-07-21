@@ -9,6 +9,7 @@ import { authGuard } from './guards/auth.guard';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component.js';
+import { CartComponent } from './cart/cart.component.js';
 export const routes: Routes = [
   // {
   //   path: '',
@@ -31,9 +32,10 @@ export const routes: Routes = [
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: '', redirectTo: 'tasks', pathMatch: 'full' },
+      { path: '', redirectTo: 'categories', pathMatch: 'full' },
       { path: 'tasks', component: TasksComponent },
       { path: 'categories', component: CategoriesComponent },
+      { path: 'cart', component: CartComponent },
       // autres routes...
       /** routes spécifiques */
       {
