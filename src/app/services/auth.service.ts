@@ -32,7 +32,9 @@ export class AuthService {
   // }
 
   checkAuth() {
-    return this.http.get<{ role: string }>(`${this.baseUrl}/users/check`).pipe(
+    return this.http.get<{ role: string }>(`${this.baseUrl}/users/check`, {
+      withCredentials: true // nécessaire pour cookie HTTP-only
+    }).pipe(
       tap(user => {
         this.loggedIn$.next(true);
         this.role$.next(user.role);
