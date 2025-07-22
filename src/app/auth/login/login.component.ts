@@ -35,7 +35,12 @@ export class LoginComponent {
     }
     if (this.loginForm.valid) {
       this.auth.login(this.loginForm.value).subscribe({
-        next: () => this.router.navigate(['/dashboard']),
+        next: () => {
+          this.auth.checkAuth().subscribe(() => {
+            this.router.navigate(['/dashboard']);
+          });
+
+        },
         error: err => {
           //alert('Login failed')
           this.errorMessage.push("Connexion échouée")

@@ -16,13 +16,12 @@ export class AuthService {
   isLoggedIn$ = this.loggedIn$.asObservable();
 
   private _role$ = new BehaviorSubject<string | null>(null);
-public get role$() {
-  return this._role$.asObservable();
-}
+  public get role$() {
+    return this._role$.asObservable();
+  }
 
   private userSubject = new BehaviorSubject<UserType | null>(null);
   user$ = this.userSubject.asObservable();
-
 
   constructor(private http: HttpClient) {}
 

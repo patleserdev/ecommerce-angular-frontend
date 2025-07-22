@@ -27,6 +27,7 @@ export class DashboardComponent {
   constructor(private router: Router, private auth: AuthService) {
     this.auth.role$.subscribe((role) => {
       this.role = role;
+      console.log(role)
     });
   }
 

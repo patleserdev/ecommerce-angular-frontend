@@ -1,7 +1,7 @@
 <app-header></app-header>
 
-<main class="min-h-screen flex flex-row bg-gray-50 p-6">
-  <aside class="w-1/6 flex flex-col p-5 gap-5">
+<main class="min-h-screen flex flex-col md:flex-row bg-gray-50 md:p-6">
+  <aside class="w-full md:w-1/6 flex flex-col p-5 gap-5">
     <ng-container *ngFor="let link of visibleLinks">
       <a [routerLink]="link.path" [ngClass]="getLinkClasses(link.path)"
         class="block px-4 py-2 rounded-lg transition-colors">
@@ -9,7 +9,7 @@
       </a>
     </ng-container>
   </aside>
-  <div class="border w-5/6 bg-white shadow-lg rounded-xl p-6">
+  <div class="border w-full md:w-5/6 bg-white shadow-lg rounded-xl p-6">
     <h1 class="text-2xl font-bold mb-4">{{ currentLabel }}</h1>
 
     <router-outlet></router-outlet>
