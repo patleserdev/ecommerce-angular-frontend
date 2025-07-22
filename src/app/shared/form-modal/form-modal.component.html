@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div *ngFor="let field of fields" class="mb-4">
+  <div *ngFor="let field of fields" class="mb-2">
     <label class="block font-bold mb-1">{{ field.label }}</label>
 
     <!-- Text / Number / String Inputs -->
@@ -11,7 +11,7 @@
       class="border p-2 w-full rounded"></textarea>
 
     <!-- Select -->
-    <select *ngIf="field.type === 'select'" [formControlName]="field.name" class="border p-2 w-full rounded">
+    <select *ngIf="field.type === 'select'" [formControlName]="field.name" class="border p-2 w-full rounded capitalize">
       <option value="">-- Sélectionnez --</option>
       <option *ngFor="let option of field.options" [value]="option.value" class="capitalize">
         {{ option.label }}
@@ -22,14 +22,55 @@
     <input *ngIf="field.type === 'file'" type="file" (change)="onFileChange($event, field.name)"
       class="border p-2 w-full rounded" />
 
-      <div class="flex flex-row justify-center">
-        <img
-        *ngIf="field.type === 'file' && getFieldValue('file')"
-        [src]="getFieldValue('file')"
-        alt="Image existante"
-        class="mt-2 rounded shadow max-h-40 self-justify-center"
-      />
+    <div class="flex flex-row justify-center">
+      <img *ngIf="field.type === 'file' && getFieldValue('file')" [src]="getFieldValue('file')" alt="Image existante"
+        class="mt-2 rounded shadow max-h-40 self-justify-center" />
+    </div>
+
+
+    <!-- Variations -->
+    <!-- ARRAY FIELD -->
+    <div *ngIf="field.type === 'array'" class="space-y-2 border p-1 rounded bg-gray-50">
+      <div formArrayName="{{ field.name }}">
+        <div *ngFor="let item of getFormArray(field.name).controls; let i = index" [formGroupName]="i"
+          class="border border-2 p-3 rounded bg-white my-2 md:my-0">
+          <div class="grid sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5  gap-2 items-center">
+
+            <div *ngFor="let subField of field.fields" class="mb-1">
+              <label class="block text-sm font-semibold">{{ subField.label }}</label>
+
+              <!-- Input classique -->
+              <input *ngIf="subField.type !== 'color'" [type]="subField.type" [formControlName]="subField.name"
+                class="border p-2 w-full rounded" />
+
+              <!-- Input type color + carré couleur -->
+              <div *ngIf="subField.type === 'color'" class="flex items-center gap-2">
+                <input type="color" [formControlName]="subField.name" class="border p-1 rounded" />
+                <div class="w-8 h-8 rounded border" [style.background]="item.get(subField.name)?.value || '#ffffff'">
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <button type="button" (click)="removeArrayItem(field.name, i)" class="mt-2 text-sm text-red-600">
+                Supprimer
+              </button>
+            </div>
+
+          </div>
+        </div>
       </div>
+
+      <button type="button" (click)="addArrayItem(field.name, field.fields || [])" class="text-blue-600 text-sm mt-2">
+        + Ajouter une variation
+      </button>
+    </div>
+
+    <!-- Si type mediaSelector, insérer le composant -->
+    <ng-container *ngIf="field.type === 'mediaSelector'">
+      <app-media-selector (selectionChange)="onMediaSelectionChange($event, field.name)">
+      </app-media-selector>
+    </ng-container>
 
 
 

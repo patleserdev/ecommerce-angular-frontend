@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ModalService } from '../../../shared/modal.service';
-import { FormModalService } from '../../../shared/form-modal.service.js';
+import { ModalService } from '../../../services/modal.service';
+import { FormModalService } from '../../../services/form-modal.service.js';
 import { HttpClient } from '@angular/common/http';
 import { BrandType } from '../../../models/brands.js';
 import { CommonModule } from '@angular/common';

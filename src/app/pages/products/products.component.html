@@ -49,6 +49,27 @@
     </div>
   </div>
 
+  <div *ngIf="mediaLinks && mediaLinks.length > 0" class="media-links-container">
+    <h3>Médias liés</h3>
+    <div class="media-list flex flex-wrap gap-4">
+      <div *ngFor="let media of mediaLinks" class="media-item border p-2 rounded shadow">
+        <!-- Exemple : si media contient une URL d'image -->
+        <!-- <img *ngIf="media.url" [src]="media.url" [alt]="media.description || 'Media image'" class="max-w-xs max-h-40 object-contain" /> -->
+
+        <!-- Si c'est une vidéo, tu peux adapter -->
+        <!-- <video *ngIf="media.videoUrl" [src]="media.videoUrl" controls class="max-w-xs max-h-40"></video> -->
+
+        <!-- Affiche éventuellement un titre ou description -->
+        <p class="text-sm mt-1">{{ media.id }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sinon, message s'il n'y a pas de médias -->
+  <div *ngIf="mediaLinks && mediaLinks.length === 0" class="text-gray-500">
+    Aucun média lié à ce produit.
+  </div>
+
 
 
 </div>

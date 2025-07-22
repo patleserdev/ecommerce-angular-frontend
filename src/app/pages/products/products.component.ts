@@ -4,8 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ProductType, ProductVariationsType } from '../../models/product.js';
-import { CartService } from '../../services/cart.service.js';
+import { ProductType, ProductVariationsType } from '../../models/product';
+import { CartService } from '../../services/cart.service';
+import { MediaLinkService } from '../../services/media-link.service';
+import { MediaLinkType } from '../../models/medias';
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -17,11 +19,14 @@ export class ProductsComponent {
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private mediaLinkService: MediaLinkService) {
+
+  }
 
   product: any = null;
   isLoading = false;
   hasError = false;
+  mediaLinks: MediaLinkType[] = [];
 
   // ngOnInit() {
   //   this.route.paramMap.subscribe(params => {
@@ -40,6 +45,8 @@ export class ProductsComponent {
       }
     });
   }
+
+
 
   addProductToCart(product:ProductType, variation: ProductVariationsType) {
     //console.log(productId, variation);
@@ -72,5 +79,16 @@ export class ProductsComponent {
           this.isLoading = false;
         },
       });
+  }
+
+  loadMediaLinks(productId: string | number) {
+    this.mediaLinkService.getMediaLinks('product', productId.toString()).subscribe({
+      next: (links) => {
+        this.mediaLinks = links;
+      },
+      error: (err) => {
+        console.error('Erreur lors du fetch des mediaLinks :', err);
+      },
+    });
   }
 }

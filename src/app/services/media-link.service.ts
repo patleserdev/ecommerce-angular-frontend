@@ -1,0 +1,30 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { MediaLinkType } from '../models/medias.js';
+
+
+
+@Injectable({
+  providedIn: 'root',
+})
+export class MediaLinkService {
+  private baseUrl = '/api/media-links'; // adapte selon ton backend
+
+  constructor(private http: HttpClient) {}
+
+  // Créer un lien
+  createMediaLink(mediaLink: MediaLinkType): Observable<MediaLinkType> {
+    return this.http.post<MediaLinkType>(this.baseUrl, mediaLink);
+  }
+
+  // Récupérer les liens pour un produit ou catégorie
+  getMediaLinks(linkedType: 'product' | 'category' | 'brand', entityId: string): Observable<MediaLinkType[]> {
+    return this.http.get<MediaLinkType[]>(`${this.baseUrl}?entityType=${linkedType}&entityId=${entityId}`);
+  }
+
+  // Supprimer un lien
+  deleteMediaLink(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+}

@@ -36,6 +36,20 @@
     <!-- <a routerLink="/tasks" routerLinkActive="underline font-semibold" class="py-2">Tâches</a> -->
     <!-- <a routerLink="/categories" routerLinkActive="underline font-semibold" class="py-2">Catégories</a> -->
     <!-- <a routerLink="/auth/login" routerLinkActive="underline">Se connecter</a> -->
+     <div class="flex flex-row items-center justify-center gap-5">
+      <a [routerLink]="['/cart']" routerLinkActive="underline font-semibold">
+        <span class="material-icons no-underline" [matBadge]="cartLength$ | async" matBadgeColor="primary"
+          matBadgeOverlap="false">
+          shopping_cart
+        </span></a>
+
+      <a *ngIf="authService.isLoggedIn$ | async " routerLinkActive="underline font-semibold"
+        class="cursor-pointer pl-2 py-2"> <span class="material-icons" [title]=getUsername()>
+          account_circle
+        </span></a>
+     </div>
+
+    <hr>
     <div class="relative group">
       <button class="py-2 hover:underline" (click)="isCategoryMobileOpen = !isCategoryMobileOpen">
         Catégories
@@ -55,6 +69,8 @@
     <a *ngIf="!(authService.isLoggedIn$ | async)" routerLink="/auth/login" class="py-2">Se connecter</a>
     <a *ngIf="authService.isLoggedIn$ | async" (click)="logout()" class="cursor-pointer py-2">Se déconnecter</a>
     <a *ngIf="authService.isLoggedIn$ | async" routerLink="/dashboard" class="py-2">Dashboard</a>
+
+
 
   </div>
 
@@ -100,7 +116,7 @@
         shopping_cart
       </span></a>
 
-    <a *ngIf="authService.isLoggedIn$ | async" (click)="logout()" routerLinkActive="underline font-semibold"
+    <a *ngIf="authService.isLoggedIn$ | async " routerLinkActive="underline font-semibold"
       class="cursor-pointer pl-2 py-2"> <span class="material-icons" [title]=getUsername()>
         account_circle
       </span></a>

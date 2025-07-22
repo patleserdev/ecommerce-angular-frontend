@@ -1,15 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ModalService } from '../../../shared/modal.service';
-import { FormModalService } from '../../../shared/form-modal.service';
+import { ModalService } from '../../../services/modal.service';
+import { FormModalService } from '../../../services/form-modal.service';
 import { HttpClient } from '@angular/common/http';
 import { MediaType } from '../../../models/medias';
 import { environment } from '../../../../environments/environment';
-import {
-  CategoryToSelectType,
-  CategoryType,
-} from '../../../models/categorie.js';
-import { BrandToSelectType } from '../../../models/brands.js';
+import { MediasService } from '../../../services/medias.service';
 
 @Component({
   selector: 'app-admin-medias',
@@ -22,7 +18,8 @@ export class AdminMediasComponent {
   constructor(
     private modalService: ModalService,
     private formModalService: FormModalService,
-    private http: HttpClient
+    private http: HttpClient,
+    private mediaService:MediasService
   ) {}
 
   /**
@@ -53,26 +50,34 @@ export class AdminMediasComponent {
     // this.fetchProducts();
     // this.fetchCategories();
     // this.fetchBrands();
-    this.fetchMedias();
+    this.mediaService.getMedias().subscribe({
+            next: (data) => {
+              this.medias = data.sort((a, b) => a.title.localeCompare(b.title));
+              console.log(data);
+            },
+            error: (err) => {
+              console.error('Erreur lors du fetch des catégories', err);
+            },
+          });;
   }
 
   /**
    * FONCTIONS
    */
 
-  fetchMedias() {
-    this.http
-      .get<any[]>(`${environment.apiUrl}/medias`, { withCredentials: true })
-      .subscribe({
-        next: (data) => {
-          this.medias = data.sort((a, b) => a.title.localeCompare(b.title));
-          console.log(data);
-        },
-        error: (err) => {
-          console.error('Erreur lors du fetch des catégories', err);
-        },
-      });
-  }
+  // fetchMedias() {
+  //   this.http
+  //     .get<any[]>(`${environment.apiUrl}/medias`, { withCredentials: true })
+  //     .subscribe({
+  //       next: (data) => {
+  //         this.medias = data.sort((a, b) => a.title.localeCompare(b.title));
+  //         console.log(data);
+  //       },
+  //       error: (err) => {
+  //         console.error('Erreur lors du fetch des catégories', err);
+  //       },
+  //     });
+  // }
 
   // fetchProducts() {
   //   this.http
@@ -177,9 +182,10 @@ export class AdminMediasComponent {
       if (datas.height !== undefined) formData.append('height', String(datas.height));
       if (datas.width !== undefined) formData.append('width', String(datas.width));
 
-      return this.http.post<any>(`${environment.apiUrl}/medias`, formData, {
-        withCredentials: true,
-      });
+      return this.mediaService.addMedia(formData)
+      // return this.http.post<any>(`${environment.apiUrl}/medias`, formData, {
+      //   withCredentials: true,
+      // });
 
   }
 
@@ -223,13 +229,14 @@ export class AdminMediasComponent {
         // this.fetchBrands();
         // this.modalService.close();
         // this.formModalService.close();
+
         this.addMediaAction(data).subscribe({
           next: (res) => {
             console.log('Produit ajouté :', res);
             // this.fetchProducts();
             // this.fetchCategories();
             // this.fetchBrands();
-            this.fetchMedias();
+            this.mediaService.getMedias();
             this.modalService.close();
             this.formModalService.close();
           },
@@ -260,16 +267,18 @@ export class AdminMediasComponent {
       ],
       onSubmit: (data) => {
         const updated = { ...media, ...data };
-        this.http
-          .patch(`${environment.apiUrl}/medias/${media.id}`, updated, {
-            withCredentials: true,
-          })
+        // this.http
+        //   .patch(`${environment.apiUrl}/medias/${media.id}`, updated, {
+        //     withCredentials: true,
+        //   })
+        if(media.id)
+          this.mediaService.updateMedia(media.id, updated)
           .subscribe({
             next: () => {
               // this.fetchProducts();
               // this.fetchCategories();
               // this.fetchBrands();
-              this.fetchMedias();
+              this.mediaService.getMedias();
               this.modalService.close();
               this.formModalService.close();
             },
@@ -290,7 +299,7 @@ export class AdminMediasComponent {
           withCredentials: true,
         })
         .subscribe({
-          next: () => this.fetchMedias(),
+          next: () => this.mediaService.getMedias(),
           error: (err) => {
             console.error('Erreur suppression', err);
           },

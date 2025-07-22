@@ -3,9 +3,9 @@ import { RouterOutlet,RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common'; // ✅
 import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { AuthService } from './services/auth.service.js';
-import { ModalService } from './shared/modal.service.js';
+import { ModalService } from './services/modal.service.js';
 import { SharedModule } from './shared/shared.module.js';
-import { FormModalService } from './shared/form-modal.service.js';
+import { FormModalService } from './services/form-modal.service.js';
 
 @Component({
   selector: 'app-root',

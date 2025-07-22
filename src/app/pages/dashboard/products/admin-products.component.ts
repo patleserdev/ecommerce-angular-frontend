@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ModalService } from '../../../shared/modal.service';
-import { FormModalService } from '../../../shared/form-modal.service';
+import { ModalService } from '../../../services/modal.service';
+import { FormModalService } from '../../../services/form-modal.service';
 import { HttpClient } from '@angular/common/http';
 import { ProductType } from '../../../models/product';
 import { environment } from '../../../../environments/environment';
-import { CategoryToSelectType, CategoryType } from '../../../models/categorie.js';
-import { BrandToSelectType } from '../../../models/brands.js';
+import {
+  CategoryToSelectType,
+  CategoryType,
+} from '../../../models/categorie.js';
+import { BrandToSelectType } from '../../../models/brands';
 
 @Component({
   selector: 'app-admin-products',
@@ -39,8 +42,8 @@ export class AdminProductsComponent {
 
   products: ProductType[] = [];
 
-  categoriesToSelect :CategoryToSelectType[] = [];
-  brandsToSelect :BrandToSelectType[] = [];
+  categoriesToSelect: CategoryToSelectType[] = [];
+  brandsToSelect: BrandToSelectType[] = [];
   errorMessage$ = this.formModalService.errorMessage$;
 
   /**
@@ -96,9 +99,7 @@ export class AdminProductsComponent {
       .get<any[]>(`${environment.apiUrl}/brands`, { withCredentials: true })
       .subscribe({
         next: (data) => {
-          const rawBrands = data.sort((a, b) =>
-            a.name.localeCompare(b.name)
-          );
+          const rawBrands = data.sort((a, b) => a.name.localeCompare(b.name));
 
           this.brandsToSelect = rawBrands.map((c) => ({
             label: c.name,
@@ -158,6 +159,18 @@ export class AdminProductsComponent {
           required: true,
           options: this.brandsToSelect,
         },
+        {
+          label: 'Variations',
+          name: 'variations',
+          type: 'array',
+          fields: [
+            { label: 'Genre', name: 'gender', type: 'text', required: true },
+            { label: 'Taille', name: 'size', type: 'text', required: true },
+            { label: 'Couleur', name: 'color', type: 'color', required: true },
+            { label: 'Stock', name: 'stock', type: 'number', required: true },
+          ],
+
+        }
         // variations?: ProductVariationsType[];
       ],
       onSubmit: async (data) => {
@@ -169,7 +182,12 @@ export class AdminProductsComponent {
         // this.fetchBrands();
         // this.modalService.close();
         // this.formModalService.close();
-        this.addProductAction(data).subscribe({
+        const productToSend = {
+          ...data,
+          variations: data.variations || [],
+        };
+
+        this.addProductAction(productToSend).subscribe({
           next: (res) => {
             console.log('Produit ajouté :', res);
             this.fetchProducts();
@@ -199,6 +217,55 @@ export class AdminProductsComponent {
           required: true,
           value: product.name,
         },
+        // { label: 'Image URL', name: 'image', type: 'text' },
+        {
+          label: 'Description',
+          name: 'description',
+          type: 'textarea',
+          value: product.description,
+        },
+        {
+          label: 'Prix',
+          name: 'price',
+          type: 'number',
+          required: true,
+          value: product.price,
+        },
+        {
+          label: 'SKU',
+          name: 'sku',
+          type: 'string',
+          required: true,
+          value: product.sku,
+        },
+        {
+          label: 'Catégorie',
+          name: 'category',
+          type: 'select',
+          required: true,
+          options: this.categoriesToSelect,
+          value: product.category?.id,
+        },
+        {
+          label: 'Marques',
+          name: 'brand',
+          type: 'select',
+          required: true,
+          options: this.brandsToSelect,
+          value: product.brand?.id,
+        },
+        {
+          label: 'Variations',
+          name: 'variations',
+          type: 'array',
+          fields: [
+            { label: 'Genre', name: 'gender', type: 'text', required: true },
+            { label: 'Taille', name: 'size', type: 'text', required: true },
+            { label: 'Couleur', name: 'color', type: 'color', required: true },
+            { label: 'Stock', name: 'stock', type: 'number', required: true },
+          ],
+          value: product.variations,
+        }
       ],
       onSubmit: (data) => {
         const updated = { ...product, ...data };
@@ -238,4 +305,32 @@ export class AdminProductsComponent {
         });
     }
   }
+
+  openMediaSelector(product: ProductType) {
+    this.modalService.open('Sélectionner un média pour ' + product.name,);
+    this.formModalService.openFormModal({
+      title: 'Sélectionner un média pour ' + product.name,
+      fields: [
+        // Exemple: un champ pour sélectionner le média, adapte selon ton mediaSelector
+        {
+          label: 'Médias liés',
+          name: 'mediaLinks',
+          type: 'mediaSelector', // type personnalisé à gérer dans ton formModal
+          value: [],              // la valeur initiale si besoin
+        }
+      ],
+      onSubmit: (data) => {
+        // Ici tu récupères les médias sélectionnés et fais ce que tu veux
+        console.log('Médias sélectionnés :', data);
+
+        // Appel service pour créer le lien média - produit
+        // Exemple:
+        // this.mediaLinkService.linkMediaToProduct(product.id, data.mediaLinks).subscribe(...);
+
+        this.modalService.close();
+        this.formModalService.close();
+      },
+    });
+  }
+
 }

@@ -6,9 +6,12 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FormModalService } from '../form-modal.service.js';
-
+import { FormBuilder, FormGroup, Validators,FormArray, ReactiveFormsModule } from '@angular/forms';
+import { FormModalService } from '../../services/form-modal.service';
+import { MediaType } from '../../models/medias';
+import { MediaSelectorComponent } from '../media-selector/media-selector.component';
+import { CommonModule } from '@angular/common';
+MediaSelectorComponent
 interface FormField {
   label: string;
   value?: string;
@@ -16,11 +19,16 @@ interface FormField {
   type: string;
   required?: boolean;
   options?: { label: string; value: string }[]; // pour les <select>
+  fields?: FormField[]; // ✅ pour les champs de type 'array'
+
 }
 
 @Component({
   selector: 'app-form-modal',
   templateUrl: './form-modal.component.html',
+  imports: [MediaSelectorComponent,ReactiveFormsModule,CommonModule], // <-- IMPORTER ICI LE COMPONENT STANDALONE
+  standalone: true,   // <---- ici
+
 })
 export class FormModalComponent implements OnInit {
   @Input() fields: FormField[] = [];
@@ -32,6 +40,7 @@ export class FormModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public formModalService: FormModalService
+
   ) {}
 
   ngOnInit() {
@@ -53,16 +62,49 @@ export class FormModalComponent implements OnInit {
     }
   }
 
-  buildForm() {
-    const group: { [key: string]: any } = {};
-    this.fields.forEach((field) => {
-      group[field.name] = [
-        field.value || '',
-        field.required ? Validators.required : [],
-      ];
-    });
-    this.form = this.fb.group(group);
+  onMediaSelectionChange(mediaArray: MediaType[], fieldName: string) {
+    // Exemple : stocker les ids dans le formControl
+    const ids = mediaArray.map(media => media.id);
+    this.form.get(fieldName)?.setValue(ids);
   }
+
+
+    buildForm() {
+      const group: { [key: string]: any } = {};
+
+      this.fields.forEach((field) => {
+        if (field.type === 'array') {
+          // On s'assure que field.value est un tableau, sinon on prend un tableau vide
+          const valuesArray = Array.isArray(field.value) ? field.value : [];
+
+          const controls = valuesArray.map((item: any) => {
+            const fgGroup: { [key: string]: any } = {};
+            if (field.fields && field.fields.length > 0) {
+
+            field.fields.forEach(subField => {
+              fgGroup[subField.name] = [
+                item[subField.name] || '',
+                subField.required ? Validators.required : []
+              ];
+            });
+          }
+            return this.fb.group(fgGroup);
+          });
+
+          group[field.name] = this.fb.array(controls);
+        } else {
+          group[field.name] = [
+            field.value || '',
+            field.required ? Validators.required : []
+          ];
+        }
+      });
+
+      this.form = this.fb.group(group);
+    }
+
+
+
 
   onSubmit() {
     if (this.form.valid) {
@@ -74,5 +116,24 @@ export class FormModalComponent implements OnInit {
 
   getFieldValue(fieldName: string): any {
     return this.form.get(fieldName)?.value;
+  }
+
+  addArrayItem(fieldName: string, fields: any[]) {
+    const array = this.form.get(fieldName) as FormArray;
+    const group = this.fb.group({});
+    fields.forEach((f) => {
+      group.addControl(f.name, this.fb.control('', f.required ? Validators.required : null));
+    });
+    array.push(group);
+  }
+
+
+  removeArrayItem(fieldName: string, index: number) {
+    const array = this.form.get(fieldName) as FormArray;
+    array.removeAt(index);
+  }
+
+  getFormArray(name: string): FormArray {
+    return this.form.get(name) as FormArray;
   }
 }

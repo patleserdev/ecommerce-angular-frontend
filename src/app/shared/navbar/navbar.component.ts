@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  NavigationEnd,
+} from '@angular/router';
 import { AuthService } from '../../services/auth.service.js';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -9,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CartService } from '../../services/cart.service.js';
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
@@ -32,10 +38,11 @@ export class NavbarComponent {
     private cartService: CartService
   ) {
     this.cartLength$ = this.cartService.cartLength$;
-  }
 
-  getUsername(): string {
-    return this.username.charAt(0).toUpperCase() + this.username.slice(1);
+    // referme le menu lors d'une navigation
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => this.closeMobileMenu());
   }
 
   cartLength$: Observable<number>;
@@ -51,6 +58,10 @@ export class NavbarComponent {
     this.authService.fetchUserProfile().subscribe((user) => {
       this.username = user.username;
     });
+  }
+
+  getUsername(): string {
+    return this.username.charAt(0).toUpperCase() + this.username.slice(1);
   }
 
   fetchCategories() {

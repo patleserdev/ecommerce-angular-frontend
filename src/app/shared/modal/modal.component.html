@@ -1,6 +1,6 @@
-<div *ngIf="visible" class="modal-overlay z-50">
-  <div class="modal-box w-full m-2 md:m-0 md:min-w-[50%] relative bg-white">
-    <div class="absolute top-0 right-0 m-2">
+<div *ngIf="visible" class="modal-overlay z-50 flex h-full">
+  <div class="modal-box w-full  m-2 md:m-0 md:min-w-[50%] relative bg-white overflow-auto min-h-50 h-full md:min-h-50">
+    <div class="absolute top-0 right-0  flex">
       <button (click)="close()"><span class="material-icons">close</span></button>
     </div>
     <h2>{{ title }}</h2>
