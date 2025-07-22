@@ -44,6 +44,15 @@ export class FormModalComponent implements OnInit {
     }
   }
 
+  onFileChange(event: Event, fieldName: string) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.form.get(fieldName)?.setValue(file);
+      this.form.get(fieldName)?.markAsDirty();
+    }
+  }
+
   buildForm() {
     const group: { [key: string]: any } = {};
     this.fields.forEach((field) => {
@@ -61,5 +70,9 @@ export class FormModalComponent implements OnInit {
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  getFieldValue(fieldName: string): any {
+    return this.form.get(fieldName)?.value;
   }
 }

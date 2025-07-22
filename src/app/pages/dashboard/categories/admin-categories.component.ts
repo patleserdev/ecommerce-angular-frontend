@@ -60,19 +60,22 @@ export class AdminCategoriesComponent {
   }
 
   addCategorieAction(datas: CategoryType) {
-    this.http
-      .post<any[]>(`${environment.apiUrl}/categories`, datas, { withCredentials: true })
-      .subscribe({
-        next: (data) => {
-          return data;
-        },
-        error: (err) => {
-          console.error('Erreur lors du fetch des catégories', err);
-          const msg =
-            err?.error?.message || 'Une erreur est survenue lors de l’ajout.';
-          this.formModalService.setError(msg);
-        },
-      });
+    // this.http
+    //   .post<any[]>(`${environment.apiUrl}/categories`, datas, { withCredentials: true })
+    //   .subscribe({
+    //     next: (data) => {
+    //       return data;
+    //     },
+    //     error: (err) => {
+    //       console.error('Erreur lors du fetch des catégories', err);
+    //       const msg =
+    //         err?.error?.message || 'Une erreur est survenue lors de l’ajout.';
+    //       this.formModalService.setError(msg);
+    //     },
+    //   });
+    return this.http.post<any>(`${environment.apiUrl}/categories`, datas, {
+      withCredentials: true,
+    });
   }
 
   addCategory() {
@@ -87,11 +90,22 @@ export class AdminCategoriesComponent {
       ],
       onSubmit: async (data) => {
         console.log('Catégorie reçue :', data);
-        const response = await this.addCategorieAction(data);
-        console.log('response', response);
-        this.fetchCategories();
-        this.modalService.close();
-        this.formModalService.close();
+        // const response = await this.addCategorieAction(data);
+        // console.log('response', response);
+        // this.fetchCategories();
+        // this.modalService.close();
+        // this.formModalService.close();
+        this.addCategorieAction(data).subscribe({
+          next: (res) => {
+            this.fetchCategories();
+            this.modalService.close();
+            this.formModalService.close();
+          },
+          error: (err) => {
+            const msg = err?.error?.message || 'Erreur lors de l’ajout.';
+            this.formModalService.setError(msg);
+          },
+        });
       },
     });
   }

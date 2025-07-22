@@ -3,41 +3,38 @@
     <label class="block font-bold mb-1">{{ field.label }}</label>
 
     <!-- Text / Number / String Inputs -->
-    <input
-      *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'string'"
-      [type]="field.type"
-      [formControlName]="field.name"
-      class="border p-2 w-full rounded"
-    />
+    <input *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'string'" [type]="field.type"
+      [formControlName]="field.name" class="border p-2 w-full rounded" />
 
     <!-- Textarea -->
-    <textarea
-      *ngIf="field.type === 'textarea'"
-      [formControlName]="field.name"
-      class="border p-2 w-full rounded"
-    ></textarea>
+    <textarea *ngIf="field.type === 'textarea'" [formControlName]="field.name"
+      class="border p-2 w-full rounded"></textarea>
 
     <!-- Select -->
-    <select
-      *ngIf="field.type === 'select'"
-      [formControlName]="field.name"
-      class="border p-2 w-full rounded"
-    >
+    <select *ngIf="field.type === 'select'" [formControlName]="field.name" class="border p-2 w-full rounded">
       <option value="">-- Sélectionnez --</option>
-      <option
-        *ngFor="let option of field.options"
-        [value]="option.value"
-        class="capitalize"
-      >
+      <option *ngFor="let option of field.options" [value]="option.value" class="capitalize">
         {{ option.label }}
       </option>
     </select>
 
+    <!-- File Input -->
+    <input *ngIf="field.type === 'file'" type="file" (change)="onFileChange($event, field.name)"
+      class="border p-2 w-full rounded" />
+
+      <div class="flex flex-row justify-center">
+        <img
+        *ngIf="field.type === 'file' && getFieldValue('file')"
+        [src]="getFieldValue('file')"
+        alt="Image existante"
+        class="mt-2 rounded shadow max-h-40 self-justify-center"
+      />
+      </div>
+
+
+
     <!-- Validation Error Message -->
-    <div
-      class="text-red-600 text-sm mt-1"
-      *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched"
-    >
+    <div class="text-red-600 text-sm mt-1" *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched">
       Ce champ est requis
     </div>
   </div>

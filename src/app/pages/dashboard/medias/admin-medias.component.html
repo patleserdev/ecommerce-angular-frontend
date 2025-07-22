@@ -1,1 +1,22 @@
-<p>medias works!</p>
+<p>Ajouter un media , modifier supprimer media</p>
+<button (click)="addMedia()"
+  class="border p-2 px-4 my-2 bg-indigo-500 font-bold text-white hover:bg-indigo-800 transition-all">Ajouter un
+  media</button>
+
+<ul class="space-y-2">
+  <li *ngFor="let media of medias"
+    class="p-3 border rounded shadow-sm capitalize flex flex-row items-center justify-between">
+    <img [src]="getOptimizedImageUrl(media.url, 200, 150)" alt="media" width="200" height="150" loading="lazy" />
+
+    <div>{{ media.title }}</div>
+
+
+    <div class="flex flex-row gap-5">
+      <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+        (click)="editMedia(media)">edit</span>
+      <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+        (click)="deleteMedia(media)">delete</span>
+    </div>
+
+  </li>
+</ul>

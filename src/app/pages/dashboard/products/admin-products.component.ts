@@ -113,21 +113,24 @@ export class AdminProductsComponent {
   }
 
   addProductAction(datas: ProductType) {
-    this.http
-      .post<any[]>(`${environment.apiUrl}/products`, datas, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (data) => {
-          return data;
-        },
-        error: (err) => {
-          console.error('Erreur lors du fetch des produits', err);
-          const msg =
-            err?.error?.message || 'Une erreur est survenue lors de l’ajout.';
-          this.formModalService.setError(msg);
-        },
-      });
+    // this.http
+    //   .post<any[]>(`${environment.apiUrl}/products`, datas, {
+    //     withCredentials: true,
+    //   })
+    //   .subscribe({
+    //     next: (data) => {
+    //       return data;
+    //     },
+    //     error: (err) => {
+    //       console.error('Erreur lors du fetch des produits', err);
+    //       const msg =
+    //         err?.error?.message || 'Une erreur est survenue lors de l’ajout.';
+    //       this.formModalService.setError(msg);
+    //     },
+    //   });
+    return this.http.post<any>(`${environment.apiUrl}/products`, datas, {
+      withCredentials: true,
+    });
   }
 
   addProduct() {
@@ -158,12 +161,28 @@ export class AdminProductsComponent {
         // variations?: ProductVariationsType[];
       ],
       onSubmit: async (data) => {
-        console.log('Catégorie reçue :', data);
-        const response = await this.addProductAction(data);
-        console.log('response', response);
-        this.fetchProducts();
-        this.modalService.close();
-        this.formModalService.close();
+        console.log('Produit reçu :', data);
+        // const response = await this.addProductAction(data);
+        // console.log('response', response);
+        // this.fetchProducts();
+        // this.fetchCategories();
+        // this.fetchBrands();
+        // this.modalService.close();
+        // this.formModalService.close();
+        this.addProductAction(data).subscribe({
+          next: (res) => {
+            console.log('Produit ajouté :', res);
+            this.fetchProducts();
+            this.fetchCategories();
+            this.fetchBrands();
+            this.modalService.close();
+            this.formModalService.close();
+          },
+          error: (err) => {
+            const msg = err?.error?.message || 'Erreur lors de l’ajout.';
+            this.formModalService.setError(msg);
+          },
+        });
       },
     });
   }
@@ -190,6 +209,8 @@ export class AdminProductsComponent {
           .subscribe({
             next: () => {
               this.fetchProducts();
+              this.fetchCategories();
+              this.fetchBrands();
               this.modalService.close();
               this.formModalService.close();
             },

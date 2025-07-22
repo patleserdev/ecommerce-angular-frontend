@@ -36,14 +36,14 @@ export class AdminBrandsComponent {
    * ON INIT
    */
   ngOnInit() {
-    this.fetchCBrands();
+    this.fetchBrands();
   }
 
   /**
    * FONCTIONS
    */
 
-  fetchCBrands() {
+  fetchBrands() {
     this.http
       .get<any[]>(`${environment.apiUrl}/brands`, { withCredentials: true })
       .subscribe({
@@ -58,19 +58,22 @@ export class AdminBrandsComponent {
   }
 
   addBrandAction(datas: BrandType) {
-    this.http
-      .post<any[]>(`${environment.apiUrl}/brands`, datas, { withCredentials: true })
-      .subscribe({
-        next: (data) => {
-          return data;
-        },
-        error: (err) => {
-          console.error('Erreur lors du fetch des marques', err);
-          const msg =
-            err?.error?.message || 'Une erreur est survenue lors de l’ajout.';
-          this.formModalService.setError(msg);
-        },
-      });
+    // this.http
+    //   .post<any[]>(`${environment.apiUrl}/brands`, datas, { withCredentials: true })
+    //   .subscribe({
+    //     next: (data) => {
+    //       return data;
+    //     },
+    //     error: (err) => {
+    //       console.error('Erreur lors du fetch des marques', err);
+    //       const msg =
+    //         err?.error?.message || 'Une erreur est survenue lors de l’ajout.';
+    //       this.formModalService.setError(msg);
+    //     },
+    //   });
+    return this.http.post<any>(`${environment.apiUrl}/brands`, datas, {
+      withCredentials: true,
+    });
   }
 
   addBrand() {
@@ -85,11 +88,22 @@ export class AdminBrandsComponent {
       ],
       onSubmit: async (data) => {
         console.log('Catégorie reçue :', data);
-        const response = await this.addBrandAction(data);
-        console.log('response', response);
-        this.fetchCBrands();
-        this.modalService.close();
-        this.formModalService.close();
+        // const response = await this.addBrandAction(data);
+        // console.log('response', response);
+        // this.fetchBrands();
+        // this.modalService.close();
+        // this.formModalService.close();
+        this.addBrandAction(data).subscribe({
+          next: (res) => {
+            this.fetchBrands();
+            this.modalService.close();
+            this.formModalService.close();
+          },
+          error: (err) => {
+            const msg = err?.error?.message || 'Erreur lors de l’ajout.';
+            this.formModalService.setError(msg);
+          },
+        });
       },
     });
   }
@@ -115,7 +129,7 @@ export class AdminBrandsComponent {
           })
           .subscribe({
             next: () => {
-              this.fetchCBrands();
+              this.fetchBrands();
               this.modalService.close();
               this.formModalService.close();
             },
@@ -132,9 +146,9 @@ export class AdminBrandsComponent {
   deleteBrand(brand: BrandType) {
     if (confirm(`Supprimer la catégorie "${brand.name}" ?`)) {
       this.http
-        .delete(`${environment.apiUrl}/categories/${brand.id}`, { withCredentials: true })
+        .delete(`${environment.apiUrl}/brands/${brand.id}`, { withCredentials: true })
         .subscribe({
-          next: () => this.fetchCBrands(),
+          next: () => this.fetchBrands(),
           error: (err) => {
             console.error('Erreur suppression', err);
           },
