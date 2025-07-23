@@ -12,7 +12,14 @@
   <div class="border w-full md:w-5/6 bg-white shadow-lg rounded-xl p-6">
     <h1 class="text-2xl font-bold mb-4">{{ currentLabel }}</h1>
 
-    <router-outlet></router-outlet>
+    <ng-container *ngIf="!loading; else spinner">
+      <router-outlet></router-outlet>
+    </ng-container>
+
+    <ng-template #spinner>
+      <div class="text-center mt-20 text-gray-500">Chargement...</div>
+    </ng-template>
+
   </div>
 </main>
 

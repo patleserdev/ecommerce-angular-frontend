@@ -7,9 +7,11 @@ import { ProductType } from '../../../models/product';
 import { environment } from '../../../../environments/environment';
 import {
   CategoryToSelectType,
-  CategoryType,
 } from '../../../models/categorie.js';
 import { BrandToSelectType } from '../../../models/brands';
+import { ProductsService } from '../../../services/products.service';
+import { CategoriesService } from '../../../services/categories.service';
+import { BrandsService } from '../../../services/brands.service';
 
 @Component({
   selector: 'app-admin-products',
@@ -22,7 +24,10 @@ export class AdminProductsComponent {
   constructor(
     private modalService: ModalService,
     private formModalService: FormModalService,
-    private http: HttpClient
+    private http: HttpClient,
+    private productsService : ProductsService,
+    private categoriesService : CategoriesService,
+    private brandsService : BrandsService
   ) {}
 
   /**
@@ -41,7 +46,6 @@ export class AdminProductsComponent {
   };
 
   products: ProductType[] = [];
-
   categoriesToSelect: CategoryToSelectType[] = [];
   brandsToSelect: BrandToSelectType[] = [];
   errorMessage$ = this.formModalService.errorMessage$;
@@ -60,22 +64,19 @@ export class AdminProductsComponent {
    */
 
   fetchProducts() {
-    this.http
-      .get<any[]>(`${environment.apiUrl}/products`, { withCredentials: true })
-      .subscribe({
-        next: (data) => {
-          this.products = data.sort((a, b) => a.name.localeCompare(b.name));
-          console.log(data);
-        },
-        error: (err) => {
-          console.error('Erreur lors du fetch des catégories', err);
-        },
-      });
+    this.productsService.getProducts().subscribe({
+      next: (data) => {
+        this.products = data.sort((a, b) => a.name.localeCompare(b.name));
+        console.log(data);
+      },
+      error: (err) => {
+        console.error('Erreur lors du fetch des catégories', err);
+      },
+    });
   }
 
   fetchCategories() {
-    this.http
-      .get<any[]>(`${environment.apiUrl}/categories`, { withCredentials: true })
+      this.categoriesService.getCategories()
       .subscribe({
         next: (data) => {
           const rawCategories = data.sort((a, b) =>
@@ -95,8 +96,7 @@ export class AdminProductsComponent {
   }
 
   fetchBrands() {
-    this.http
-      .get<any[]>(`${environment.apiUrl}/brands`, { withCredentials: true })
+    this.brandsService.getBrandsToSelect()
       .subscribe({
         next: (data) => {
           const rawBrands = data.sort((a, b) => a.name.localeCompare(b.name));
@@ -114,34 +114,18 @@ export class AdminProductsComponent {
   }
 
   addProductAction(datas: ProductType) {
-    // this.http
-    //   .post<any[]>(`${environment.apiUrl}/products`, datas, {
-    //     withCredentials: true,
-    //   })
-    //   .subscribe({
-    //     next: (data) => {
-    //       return data;
-    //     },
-    //     error: (err) => {
-    //       console.error('Erreur lors du fetch des produits', err);
-    //       const msg =
-    //         err?.error?.message || 'Une erreur est survenue lors de l’ajout.';
-    //       this.formModalService.setError(msg);
-    //     },
-    //   });
-    return this.http.post<any>(`${environment.apiUrl}/products`, datas, {
-      withCredentials: true,
-    });
+    // return this.http.post<any>(`${environment.apiUrl}/products`, datas, {
+    //   withCredentials: true,
+    // });
+    return this.productsService.addProduct(datas)
   }
 
   addProduct() {
-    // this.modalService.setDynamicComponent(LoginComponent);
     this.modalService.open('Ajouter un produit');
     this.formModalService.openFormModal({
       title: 'Ajouter un produit',
       fields: [
         { label: 'Nom', name: 'name', type: 'text', required: true },
-        // { label: 'Image URL', name: 'image', type: 'text' },
         { label: 'Description', name: 'description', type: 'textarea' },
         { label: 'Prix', name: 'price', type: 'number', required: true },
         { label: 'SKU', name: 'sku', type: 'string', required: true },
@@ -171,17 +155,9 @@ export class AdminProductsComponent {
           ],
 
         }
-        // variations?: ProductVariationsType[];
       ],
       onSubmit: async (data) => {
         console.log('Produit reçu :', data);
-        // const response = await this.addProductAction(data);
-        // console.log('response', response);
-        // this.fetchProducts();
-        // this.fetchCategories();
-        // this.fetchBrands();
-        // this.modalService.close();
-        // this.formModalService.close();
         const productToSend = {
           ...data,
           variations: data.variations || [],
@@ -217,7 +193,6 @@ export class AdminProductsComponent {
           required: true,
           value: product.name,
         },
-        // { label: 'Image URL', name: 'image', type: 'text' },
         {
           label: 'Description',
           name: 'description',
@@ -311,16 +286,14 @@ export class AdminProductsComponent {
     this.formModalService.openFormModal({
       title: 'Sélectionner un média pour ' + product.name,
       fields: [
-        // Exemple: un champ pour sélectionner le média, adapte selon ton mediaSelector
         {
           label: 'Médias liés',
           name: 'mediaLinks',
-          type: 'mediaSelector', // type personnalisé à gérer dans ton formModal
-          value: [],              // la valeur initiale si besoin
+          type: 'mediaSelector',
+          value: [],
         }
       ],
       onSubmit: (data) => {
-        // Ici tu récupères les médias sélectionnés et fais ce que tu veux
         console.log('Médias sélectionnés :', data);
 
         // Appel service pour créer le lien média - produit

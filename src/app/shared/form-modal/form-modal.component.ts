@@ -107,6 +107,7 @@ export class FormModalComponent implements OnInit {
 
 
   onSubmit() {
+    console.log("formvalidé",this.form)
     if (this.form.valid) {
       this.submitForm.emit(this.form.value);
     } else {

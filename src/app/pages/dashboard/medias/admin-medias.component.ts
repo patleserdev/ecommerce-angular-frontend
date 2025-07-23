@@ -2,9 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ModalService } from '../../../services/modal.service';
 import { FormModalService } from '../../../services/form-modal.service';
-import { HttpClient } from '@angular/common/http';
 import { MediaType } from '../../../models/medias';
-import { environment } from '../../../../environments/environment';
 import { MediasService } from '../../../services/medias.service';
 
 @Component({
@@ -18,8 +16,7 @@ export class AdminMediasComponent {
   constructor(
     private modalService: ModalService,
     private formModalService: FormModalService,
-    private http: HttpClient,
-    private mediaService:MediasService
+    private mediaService: MediasService
   ) {}
 
   /**
@@ -38,102 +35,27 @@ export class AdminMediasComponent {
   };
 
   medias: MediaType[] = [];
-
-  // mediasToSelect :CategoryToSelectType[] = [];
-  // brandsToSelect :BrandToSelectType[] = [];
   errorMessage$ = this.formModalService.errorMessage$;
 
   /**
    * ON INIT
    */
   ngOnInit() {
-    // this.fetchProducts();
-    // this.fetchCategories();
-    // this.fetchBrands();
-    this.mediaService.getMedias().subscribe({
-            next: (data) => {
-              this.medias = data.sort((a, b) => a.title.localeCompare(b.title));
-              console.log(data);
-            },
-            error: (err) => {
-              console.error('Erreur lors du fetch des catégories', err);
-            },
-          });;
+    this.getMedias();
   }
 
-  /**
-   * FONCTIONS
-   */
+  getMedias() {
+    this.mediaService.getMedias().subscribe({
+      next: (data) => {
+        this.medias = data.sort((a, b) => a.title.localeCompare(b.title));
+        console.log(data);
+      },
+      error: (err) => {
+        console.error('Erreur lors du fetch des catégories', err);
+      },
+    });
+  }
 
-  // fetchMedias() {
-  //   this.http
-  //     .get<any[]>(`${environment.apiUrl}/medias`, { withCredentials: true })
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.medias = data.sort((a, b) => a.title.localeCompare(b.title));
-  //         console.log(data);
-  //       },
-  //       error: (err) => {
-  //         console.error('Erreur lors du fetch des catégories', err);
-  //       },
-  //     });
-  // }
-
-  // fetchProducts() {
-  //   this.http
-  //     .get<any[]>(`${environment.apiUrl}/products`, { withCredentials: true })
-  //     .subscribe({
-  //       next: (data) => {
-  //         this.products = data.sort((a, b) => a.name.localeCompare(b.name));
-  //         console.log(data);
-  //       },
-  //       error: (err) => {
-  //         console.error('Erreur lors du fetch des catégories', err);
-  //       },
-  //     });
-  // }
-
-  // fetchCategories() {
-  //   this.http
-  //     .get<any[]>(`${environment.apiUrl}/categories`, { withCredentials: true })
-  //     .subscribe({
-  //       next: (data) => {
-  //         const rawCategories = data.sort((a, b) =>
-  //           a.name.localeCompare(b.name)
-  //         );
-
-  //         this.categoriesToSelect = rawCategories.map((c) => ({
-  //           label: c.name,
-  //           value: c.id,
-  //         }));
-  //         console.log(data);
-  //       },
-  //       error: (err) => {
-  //         console.error('Erreur lors du fetch des catégories', err);
-  //       },
-  //     });
-  // }
-
-  // fetchBrands() {
-  //   this.http
-  //     .get<any[]>(`${environment.apiUrl}/brands`, { withCredentials: true })
-  //     .subscribe({
-  //       next: (data) => {
-  //         const rawBrands = data.sort((a, b) =>
-  //           a.name.localeCompare(b.name)
-  //         );
-
-  //         this.brandsToSelect = rawBrands.map((c) => ({
-  //           label: c.name,
-  //           value: c.id,
-  //         }));
-  //         console.log(data);
-  //       },
-  //       error: (err) => {
-  //         console.error('Erreur lors du fetch des marques', err);
-  //       },
-  //     });
-  // }
 
   getOptimizedImageUrl(
     url: string | undefined,
@@ -149,44 +71,23 @@ export class AdminMediasComponent {
   }
 
   addMediaAction(datas: MediaType) {
-    // this.http
-    //   .post<any[]>(`${environment.apiUrl}/products`, datas, {
-    //     withCredentials: true,
-    //   })
-    //   .subscribe({
-    //     next: (data) => {
-    //       return data;
-    //     },
-    //     error: (err) => {
-    //       console.error('Erreur lors du fetch des produits', err);
-    //       const msg =
-    //         err?.error?.message || 'Une erreur est survenue lors de l’ajout.';
-    //       this.formModalService.setError(msg);
-    //     },
-    //   });
+    const formData = new FormData();
 
-    // return this.http.post<any>(`${environment.apiUrl}/medias`, datas, {
-    //   withCredentials: true,
-    // });
-      const formData = new FormData();
+    if (datas.file) {
+      formData.append('file', datas.file);
+    }
 
-      if (datas.file) {
-        formData.append('file', datas.file);
-      }
+    // Ajout des autres champs si définis
+    if (datas.title) formData.append('title', datas.title);
+    if (datas.description) formData.append('description', datas.description);
+    if (datas.altText) formData.append('altText', datas.altText);
+    if (datas.fileName) formData.append('fileName', datas.fileName);
+    if (datas.height !== undefined)
+      formData.append('height', String(datas.height));
+    if (datas.width !== undefined)
+      formData.append('width', String(datas.width));
 
-      // Ajout des autres champs si définis
-      if (datas.title) formData.append('title', datas.title);
-      if (datas.description) formData.append('description', datas.description);
-      if (datas.altText) formData.append('altText', datas.altText);
-      if (datas.fileName) formData.append('fileName', datas.fileName);
-      if (datas.height !== undefined) formData.append('height', String(datas.height));
-      if (datas.width !== undefined) formData.append('width', String(datas.width));
-
-      return this.mediaService.addMedia(formData)
-      // return this.http.post<any>(`${environment.apiUrl}/medias`, formData, {
-      //   withCredentials: true,
-      // });
-
+    return this.mediaService.addMedia(formData);
   }
 
   addMedia() {
@@ -203,40 +104,14 @@ export class AdminMediasComponent {
           name: 'file',
           type: 'file',
           required: true,
-        }
-        // {
-        //   label: 'Catégorie',
-        //   name: 'category',
-        //   type: 'select',
-        //   required: true,
-        //   options: this.categoriesToSelect,
-        // },
-        // {
-        //   label: 'Marques',
-        //   name: 'brand',
-        //   type: 'select',
-        //   required: true,
-        //   options: this.brandsToSelect,
-        // },
-        // variations?: ProductVariationsType[];
+        },
       ],
       onSubmit: async (data) => {
         console.log('Produit reçu :', data);
-        // const response = await this.addProductAction(data);
-        // console.log('response', response);
-        // this.fetchProducts();
-        // this.fetchCategories();
-        // this.fetchBrands();
-        // this.modalService.close();
-        // this.formModalService.close();
-
         this.addMediaAction(data).subscribe({
           next: (res) => {
             console.log('Produit ajouté :', res);
-            // this.fetchProducts();
-            // this.fetchCategories();
-            // this.fetchBrands();
-            this.mediaService.getMedias();
+            this.getMedias();
             this.modalService.close();
             this.formModalService.close();
           },
@@ -254,31 +129,33 @@ export class AdminMediasComponent {
     this.formModalService.openFormModal({
       title: 'Modifier un produit',
       fields: [
-        { label: 'Nom', name: 'title', type: 'text', required: true,value: media.title, },
-        // { label: 'Image URL', name: 'image', type: 'text' },
-        { label: 'Description', name: 'description', type: 'textarea',value: media.description, },
+        {
+          label: 'Nom',
+          name: 'title',
+          type: 'text',
+          required: true,
+          value: media.title,
+        },
+        {
+          label: 'Description',
+          name: 'description',
+          type: 'textarea',
+          value: media.description,
+        },
         {
           label: 'Image',
           name: 'file',
           type: 'file',
           required: true,
           value: media.url,
-        }
+        },
       ],
       onSubmit: (data) => {
         const updated = { ...media, ...data };
-        // this.http
-        //   .patch(`${environment.apiUrl}/medias/${media.id}`, updated, {
-        //     withCredentials: true,
-        //   })
-        if(media.id)
-          this.mediaService.updateMedia(media.id, updated)
-          .subscribe({
+        if (media.id)
+          this.mediaService.updateMedia(media.id, updated).subscribe({
             next: () => {
-              // this.fetchProducts();
-              // this.fetchCategories();
-              // this.fetchBrands();
-              this.mediaService.getMedias();
+              this.getMedias();
               this.modalService.close();
               this.formModalService.close();
             },
@@ -294,12 +171,14 @@ export class AdminMediasComponent {
 
   deleteMedia(media: MediaType) {
     if (confirm(`Supprimer le media "${media.title}" ?`)) {
-      this.http
-        .delete(`${environment.apiUrl}/medias/${media.id}`, {
-          withCredentials: true,
-        })
+      // this.http
+      //   .delete(`${environment.apiUrl}/medias/${media.id}`, {
+      //     withCredentials: true,
+      //   })
+      if (media.id)
+        this.mediaService.deleteMedia(media.id)
         .subscribe({
-          next: () => this.mediaService.getMedias(),
+          next: () => this.getMedias(),
           error: (err) => {
             console.error('Erreur suppression', err);
           },

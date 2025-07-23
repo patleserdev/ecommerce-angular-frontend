@@ -1,1 +1,26 @@
-<p>media-selector works!</p>
+<p class="text-lg font-semibold mb-4">Associer des médias</p>
+
+<div class="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+  <div *ngFor="let media of medias"
+       (click)="toggleMediaSelection(media)"
+       class="relative border rounded-lg shadow-sm p-2 flex flex-col bg-white cursor-pointer transition-all duration-200"
+       [ngClass]="{
+         'ring-4 ring-indigo-500 border-indigo-600': isSelected(media),
+         'hover:ring-2 hover:ring-indigo-300': !isSelected(media)
+       }">
+
+    <img [src]="getOptimizedImageUrl(media.url, 400, 250)"
+         alt="media"
+         class="w-full h-auto rounded object-cover"
+         loading="lazy" />
+
+    <div class="text-center font-medium capitalize text-gray-800 mt-2">
+      {{ media.title }}
+    </div>
+
+    <!-- Optional visual checkmark -->
+    <div *ngIf="isSelected(media)" class="absolute top-2 right-2 bg-indigo-600 text-white rounded-full p-1">
+      <span class="material-icons text-sm">check</span>
+    </div>
+  </div>
+</div>

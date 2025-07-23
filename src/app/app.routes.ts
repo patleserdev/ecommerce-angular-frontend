@@ -5,26 +5,15 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
-import { adminGuard } from './guards/auth.guard';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { ProductsComponent } from './pages/products/products.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component.js';
-import { CartComponent } from './cart/cart.component.js';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { CartComponent } from './cart/cart.component';
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: AuthLayoutComponent,
-  //   canActivate: [authGuard],
-  //   children: [
-  //     {path: 'dashboard',component: DashboardComponent},
-  //   ]
-  // },
   {
     path: 'dashboard',
     // canActivate: [adminGuard],
     loadChildren: () =>
-      import('./pages/dashboard/dashboard-routing.module').then(
-        (m) => m.DashboardRoutingModule
+      import('./pages/dashboard/dashboard.module').then(
+        (m) => m.DashboardModule
       ),
   },
 
@@ -64,10 +53,12 @@ export const routes: Routes = [
   },
 
   /** Route par défault -- 404  */
-  {
-    path: 'not-found',
-    component: MainLayoutComponent,
-    children: [{ path: '**', component: PageNotFoundComponent }],
-  },
-  { path: '**', redirectTo: 'not-found' },
+  // {
+  //   path: 'not-found',
+  //   component: MainLayoutComponent,
+  //   children: [{ path: '**', component: PageNotFoundComponent }],
+  // },
+  // { path: '**', redirectTo: 'not-found' },
+
+  { path: '**', component: PageNotFoundComponent  },
 ];

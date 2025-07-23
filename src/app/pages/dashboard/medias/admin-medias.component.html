@@ -1,22 +1,30 @@
-<p>Ajouter un media , modifier supprimer media</p>
+<p class="text-lg font-semibold mb-4">Ajouter un média, modifier ou supprimer un média</p>
+
 <button (click)="addMedia()"
-  class="border p-2 px-4 my-2 bg-indigo-500 font-bold text-white hover:bg-indigo-800 transition-all">Ajouter un
-  media</button>
+  class="border p-2 px-4 mb-6 bg-indigo-500 font-bold text-white hover:bg-indigo-800 transition-all rounded">
+  Ajouter un média
+</button>
 
-<ul class="space-y-2">
-  <li *ngFor="let media of medias"
-    class="p-3 border rounded shadow-sm capitalize flex flex-row items-center justify-between">
-    <img [src]="getOptimizedImageUrl(media.url, 200, 150)" alt="media" width="200" height="150" loading="lazy" />
+<div class="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+  <div *ngFor="let media of medias"
+    class="border rounded-lg shadow-sm p-4 flex flex-col space-y-4 bg-white">
 
-    <div>{{ media.title }}</div>
+    <img [src]="getOptimizedImageUrl(media.url, 400, 250)"
+         alt="media"
+         class="w-full h-auto rounded object-cover"
+         loading="lazy" />
 
+    <div class="text-center font-medium capitalize text-gray-800">
+      {{ media.title }}
+    </div>
 
-    <div class="flex flex-col md:flex-row gap-5">
-      <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+    <div class="flex justify-center md:justify-between gap-6 pt-2">
+      <span class="material-icons cursor-pointer text-gray-500 hover:text-indigo-600 transition-all"
         (click)="editMedia(media)">edit</span>
-      <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+
+      <span class="material-icons cursor-pointer text-gray-500 hover:text-red-600 transition-all"
         (click)="deleteMedia(media)">delete</span>
     </div>
 
-  </li>
-</ul>
+  </div>
+</div>
