@@ -277,7 +277,7 @@ export class AdminProductsComponent {
   }
 
   openMediaSelector(product: ProductType) {
-    this.modalService.open('Sélectionner un média pour ' + product.name);
+    this.modalService.open('Sélectionner un média pour le produit ' + product.name);
 
     this.formModalService.openFormModal({
       title: 'Sélectionner un média pour ' + product.name,
@@ -290,57 +290,73 @@ export class AdminProductsComponent {
         },
       ],
       onSubmit: (data) => {
-        const currentMedias = product.medias ?? [];
-        const selectedMediaIds = new Set<string>(data.mediaLinks);
+        this.modalService.setLoading(true); // ⏳ spinner ON
 
-        const existingMediaIds = new Set<string>(
-          currentMedias.map((m) => m.id)
-        );
 
-        // ✅ Médias à ajouter
-        const newMediaIds = data.mediaLinks.filter(
-          (id: string) => !existingMediaIds.has(id)
-        );
+          const currentMedias = product.medias ?? [];
+          const selectedMediaIds = new Set<string>(data.mediaLinks);
 
-        // ❌ Médias à supprimer
-        const removedMediaIds = currentMedias
-          .filter((m) => !selectedMediaIds.has(m.id))
-          .map((m) => m.id);
+          const existingMediaIds = new Set<string>(
+            currentMedias.map((m) => m.id)
+          );
 
-        // Création des nouveaux liens
-        for (const id of newMediaIds) {
-          const link = {
-            mediaId: id,
-            linkedType: 'product',
-            linkedId: product.id,
-            role: 'gallery' as const,
-          };
+          // ✅ Médias à ajouter
+          const newMediaIds = data.mediaLinks.filter(
+            (id: string) => !existingMediaIds.has(id)
+          );
 
-          this.mediaLinkService.createMediaLink(link).subscribe({
-            next: (res) => {
-              console.log('Lien créé :', res);
-              this.fetchProducts();
-            },
-            error: (err) => console.error('Erreur création lien :', err),
-          });
-        }
+          // ❌ Médias à supprimer
+          const removedMediaIds = currentMedias
+            .filter((m) => !selectedMediaIds.has(m.id))
+            .map((m) => m.id);
 
-        // Suppression des anciens liens
-        for (const mediaId of removedMediaIds) {
-          if(product.id)
-          this.mediaLinkService
-            .deleteMediaLinkByLinkedIdAndMediaId(product.id, mediaId)
-            .subscribe({
-              next: () => {
-                console.log(`Lien supprimé : media ${mediaId} de product ${product.id}`);
+          // Création des nouveaux liens
+          for (const id of newMediaIds) {
+            const link = {
+              mediaId: id,
+              linkedType: 'product',
+              linkedId: product.id,
+              role: 'gallery' as const,
+            };
+
+            this.mediaLinkService.createMediaLink(link).subscribe({
+              next: (res) => {
+                console.log('Lien créé :', res);
                 this.fetchProducts();
-              },
-              error: (err) => console.error('Erreur suppression lien :', err),
-            });
-        }
+                this.modalService.setLoading(false); // ✅ spinner OFF
 
-        this.modalService.close();
-        this.formModalService.close();
+              },
+              error: (err) => {
+                console.error('Erreur création lien :', err)
+                this.modalService.setLoading(false); // ✅ spinner OFF
+              }
+            });
+          }
+
+          // Suppression des anciens liens
+          for (const mediaId of removedMediaIds) {
+            if(product.id)
+            this.mediaLinkService
+              .deleteMediaLinkByLinkedIdAndMediaId(product.id, mediaId)
+              .subscribe({
+                next: () => {
+                  console.log(`Lien supprimé : media ${mediaId} de product ${product.id}`);
+                  this.fetchProducts();
+                  this.modalService.setLoading(false); // ✅ spinner OFF
+
+                },
+                error: (err) => {
+                  console.error('Erreur suppression lien :', err)
+                  this.modalService.setLoading(false); // ✅ spinner OFF
+                }
+              });
+          }
+
+          this.modalService.close();
+          this.formModalService.close();
+
+
+
       },
     });
   }

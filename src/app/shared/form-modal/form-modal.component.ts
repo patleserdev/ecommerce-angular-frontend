@@ -11,6 +11,7 @@ import { FormModalService } from '../../services/form-modal.service';
 import { MediaType } from '../../models/medias';
 import { MediaSelectorComponent } from '../media-selector/media-selector.component';
 import { CommonModule } from '@angular/common';
+import { ModalService } from '../../services/modal.service';
 MediaSelectorComponent
 interface FormField {
   label: string;
@@ -41,7 +42,9 @@ export class FormModalComponent implements OnInit {
     private fb: FormBuilder,
     public formModalService: FormModalService
 
-  ) {}
+  ) {
+
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -62,13 +65,7 @@ export class FormModalComponent implements OnInit {
     }
   }
 
-  // onMediaSelectionChange(mediaArray: MediaType[], fieldName: string) {
-  //   // Exemple : stocker les ids dans le formControl
-  //   const ids = mediaArray.map(media => media.id);
-  //   this.form.get(fieldName)?.setValue(ids);
-  // }
-
-  onMediaSelectionChange(mediaArray: MediaType[], fieldName: string) {
+ onMediaSelectionChange(mediaArray: MediaType[], fieldName: string) {
     this.form.get(fieldName)?.setValue(mediaArray); // 👈 stocke les objets
   }
 

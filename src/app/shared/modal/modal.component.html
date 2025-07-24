@@ -1,13 +1,26 @@
-<div *ngIf="visible" class="modal-overlay z-50 flex h-full overflow-auto ">
-  <div class="modal-box w-full m-2 md:m-5 md:min-w-[50%] relative bg-white overflow-y-auto min-h-50 md:min-h-50 h-full flex flex-col">
-    <div class="absolute top-0 right-0 flex m-2">
-      <button (click)="close()"><span class="material-icons">close</span></button>
+<div *ngIf="visible" class="modal-overlay fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 overflow-auto p-4">
+
+  <!-- Spinner overlay, uniquement si loading, au-dessus de la modal -->
+  <div
+    *ngIf="loading"
+    class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 pointer-events-auto"
+  >
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div
+    class="modal-box bg-white rounded-lg shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto relative flex flex-col z-40"
+  >
+    <div class="absolute top-2 right-2">
+      <button (click)="close()" class="text-gray-600 hover:text-gray-900">
+        <span class="material-icons">close</span>
+      </button>
     </div>
-    <h2>{{ title }}</h2>
 
-    <!-- <ng-container *ngComponentOutlet="dynamicComponent"></ng-container> -->
-    <ng-content></ng-content> <!-- Permet d'afficher le contenu -->
+    <h2 class="text-xl font-semibold px-6 pt-6 pb-4 border-b">{{ title }}</h2>
 
-
+    <div class="p-6 flex-grow overflow-auto">
+      <ng-content></ng-content>
+    </div>
   </div>
 </div>

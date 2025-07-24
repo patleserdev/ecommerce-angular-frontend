@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { ModalService } from '../../../services/modal.service';
-import { FormModalService } from '../../../services/form-modal.service.js';
+import { FormModalService } from '../../../services/form-modal.service';
 import { HttpClient } from '@angular/common/http';
 import { BrandType } from '../../../models/brands.js';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
+import { MediaLinkService } from '../../../services/media-link.service';
 @Component({
   selector: 'app-admin-brands',
   standalone: true,
@@ -16,7 +17,8 @@ export class AdminBrandsComponent {
   constructor(
     private modalService: ModalService,
     private formModalService: FormModalService,
-    private http: HttpClient
+    private http: HttpClient,
+    private mediaLinkService : MediaLinkService
   ) {}
 
   /**
@@ -49,7 +51,7 @@ export class AdminBrandsComponent {
       .subscribe({
         next: (data) => {
           this.brands = data.sort((a, b) => a.name.localeCompare(b.name));
-          console.log(data);
+          console.log('brands',data);
         },
         error: (err) => {
           console.error('Erreur lors du fetch des marques', err);
@@ -154,6 +156,88 @@ export class AdminBrandsComponent {
           },
         });
     }
+  }
+
+  openMediaSelector(brand: BrandType) {
+    this.modalService.open('Sélectionner un média pour le produit ' + brand.name);
+
+    this.formModalService.openFormModal({
+      title: 'Sélectionner un média pour ' + brand.name,
+      fields: [
+        {
+          label: 'Médias liés',
+          name: 'mediaLinks',
+          type: 'mediaSelector',
+          value: brand.medias ?? [],
+        },
+      ],
+      onSubmit: (data) => {
+        this.modalService.setLoading(true); // ⏳ spinner ON
+
+
+          const currentMedias = brand.medias ?? [];
+          const selectedMediaIds = new Set<string>(data.mediaLinks);
+
+          const existingMediaIds = new Set<string>(
+            currentMedias.map((m) => m.id)
+          );
+
+          // ✅ Médias à ajouter
+          const newMediaIds = data.mediaLinks.filter(
+            (id: string) => !existingMediaIds.has(id)
+          );
+
+          // ❌ Médias à supprimer
+          const removedMediaIds = currentMedias
+            .filter((m) => !selectedMediaIds.has(m.id))
+            .map((m) => m.id);
+
+          // Création des nouveaux liens
+          for (const id of newMediaIds) {
+            const link = {
+              mediaId: id,
+              linkedType: 'brand',
+              linkedId: brand.id,
+              role: 'gallery' as const,
+            };
+
+            this.mediaLinkService.createMediaLink(link).subscribe({
+              next: (res) => {
+                console.log('Lien créé :', res);
+                this.fetchBrands();
+                this.modalService.setLoading(false); // ✅ spinner OFF
+
+              },
+              error: (err) => {
+                console.error('Erreur création lien :', err)
+                this.modalService.setLoading(false); // ✅ spinner OFF
+              }
+            });
+          }
+
+          // Suppression des anciens liens
+          for (const mediaId of removedMediaIds) {
+            if(brand.id)
+            this.mediaLinkService
+              .deleteMediaLinkByLinkedIdAndMediaId(brand.id, mediaId)
+              .subscribe({
+                next: () => {
+                  console.log(`Lien supprimé : media ${mediaId} de product ${brand.id}`);
+                  this.fetchBrands();
+                  this.modalService.setLoading(false); // ✅ spinner OFF
+
+                },
+                error: (err) => {
+                  console.error('Erreur suppression lien :', err)
+                  this.modalService.setLoading(false); // ✅ spinner OFF
+                }
+              });
+          }
+
+          this.modalService.close();
+          this.formModalService.close();
+      },
+    });
   }
 
 }

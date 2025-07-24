@@ -5,9 +5,10 @@
 
   </select>
 </div>
-
-<div class="grid gap-5 sm:grid-cols-1 md:grid-cols-3"  [ngClass]="' xl:grid-cols-' + selectedOption">
-
+<div
+  class="grid gap-5"
+  [ngClass]="gridColsClass[selectedOption]"
+>
   <div *ngFor="let media of medias"
        (click)="toggleMediaSelection(media)"
        class="relative border rounded-lg shadow-sm p-2 flex flex-col bg-white cursor-pointer transition-all duration-200"
@@ -25,9 +26,9 @@
       {{ media.title }}
     </div>
 
-    <!-- Optional visual checkmark -->
     <div *ngIf="isSelected(media)" class="absolute top-2 right-2 bg-indigo-600 text-white rounded-full p-1">
       <span class="material-icons text-sm">check</span>
     </div>
   </div>
 </div>
+

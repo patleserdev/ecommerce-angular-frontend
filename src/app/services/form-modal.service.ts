@@ -10,13 +10,12 @@ export class FormModalService {
 
   public errorMessage$ = new BehaviorSubject<string | null>(null);
 
-
   openFormModal(config: {
     title: string;
     fields: any[];
     onSubmit: (data: any) => void;
   }) {
-    console.log("form modal opened")
+    console.log('form modal opened');
     this.title$.next(config.title);
     this.fields$.next(config.fields);
     this.onSubmitCallback = config.onSubmit;

@@ -94,7 +94,6 @@ export class AdminMediasComponent {
   }
 
   addMedia() {
-    // this.modalService.setDynamicComponent(LoginComponent);
     this.modalService.open('Ajouter un média');
     this.formModalService.openFormModal({
       title: 'Ajouter un média',

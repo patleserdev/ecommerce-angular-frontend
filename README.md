@@ -9,37 +9,38 @@
 - Connexion et session **OK**
 - Admin :
   - CRUD **catégorie** OK
+  - CRUD **marque** OK
+  - CRUD **produit** OK
+  - CRUD **medias** OK
+
 - Affichage de la page liste des **catégories**
 - Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)
+- Routage par **slug**
+- Cart persistant  : **CART**
+- Affichage des **produits** d'une catégorie *(via slug)*
+- Affichage d'une **fiche produit** *(via slug)*
+- Dans la fiche produit :
+  - Sélecteur de produit *(quantité, taille, genre)*
+- Panier dynamique dans la **navbar**
+- Optimisation des temps de réponse *(SSG)*  
+- Nav responsive avec comportements distincts **mobile / desktop**
+- Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)*
+- Créer un module **médiathèque** (front / back)
+- Mise en production (Frontend **Next.js**, Backend **Nest.js**, DB **MySQL Railway**)
   
 ---
 
 ## 🚧 Objectifs suivants
 
-- Mise en production (Frontend **Next.js**, Backend **Nest.js**, DB **MySQL Railway**)
 - Thème dark **OK** – Thème clair par défaut
-- Routage par **slug**
-- Redux : **CART**
-- Redux Persist
-- Admin :
-  - CRUD **marque** OK
-  - CRUD **produit** OK
-- Affichage des **produits** d'une catégorie *(via slug)*
-- Affichage d'une **fiche produit** *(via slug)*
 - Dans la fiche produit :
-  - Sélecteur de produit *(quantité, taille, genre)*
   - Carousel Framer des produits de la même catégorie
-- Panier dynamique dans la **navbar**
-- Optimisation des temps de réponse *(SSG)*
-- Nav responsive avec comportements distincts **mobile / desktop**
 - Optimisation des requêtes backend
 - **Test des rôles** *(Admin / Customer)*
 - Validation des **quantités** par **variation** (et non globalement)
 - Gestion des **rôles** pour l’accès à l’admin
 - Ajout d’**icônes** aux catégories
-- Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)*
 - Ajouter une **recherche dans la navbar** avec autocomplete
-- Créer un module **médiathèque** (front / back)
 - Implémenter le **checkout** (validation du panier)
 - Sécuriser le panier : **persistance sans session**
   
@@ -71,10 +72,4 @@
   - Confirmation de demande de retour
   - Suivi du remboursement
 
----
-
-## ❌ Objectifs manquants
-
-- Gestion des **codes promotionnels**
-
----
+## ❌ Codes promotionnels
