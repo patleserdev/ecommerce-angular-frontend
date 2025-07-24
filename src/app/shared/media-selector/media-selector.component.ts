@@ -1,21 +1,27 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { MediaType } from '../../models/medias.js';
 import { MediasService } from '../../services/medias.service';
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-media-selector',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './media-selector.component.html',
   styleUrl: './media-selector.component.css'
 })
-export class MediaSelectorComponent {
+export class MediaSelectorComponent implements OnInit, OnChanges {
   @Input() selectedMedia: MediaType[] = [];
   @Output() selectionChange = new EventEmitter<MediaType[]>();
 
   constructor(
     private mediaService: MediasService
   ) {}
+
+  /** Gestion de la taille de grille */
+  selectedOption: string = '5';
+  options: string[] = ['3', '4', '5'];
 
   medias: MediaType[] = [];
 
@@ -27,8 +33,12 @@ export class MediaSelectorComponent {
     console.log(this.selectedMedia)
   }
 
+  // isSelected(media: MediaType): boolean {
+  //   return this.selectedMedia.some((m) => m.id === media.id);
+  // }
   isSelected(media: MediaType): boolean {
-    return this.selectedMedia.some((m) => m.id === media.id);
+    if (!media || !media.id) return false;
+    return this.selectedMedia?.some((m) => m?.id === media.id);
   }
 
   toggleMediaSelection(media: MediaType): void {
@@ -48,8 +58,26 @@ export class MediaSelectorComponent {
    */
     ngOnInit() {
       this.getMedias();
+console.log(this.selectedMedia)
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+      if (changes['selectedMedia']) {
+        let selected = changes['selectedMedia'].currentValue;
+
+        // 🔥 Correction ici : détection de double tableau
+        if (Array.isArray(selected) && selected.length === 1 && Array.isArray(selected[0])) {
+          selected = selected[0]; // dé-nesting
+        }
+
+        console.log('🔍 Valeurs initiales passées à selectedMedia :', selected);
+        this.selectedMedia = selected || [];
+      }
+    }
+
+
+
+    /** récupère la taille d'image optimisée sur cloudinary */
     getOptimizedImageUrl(
       url: string | undefined,
       width: number,
@@ -63,16 +91,38 @@ export class MediaSelectorComponent {
       }
     }
 
+    /** récupère les medias */
+    // getMedias() {
+    //   this.mediaService.getMedias().subscribe({
+    //     next: (data) => {
+    //       this.medias = data.sort((a, b) => a.title.localeCompare(b.title));
+    //       console.log(data);
+    //     },
+    //     error: (err) => {
+    //       console.error('Erreur lors du fetch des catégories', err);
+    //     },
+    //   });
+    // }
     getMedias() {
       this.mediaService.getMedias().subscribe({
         next: (data) => {
           this.medias = data.sort((a, b) => a.title.localeCompare(b.title));
-          console.log(data);
+
+          // ✅ Rafraîchir la sélection visuelle une fois les objets bien alignés
+          if (this.selectedMedia?.length) {
+            const selectedIds = new Set(this.selectedMedia.map(m => m.id));
+            this.selectedMedia = this.medias.filter(m => selectedIds.has(m.id));
+          }
+
+          console.log('🎯 Medias après synchro :', this.medias);
+          console.log('✅ SelectedMedia mis à jour :', this.selectedMedia);
         },
         error: (err) => {
-          console.error('Erreur lors du fetch des catégories', err);
+          console.error('Erreur lors du fetch des médias', err);
         },
       });
     }
+
+
 
 }

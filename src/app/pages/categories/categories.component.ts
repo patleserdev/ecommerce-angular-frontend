@@ -3,17 +3,18 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule,RouterLink,MatProgressSpinnerModule],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.css',
 })
 
 export class CategoriesComponent {
   categories: any[] = [];
-
+  isLoading = false;
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -21,12 +22,15 @@ export class CategoriesComponent {
   }
 
   fetchCategories() {
+    this.isLoading=true
     this.http.get<any[]>(`${environment.apiUrl}/categories`, { withCredentials: true }).subscribe({
       next: (data) => {
         this.categories = data;
+        this.isLoading=false
       },
       error: (err) => {
         console.error('Erreur lors du fetch des catégories', err);
+        this.isLoading=false
       }
     });
   }

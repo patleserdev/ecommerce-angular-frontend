@@ -13,7 +13,9 @@ export class MediasService {
 
   // Créer un lien
   addMedia(media: any): Observable<any> {
-    return this.http.post<any>(this.baseUrl, media);
+    return this.http.post<any>(this.baseUrl, media, {
+      withCredentials: true,
+    });
   }
 
   // Récupérer les liens pour un produit ou catégorie
@@ -39,6 +41,8 @@ export class MediasService {
 
   // Supprimer un lien
   deleteMedia(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`, {
+      withCredentials: true,
+    });
   }
 }

@@ -1,6 +1,17 @@
 import { BrandType } from "./brands";
 import { CategoryType } from "./categorie";
 
+export type ProductMediasType={
+  altText:string,
+  description:string,
+  height:number,
+  id:string,
+  position:number
+  role:string,
+  title:string,
+  url:string,
+  width: number
+}
 export type ProductVariationsType = {
   id?: number;
   gender: string;
@@ -21,6 +32,7 @@ export interface ProductType {
   category?: CategoryType;
   brand?: BrandType;
   variations?: ProductVariationsType[];
+  medias?:ProductMediasType[]
 }
 
 export interface CreateProductType {

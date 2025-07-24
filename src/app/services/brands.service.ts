@@ -13,7 +13,9 @@ export class BrandsService {
 
   // Créer un lien
   addBrand(brand: any): Observable<any> {
-    return this.http.post<any>(this.baseUrl, brand);
+    return this.http.post<any>(this.baseUrl, brand, {
+      withCredentials: true,
+    });
   }
 
   // Récupérer les liens pour un produit ou catégorie
@@ -34,6 +36,8 @@ export class BrandsService {
 
   // Supprimer un lien
   deleteBrand(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`, {
+      withCredentials: true,
+    });
   }
 }

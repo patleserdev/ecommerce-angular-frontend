@@ -1,6 +1,13 @@
-<p class="text-lg font-semibold mb-4">Associer des médias</p>
+<div class="xl:flex-row items-center gap-5 justify-end mb-4 hidden xl:flex">
+  <label for="grid-selector">Taille de grille</label>
+  <select id="grid-selector" class="px-5" [(ngModel)]="selectedOption">
+    <option *ngFor="let option of options" [value]="option">{{ option }}</option>
 
-<div class="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+  </select>
+</div>
+
+<div class="grid gap-5 sm:grid-cols-1 md:grid-cols-3"  [ngClass]="' xl:grid-cols-' + selectedOption">
+
   <div *ngFor="let media of medias"
        (click)="toggleMediaSelection(media)"
        class="relative border rounded-lg shadow-sm p-2 flex flex-col bg-white cursor-pointer transition-all duration-200"

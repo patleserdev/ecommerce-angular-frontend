@@ -5,13 +5,12 @@ import { FormModalService } from '../../../services/form-modal.service';
 import { HttpClient } from '@angular/common/http';
 import { ProductType } from '../../../models/product';
 import { environment } from '../../../../environments/environment';
-import {
-  CategoryToSelectType,
-} from '../../../models/categorie.js';
+import { CategoryToSelectType } from '../../../models/categorie.js';
 import { BrandToSelectType } from '../../../models/brands';
 import { ProductsService } from '../../../services/products.service';
 import { CategoriesService } from '../../../services/categories.service';
 import { BrandsService } from '../../../services/brands.service';
+import { MediaLinkService } from '../../../services/media-link.service.js';
 
 @Component({
   selector: 'app-admin-products',
@@ -25,9 +24,10 @@ export class AdminProductsComponent {
     private modalService: ModalService,
     private formModalService: FormModalService,
     private http: HttpClient,
-    private productsService : ProductsService,
-    private categoriesService : CategoriesService,
-    private brandsService : BrandsService
+    private productsService: ProductsService,
+    private categoriesService: CategoriesService,
+    private brandsService: BrandsService,
+    private mediaLinkService: MediaLinkService
   ) {}
 
   /**
@@ -70,54 +70,50 @@ export class AdminProductsComponent {
         console.log(data);
       },
       error: (err) => {
-        console.error('Erreur lors du fetch des catégories', err);
+        console.error('Erreur lors du fetch des produits', err);
       },
     });
   }
 
   fetchCategories() {
-      this.categoriesService.getCategories()
-      .subscribe({
-        next: (data) => {
-          const rawCategories = data.sort((a, b) =>
-            a.name.localeCompare(b.name)
-          );
+    this.categoriesService.getCategories().subscribe({
+      next: (data) => {
+        const rawCategories = data.sort((a, b) => a.name.localeCompare(b.name));
 
-          this.categoriesToSelect = rawCategories.map((c) => ({
-            label: c.name,
-            value: c.id,
-          }));
-          console.log(data);
-        },
-        error: (err) => {
-          console.error('Erreur lors du fetch des catégories', err);
-        },
-      });
+        this.categoriesToSelect = rawCategories.map((c) => ({
+          label: c.name,
+          value: c.id,
+        }));
+        console.log(data);
+      },
+      error: (err) => {
+        console.error('Erreur lors du fetch des catégories', err);
+      },
+    });
   }
 
   fetchBrands() {
-    this.brandsService.getBrandsToSelect()
-      .subscribe({
-        next: (data) => {
-          const rawBrands = data.sort((a, b) => a.name.localeCompare(b.name));
+    this.brandsService.getBrandsToSelect().subscribe({
+      next: (data) => {
+        const rawBrands = data.sort((a, b) => a.name.localeCompare(b.name));
 
-          this.brandsToSelect = rawBrands.map((c) => ({
-            label: c.name,
-            value: c.id,
-          }));
-          console.log(data);
-        },
-        error: (err) => {
-          console.error('Erreur lors du fetch des marques', err);
-        },
-      });
+        this.brandsToSelect = rawBrands.map((c) => ({
+          label: c.name,
+          value: c.id,
+        }));
+        console.log(data);
+      },
+      error: (err) => {
+        console.error('Erreur lors du fetch des marques', err);
+      },
+    });
   }
 
   addProductAction(datas: ProductType) {
     // return this.http.post<any>(`${environment.apiUrl}/products`, datas, {
     //   withCredentials: true,
     // });
-    return this.productsService.addProduct(datas)
+    return this.productsService.addProduct(datas);
   }
 
   addProduct() {
@@ -153,8 +149,7 @@ export class AdminProductsComponent {
             { label: 'Couleur', name: 'color', type: 'color', required: true },
             { label: 'Stock', name: 'stock', type: 'number', required: true },
           ],
-
-        }
+        },
       ],
       onSubmit: async (data) => {
         console.log('Produit reçu :', data);
@@ -240,7 +235,7 @@ export class AdminProductsComponent {
             { label: 'Stock', name: 'stock', type: 'number', required: true },
           ],
           value: product.variations,
-        }
+        },
       ],
       onSubmit: (data) => {
         const updated = { ...product, ...data };
@@ -282,7 +277,8 @@ export class AdminProductsComponent {
   }
 
   openMediaSelector(product: ProductType) {
-    this.modalService.open('Sélectionner un média pour ' + product.name,);
+    this.modalService.open('Sélectionner un média pour ' + product.name);
+
     this.formModalService.openFormModal({
       title: 'Sélectionner un média pour ' + product.name,
       fields: [
@@ -290,20 +286,62 @@ export class AdminProductsComponent {
           label: 'Médias liés',
           name: 'mediaLinks',
           type: 'mediaSelector',
-          value: [],
-        }
+          value: product.medias ?? [],
+        },
       ],
       onSubmit: (data) => {
-        console.log('Médias sélectionnés :', data);
+        const currentMedias = product.medias ?? [];
+        const selectedMediaIds = new Set<string>(data.mediaLinks);
 
-        // Appel service pour créer le lien média - produit
-        // Exemple:
-        // this.mediaLinkService.linkMediaToProduct(product.id, data.mediaLinks).subscribe(...);
+        const existingMediaIds = new Set<string>(
+          currentMedias.map((m) => m.id)
+        );
+
+        // ✅ Médias à ajouter
+        const newMediaIds = data.mediaLinks.filter(
+          (id: string) => !existingMediaIds.has(id)
+        );
+
+        // ❌ Médias à supprimer
+        const removedMediaIds = currentMedias
+          .filter((m) => !selectedMediaIds.has(m.id))
+          .map((m) => m.id);
+
+        // Création des nouveaux liens
+        for (const id of newMediaIds) {
+          const link = {
+            mediaId: id,
+            linkedType: 'product',
+            linkedId: product.id,
+            role: 'gallery' as const,
+          };
+
+          this.mediaLinkService.createMediaLink(link).subscribe({
+            next: (res) => {
+              console.log('Lien créé :', res);
+              this.fetchProducts();
+            },
+            error: (err) => console.error('Erreur création lien :', err),
+          });
+        }
+
+        // Suppression des anciens liens
+        for (const mediaId of removedMediaIds) {
+          if(product.id)
+          this.mediaLinkService
+            .deleteMediaLinkByLinkedIdAndMediaId(product.id, mediaId)
+            .subscribe({
+              next: () => {
+                console.log(`Lien supprimé : media ${mediaId} de product ${product.id}`);
+                this.fetchProducts();
+              },
+              error: (err) => console.error('Erreur suppression lien :', err),
+            });
+        }
 
         this.modalService.close();
         this.formModalService.close();
       },
     });
   }
-
 }

@@ -62,10 +62,14 @@ export class FormModalComponent implements OnInit {
     }
   }
 
+  // onMediaSelectionChange(mediaArray: MediaType[], fieldName: string) {
+  //   // Exemple : stocker les ids dans le formControl
+  //   const ids = mediaArray.map(media => media.id);
+  //   this.form.get(fieldName)?.setValue(ids);
+  // }
+
   onMediaSelectionChange(mediaArray: MediaType[], fieldName: string) {
-    // Exemple : stocker les ids dans le formControl
-    const ids = mediaArray.map(media => media.id);
-    this.form.get(fieldName)?.setValue(ids);
+    this.form.get(fieldName)?.setValue(mediaArray); // 👈 stocke les objets
   }
 
 
@@ -106,14 +110,23 @@ export class FormModalComponent implements OnInit {
 
 
 
-  onSubmit() {
-    console.log("formvalidé",this.form)
-    if (this.form.valid) {
-      this.submitForm.emit(this.form.value);
-    } else {
-      this.form.markAllAsTouched();
+    onSubmit() {
+      if (this.form.valid) {
+        const processedValue = { ...this.form.value };
+
+        // Si tu veux filtrer pour n’envoyer que les ids :
+        this.fields.forEach(field => {
+          if (field.type === 'mediaSelector') {
+            processedValue[field.name] = (processedValue[field.name] || []).map((media: MediaType) => media.id);
+          }
+        });
+
+        this.submitForm.emit(processedValue);
+      } else {
+        this.form.markAllAsTouched();
+      }
     }
-  }
+
 
   getFieldValue(fieldName: string): any {
     return this.form.get(fieldName)?.value;

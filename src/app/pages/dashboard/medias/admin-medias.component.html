@@ -5,7 +5,15 @@
   Ajouter un média
 </button>
 
-<div class="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5">
+<div class="flex flex-row items-center gap-5 justify-end mb-4">
+  <label for="grid-selector">Taille de grille</label>
+  <select id="grid-selector" class="px-5" [(ngModel)]="selectedOption">
+    <option *ngFor="let option of options" [value]="option">{{ option }}</option>
+
+  </select>
+</div>
+
+<div class="grid gap-5 sm:grid-cols-1"  [ngClass]="'md:grid-cols-' + selectedOption + ' xl:grid-cols-' + selectedOption">
   <div *ngFor="let media of medias"
     class="border rounded-lg shadow-sm p-4 flex flex-col space-y-4 bg-white">
 

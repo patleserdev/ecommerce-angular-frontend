@@ -68,7 +68,8 @@
 
     <!-- Si type mediaSelector, insérer le composant -->
     <ng-container *ngIf="field.type === 'mediaSelector'">
-      <app-media-selector (selectionChange)="onMediaSelectionChange($event, field.name)">
+      <app-media-selector [selectedMedia]="getFieldValue(field.name)"
+        (selectionChange)="onMediaSelectionChange($event, field.name)">
       </app-media-selector>
     </ng-container>
 

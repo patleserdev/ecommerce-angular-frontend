@@ -4,11 +4,12 @@ import { ModalService } from '../../../services/modal.service';
 import { FormModalService } from '../../../services/form-modal.service';
 import { MediaType } from '../../../models/medias';
 import { MediasService } from '../../../services/medias.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-medias',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './admin-medias.component.html',
   styleUrl: './admin-medias.component.css',
 })
@@ -37,6 +38,8 @@ export class AdminMediasComponent {
   medias: MediaType[] = [];
   errorMessage$ = this.formModalService.errorMessage$;
 
+  selectedOption: string = '5';
+  options: string[] = ['3', '4', '5'];
   /**
    * ON INIT
    */

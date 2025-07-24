@@ -13,7 +13,9 @@ export class ProductsService {
 
   // Créer un lien
   addProduct(product: any): Observable<any> {
-    return this.http.post<any>(this.baseUrl, product);
+    return this.http.post<any>(this.baseUrl, product, {
+      withCredentials: true,
+    });
   }
 
   // Récupérer les liens pour un produit ou catégorie

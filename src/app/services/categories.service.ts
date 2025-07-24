@@ -13,7 +13,9 @@ export class CategoriesService {
 
   // Créer un lien
   addCategory(category: any): Observable<any> {
-    return this.http.post<any>(this.baseUrl, category);
+    return this.http.post<any>(this.baseUrl, category, {
+      withCredentials: true,
+    });
   }
 
   // Récupérer les liens pour un produit ou catégorie
@@ -33,6 +35,8 @@ export class CategoriesService {
 
   // Supprimer un lien
   deleteCategory(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`, {
+      withCredentials: true,
+    });
   }
 }
