@@ -5,6 +5,7 @@ import { CategoryType } from '../../../models/categorie';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
+import { MediaLinkService } from '../../../services/media-link.service.js';
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
@@ -16,7 +17,8 @@ export class AdminCategoriesComponent {
   constructor(
     private modalService: ModalService,
     private formModalService: FormModalService,
-    private http: HttpClient
+    private http: HttpClient,
+    private mediaLinkService : MediaLinkService
   ) {}
 
   /**
@@ -156,5 +158,87 @@ export class AdminCategoriesComponent {
           },
         });
     }
+  }
+
+  openMediaSelector(category: CategoryType) {
+    this.modalService.open('Sélectionner un média pour la catégorie ' + category.name);
+
+    this.formModalService.openFormModal({
+      title: 'Sélectionner un média pour ' + category.name,
+      fields: [
+        {
+          label: 'Médias liés',
+          name: 'mediaLinks',
+          type: 'mediaSelector',
+          value: category.medias ?? [],
+        },
+      ],
+      onSubmit: (data) => {
+        this.modalService.setLoading(true); // ⏳ spinner ON
+
+
+          const currentMedias = category.medias ?? [];
+          const selectedMediaIds = new Set<string>(data.mediaLinks);
+
+          const existingMediaIds = new Set<string>(
+            currentMedias.map((m) => m.id)
+          );
+
+          // ✅ Médias à ajouter
+          const newMediaIds = data.mediaLinks.filter(
+            (id: string) => !existingMediaIds.has(id)
+          );
+
+          // ❌ Médias à supprimer
+          const removedMediaIds = currentMedias
+            .filter((m) => !selectedMediaIds.has(m.id))
+            .map((m) => m.id);
+
+          // Création des nouveaux liens
+          for (const id of newMediaIds) {
+            const link = {
+              mediaId: id,
+              linkedType: 'category',
+              linkedId: category.id,
+              role: 'gallery' as const,
+            };
+
+            this.mediaLinkService.createMediaLink(link).subscribe({
+              next: (res) => {
+                console.log('Lien créé :', res);
+                this.fetchCategories();
+                this.modalService.setLoading(false); // ✅ spinner OFF
+
+              },
+              error: (err) => {
+                console.error('Erreur création lien :', err)
+                this.modalService.setLoading(false); // ✅ spinner OFF
+              }
+            });
+          }
+
+          // Suppression des anciens liens
+          for (const mediaId of removedMediaIds) {
+            if(category.id)
+            this.mediaLinkService
+              .deleteMediaLinkByLinkedIdAndMediaId(category.id, mediaId)
+              .subscribe({
+                next: () => {
+                  console.log(`Lien supprimé : media ${mediaId} de product ${category.id}`);
+                  this.fetchCategories();
+                  this.modalService.setLoading(false); // ✅ spinner OFF
+
+                },
+                error: (err) => {
+                  console.error('Erreur suppression lien :', err)
+                  this.modalService.setLoading(false); // ✅ spinner OFF
+                }
+              });
+          }
+
+          this.modalService.close();
+          this.formModalService.close();
+      },
+    });
   }
 }

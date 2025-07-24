@@ -2,7 +2,7 @@
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div *ngFor="let field of fields" class="mb-2">
-    <label class="block font-bold mb-1">{{ field.label }}</label>
+    <label *ngIf="field.type !== 'mediaSelector'" class="block font-bold mb-1">{{ field.label }}</label>
 
     <!-- Text / Number / String Inputs -->
     <input *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'string'" [type]="field.type"
