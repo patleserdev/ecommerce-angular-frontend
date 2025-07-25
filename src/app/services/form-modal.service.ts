@@ -1,14 +1,23 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
+import { FormModalComponent } from '../shared/form-modal/form-modal.component';
 @Injectable({ providedIn: 'root' })
 export class FormModalService {
   public visible$ = new BehaviorSubject<boolean>(false);
   public title$ = new BehaviorSubject<string>('');
   public fields$ = new BehaviorSubject<any[]>([]);
   private onSubmitCallback: ((data: any) => void) | null = null;
+  private formComponentRef: FormModalComponent | null = null;
 
   public errorMessage$ = new BehaviorSubject<string | null>(null);
+
+  setFormComponentRef(ref: FormModalComponent) {
+    this.formComponentRef = ref;
+  }
+
+  resetForm() {
+    this.formComponentRef?.resetForm();
+  }
 
   openFormModal(config: {
     title: string;

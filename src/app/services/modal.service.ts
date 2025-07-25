@@ -28,6 +28,7 @@ export class ModalService {
   close() {
     this.modalVisibility.next(false);
     this.setLoading(false)
+
   }
 
   private dynamicComponent = new BehaviorSubject<Type<any> | null>(null);
