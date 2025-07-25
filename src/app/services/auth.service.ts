@@ -15,6 +15,7 @@ export class AuthService {
   private loggedIn$ = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.loggedIn$.asObservable();
 
+
   private _role$ = new BehaviorSubject<string | null>(null);
   public get role$() {
     return this._role$.asObservable();
@@ -28,7 +29,17 @@ export class AuthService {
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.baseUrl}/users/login`, credentials, {
       withCredentials: true, // nécessaire pour cookie HTTP-only
-    });
+    }).pipe(
+      tap((user) => {
+        this.loggedIn$.next(true);
+
+      }),
+      catchError(() => {
+        this.loggedIn$.next(false);
+        return of(null);
+      })
+    );
+
   }
 
   register(credentials: {

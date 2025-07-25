@@ -25,6 +25,8 @@ export class LoginComponent {
     });
   }
 
+  showPassword = false;
+
   errorMessage:string[]=[]
 
   onSubmit() {

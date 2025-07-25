@@ -12,7 +12,7 @@
 >
   <div *ngFor="let media of medias"
        (click)="toggleMediaSelection(media)"
-       class="relative border rounded-lg shadow-sm p-2 flex flex-col bg-white cursor-pointer transition-all duration-200"
+       class="relative border rounded-lg shadow-sm p-2 flex flex-col bg-white cursor-pointer transition-all duration-200 mb-4"
        [ngClass]="{
          'ring-4 ring-indigo-500 border-indigo-600': isSelected(media),
          'hover:ring-2 hover:ring-indigo-300': !isSelected(media)

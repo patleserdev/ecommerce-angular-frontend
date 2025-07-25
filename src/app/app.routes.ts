@@ -7,6 +7,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CartComponent } from './cart/cart.component';
+import { RoadmapComponent } from './pages/roadmap/roadmap.component';
 export const routes: Routes = [
   {
     path: 'dashboard',
@@ -25,6 +26,7 @@ export const routes: Routes = [
       { path: 'tasks', component: TasksComponent },
       { path: 'categories', component: CategoriesComponent },
       { path: 'cart', component: CartComponent },
+      { path: 'roadmap', component: RoadmapComponent },
       // autres routes...
       /** routes spécifiques */
       {

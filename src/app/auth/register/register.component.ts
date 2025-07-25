@@ -8,9 +8,9 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [RouterOutlet,ReactiveFormsModule,CommonModule,RouterLink],
+  imports: [RouterOutlet, ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
 })
 export class RegisterComponent {
   loginForm: FormGroup;
@@ -19,14 +19,25 @@ export class RegisterComponent {
     private auth: AuthService,
     private router: Router
   ) {
-    this.loginForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-    });
+    this.loginForm = this.fb.group(
+      {
+        username: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', Validators.required],
+        confirmPassword: ['', [Validators.required]],
+      },
+      {
+        validators: this.passwordsMatchValidator,
+      }
+    );
   }
 
-
+  // Validator custom pour comparer les deux champs
+  passwordsMatchValidator(group: FormGroup) {
+    const password = group.get('password')?.value;
+    const confirm = group.get('confirmPassword')?.value;
+    return password === confirm ? null : { passwordsMismatch: true };
+  }
 
   onSubmit() {
     if (this.loginForm.invalid) {
@@ -42,10 +53,10 @@ export class RegisterComponent {
             next: () => {
               this.router.navigate(['/dashboard']);
             },
-            error: err => alert('Connexion échouée après inscription')
+            error: (err) => alert('Connexion échouée après inscription'),
           });
         },
-        error: err => alert('Inscription échouée')
+        error: (err) => alert('Inscription échouée'),
       });
     }
   }

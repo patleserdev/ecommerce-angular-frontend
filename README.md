@@ -6,28 +6,20 @@
 
 ## ✅ Objectifs atteints
 
-- Connexion et session **OK**
-- Admin :
-  - CRUD **catégorie** OK
-  - CRUD **marque** OK
-  - CRUD **produit** OK
-  - CRUD **medias** OK
+- Connexion et session avec cookie http only **OK**
+- Admin : CRUD **catégorie / marque / produit / medias**
+- Client : Affichage des **catégories**
+- Client : Affichage des **produits par catégorie**
+- Client : Affichage des **fiches produits**
+- Admin : Formulaire unique pour tous les contextes
+- Site : Routage par **slug**
+- Sélecteur de produit (quantité, taille, genre)
+- Site : Panier dynamique dans la navbar et persistant
+- Site : Optimisation (**SSG**)
+- Site : Navigation responsive (mobile / desktop)
+- Admin : Module médiathèque (front / back)
+- Mise en production : **Angular.js / Nest.js / MySQL Railway**
 
-- Affichage de la page liste des **catégories**
-- Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)
-- Routage par **slug**
-- Cart persistant  : **CART**
-- Affichage des **produits** d'une catégorie *(via slug)*
-- Affichage d'une **fiche produit** *(via slug)*
-- Dans la fiche produit :
-  - Sélecteur de produit *(quantité, taille, genre)*
-- Panier dynamique dans la **navbar**
-- Optimisation des temps de réponse *(SSG)*  
-- Nav responsive avec comportements distincts **mobile / desktop**
-- Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)*
-- Créer un module **médiathèque** (front / back)
-- Mise en production (Frontend **Next.js**, Backend **Nest.js**, DB **MySQL Railway**)
-  
 ---
 
 ## 🚧 Objectifs suivants
