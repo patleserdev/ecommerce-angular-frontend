@@ -4,7 +4,7 @@
 <div *ngIf="!isLoading && categories" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
   <div
     *ngFor="let cat of categories"
-    class="p-4 border rounded-xl shadow hover:shadow-md transition-all cursor-pointer bg-white"
+    class="p-4 border rounded-xl shadow hover:shadow-md transition-all cursor-pointer bg-white flex flex-col items-center justify-around"
   >
     <a
       [routerLink]="['/categories', cat.slug]"
@@ -12,5 +12,6 @@
     >
       {{ cat.name }}
     </a>
+    <img [src]="cat?.medias[0]?.url ?? '/assets/placeholder.jpg'" height="50" width="50"/>
   </div>
 </div>

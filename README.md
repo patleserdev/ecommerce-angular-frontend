@@ -19,7 +19,8 @@
 - Site : Navigation responsive (mobile / desktop)
 - Admin : Module médiathèque (front / back)
 - Mise en production : **Angular.js / Nest.js / MySQL Railway**
-
+- Form modal Stack
+  
 ---
 
 ## 🚧 Objectifs suivants

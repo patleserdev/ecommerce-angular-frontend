@@ -46,6 +46,7 @@ export class LoginComponent {
         error: err => {
           //alert('Login failed')
           this.errorMessage.push("Connexion échouée")
+          console.log("erreeur",err)
         }
       });
     }

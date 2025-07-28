@@ -114,6 +114,9 @@ export class AdminMediasComponent {
           next: (res) => {
             console.log('Produit ajouté :', res);
             this.getMedias();
+            data.file = undefined
+            this.formModalService.resetForm();
+
             this.modalService.close();
             this.formModalService.close();
           },

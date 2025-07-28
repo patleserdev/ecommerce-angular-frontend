@@ -22,6 +22,6 @@ export class ModalComponent {
   close() {
     this.visible = false;
     this.closeCallback();
-    this.formModalService.resetForm();
+    this.modalService.close();
   }
 }

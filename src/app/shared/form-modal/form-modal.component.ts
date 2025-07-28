@@ -160,6 +160,12 @@ export class FormModalComponent implements OnInit {
   resetForm() {
     this.form.reset();
     this.imagePreviewUrl = null;
+
+    // Réinitialisation manuelle des champs <input type="file">
+    const fileInputs = document.querySelectorAll('input[type="file"]') as NodeListOf<HTMLInputElement>;
+    fileInputs.forEach((input) => {
+      input.value = '';
+    });
   }
 
   ngAfterViewInit(): void {

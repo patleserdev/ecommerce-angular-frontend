@@ -9,9 +9,21 @@
       <div class="flex flex-row gap-5">
         <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all" (click)="editCategory(cat)">edit</span>
         <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all" (click)="deleteCategory(cat)">delete</span>
-        <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all" (click)="openMediaSelector(cat)">
-          insert_photo
+        <div class="relative inline-block">
+          <span
+            class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+            (click)="openMediaSelector(cat)"
+          >
+            insert_photo
           </span>
+
+          <span
+            *ngIf="cat.medias?.length"
+            class="absolute -top-3 -right-3 text-[10px] font-bold bg-indigo-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+          >
+            {{ cat.medias?.length }}
+          </span>
+        </div>
       </div>
 
     </li>

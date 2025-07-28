@@ -5,7 +5,7 @@ import { Observable, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { UserType } from '../models/user';
-
+import { throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -34,9 +34,10 @@ export class AuthService {
         this.loggedIn$.next(true);
 
       }),
-      catchError(() => {
+      catchError((err) => {
         this.loggedIn$.next(false);
-        return of(null);
+        return throwError(() => err); // ⚠️ Propagation de l'erreur ici
+
       })
     );
 
@@ -68,10 +69,11 @@ export class AuthService {
           this.loggedIn$.next(true);
           this._role$.next(user.role);
         }),
-        catchError(() => {
+        catchError((err) => {
           this.loggedIn$.next(false);
           this._role$.next(null);
-          return of(null);
+          return throwError(() => err); // ⚠️ Propagation de l'erreur ici
+
         })
       );
   }

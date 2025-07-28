@@ -1,10 +1,15 @@
 import { Injectable,Type } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { FormModalService } from './form-modal.service.js';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModalService {
+
+  constructor(private formModalService: FormModalService) {}
+
+
   private modalVisibility = new BehaviorSubject<boolean>(false);
   private modalTitle = new BehaviorSubject<string>('');
   public visible$ = this.modalVisibility.asObservable();
@@ -26,9 +31,14 @@ export class ModalService {
   }
 
   close() {
-    this.modalVisibility.next(false);
-    this.setLoading(false)
-
+    // 👉 Si un formulaire précédent est en attente, on le restaure
+    if (this.formModalService.hasStack()) {
+      this.formModalService.popFormModal();
+    } else {
+      // 👉 Sinon on ferme normalement
+      this.modalVisibility.next(false);
+      this.setLoading(false);
+    }
   }
 
   private dynamicComponent = new BehaviorSubject<Type<any> | null>(null);

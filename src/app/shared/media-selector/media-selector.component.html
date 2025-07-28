@@ -1,11 +1,24 @@
-<h2 class="font-bold">Médias liés ({{selectedMedia.length}})</h2>
-<div class="xl:flex-row items-center gap-5 justify-end mb-4 hidden xl:flex">
+
+<div class="flex flex-row items-center justify-between">
+  <h2 class="font-bold">Médias liés ({{selectedMedia.length}})</h2>
+  <button type="button"
+        class="bg-indigo-500 text-white px-3 py-1 rounded shadow hover:bg-indigo-600 mb-2"
+        (click)="openAddMediaModal()">
+  Ajouter un média
+</button>
+</div>
+
+
+<div class="xl:flex xl:flex-row items-center gap-5 justify-end mb-4 hidden ">
   <label for="grid-selector">Taille de grille</label>
   <select id="grid-selector" class="px-5" [(ngModel)]="selectedOption">
     <option *ngFor="let option of options" [value]="option">{{ option }}</option>
 
   </select>
 </div>
+
+
+
 <div
   class="grid gap-5"
   [ngClass]="gridColsClass[selectedOption]"
