@@ -12,7 +12,7 @@ export class MediasService {
   constructor(private http: HttpClient) {}
 
   // Créer un lien
-  addMedia(media: any): Observable<any> {
+  addMedia(media: FormData): Observable<any> {
     return this.http.post<any>(this.baseUrl, media, {
       withCredentials: true,
     });
@@ -33,7 +33,7 @@ export class MediasService {
     );
   }
 
-  updateMedia(id: string, data: Partial<MediaType>) {
+  updateMedia(id: string, data: FormData) {
     return this.http.patch(`${this.baseUrl}/${id}`, data, {
       withCredentials: true,
     });

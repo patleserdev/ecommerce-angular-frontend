@@ -29,7 +29,7 @@ export class DashboardComponent {
   constructor(private router: Router, private auth: AuthService) {
     this.auth.role$.subscribe((role) => {
       this.role = role;
-      console.log(role)
+      // console.log(role)
     });
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {

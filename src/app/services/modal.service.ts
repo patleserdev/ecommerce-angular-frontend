@@ -18,8 +18,25 @@ export class ModalService {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
 
+  private modalData = new BehaviorSubject<any>(null);
+modalData$ = this.modalData.asObservable();
+
+setModalData(data: any) {
+  this.modalData.next(data);
+}
+
+
   setLoading(isLoading: boolean) {
     this.loadingSubject.next(isLoading);
+  }
+
+  openWithComponent(title: string, component: Type<any>, data?: any) {
+    this.modalVisibility.next(false);
+    this.modalTitle.next(title);
+
+    this.setDynamicComponent(component);
+    this.setModalData(data || null);
+    setTimeout(() => this.modalVisibility.next(true), 0);
   }
 
   open(title: string = '') {

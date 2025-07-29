@@ -6,6 +6,7 @@ import { BrandType } from '../../../models/brands.js';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { MediaLinkService } from '../../../services/media-link.service';
+import { BrandsService } from '../../../services/brands.service.js';
 @Component({
   selector: 'app-admin-brands',
   standalone: true,
@@ -18,7 +19,8 @@ export class AdminBrandsComponent {
     private modalService: ModalService,
     private formModalService: FormModalService,
     private http: HttpClient,
-    private mediaLinkService : MediaLinkService
+    private mediaLinkService : MediaLinkService,
+    private brandsService : BrandsService
   ) {}
 
   /**
@@ -46,12 +48,13 @@ export class AdminBrandsComponent {
    */
 
   fetchBrands() {
-    this.http
-      .get<any[]>(`${environment.apiUrl}/brands`, { withCredentials: true })
+    // this.http
+    //   .get<any[]>(`${environment.apiUrl}/brands`, { withCredentials: true })
+    this.brandsService.getBrands()
       .subscribe({
         next: (data) => {
           this.brands = data.sort((a, b) => a.name.localeCompare(b.name));
-          console.log('brands',data);
+          // console.log('brands',data);
         },
         error: (err) => {
           console.error('Erreur lors du fetch des marques', err);
@@ -73,9 +76,10 @@ export class AdminBrandsComponent {
     //       this.formModalService.setError(msg);
     //     },
     //   });
-    return this.http.post<any>(`${environment.apiUrl}/brands`, datas, {
-      withCredentials: true,
-    });
+    // return this.http.post<any>(`${environment.apiUrl}/brands`, datas, {
+    //   withCredentials: true,
+    // });
+    return this.brandsService.addBrand(datas)
   }
 
   addBrand() {
@@ -125,10 +129,12 @@ export class AdminBrandsComponent {
       ],
       onSubmit: (data) => {
         const updated = { ...brand, ...data };
-        this.http
-          .patch(`${environment.apiUrl}/brands/${brand.id}`, updated, {
-            withCredentials: true,
-          })
+        // this.http
+        //   .patch(`${environment.apiUrl}/brands/${brand.id}`, updated, {
+        //     withCredentials: true,
+        //   })
+        if(brand.id)
+        this.brandsService.updateBrand(brand.id,updated)
           .subscribe({
             next: () => {
               this.fetchBrands();
@@ -146,9 +152,11 @@ export class AdminBrandsComponent {
   }
 
   deleteBrand(brand: BrandType) {
+    if(brand.id)
     if (confirm(`Supprimer la catégorie "${brand.name}" ?`)) {
-      this.http
-        .delete(`${environment.apiUrl}/brands/${brand.id}`, { withCredentials: true })
+      // this.http
+      //   .delete(`${environment.apiUrl}/brands/${brand.id}`, { withCredentials: true })
+      this.brandsService.deleteBrand(brand.id)
         .subscribe({
           next: () => this.fetchBrands(),
           error: (err) => {

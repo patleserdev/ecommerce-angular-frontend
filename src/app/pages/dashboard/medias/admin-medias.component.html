@@ -1,11 +1,11 @@
 <p class="text-lg font-semibold mb-4">Ajouter un média, modifier ou supprimer un média</p>
 
-<button (click)="addMedia()"
-  class="border p-2 px-4 bg-indigo-500 font-bold text-white hover:bg-indigo-800 transition-all rounded">
+<button (click)="addMedia()" title="Ajouter une image"
+  class="border p-2 px-4 bg-indigo-500 font-bold text-white hover:bg-indigo-800 transition-all rounded mb-4">
   Ajouter un média
 </button>
 
-<div class="flex flex-row items-center gap-5 justify-end mb-4">
+<div class="xl:flex xl:flex-row items-center gap-5 justify-end mb-4 hidden ">
   <label for="grid-selector">Taille de grille</label>
   <select id="grid-selector" class="px-5" [(ngModel)]="selectedOption">
     <option *ngFor="let option of options" [value]="option">{{ option }}</option>
@@ -13,24 +13,21 @@
   </select>
 </div>
 
-<div class="grid gap-5 sm:grid-cols-1"  [ngClass]="'md:grid-cols-' + selectedOption + ' xl:grid-cols-' + selectedOption">
-  <div *ngFor="let media of medias"
-    class="border rounded-lg shadow-sm p-4 flex flex-col space-y-4 bg-white">
+<div class="grid gap-5 sm:grid-cols-1" [ngClass]="'md:grid-cols-' + selectedOption + ' xl:grid-cols-' + selectedOption">
+  <div *ngFor="let media of medias" class="border rounded-lg shadow-sm p-4 flex flex-col space-y-4 bg-white">
 
-    <img [src]="getOptimizedImageUrl(media.url, 400, 250)"
-         alt="media"
-         class="w-full h-auto rounded object-cover"
-         loading="lazy" />
+    <img *ngIf="media?.url" [src]="getOptimizedImageUrl(media.url, 400, 250)" alt="media"
+      class="w-full h-auto rounded object-cover cursor-pointer" title="Voir l'image" loading="lazy" (click)="openPictureInModal(media.url)" />
 
     <div class="text-center font-medium capitalize text-gray-800">
       {{ media.title }}
     </div>
 
     <div class="flex justify-center md:justify-between gap-6 pt-2">
-      <span class="material-icons cursor-pointer text-gray-500 hover:text-indigo-600 transition-all"
+      <span class="material-icons cursor-pointer text-gray-500 hover:text-indigo-600 transition-all" title="Modifier l'image"
         (click)="editMedia(media)">edit</span>
 
-      <span class="material-icons cursor-pointer text-gray-500 hover:text-red-600 transition-all"
+      <span class="material-icons cursor-pointer text-gray-500 hover:text-red-600 transition-all" title="Supprimer l'image"
         (click)="deleteMedia(media)">delete</span>
     </div>
 

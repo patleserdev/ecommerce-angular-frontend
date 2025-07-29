@@ -8,7 +8,9 @@
 </div>
 
 <div *ngIf="!isLoading && !hasError">
-  <h2 class="text-2xl font-bold mb-4 capitalize align-baseline ">{{ category.name }} ({{ category.products?.length || 0
+  <h2 class="text-2xl font-bold mb-4 capitalize align-baseline ">
+    <img src="{{category.medias[0]?.url}}"/>
+    {{ category.name }} ({{ category.products?.length || 0
     }})</h2>
   <!-- <p>Slug: {{ category.slug }}</p> -->
   <!-- <p>Produits: {{ category.products?.length || 0 }}</p> -->

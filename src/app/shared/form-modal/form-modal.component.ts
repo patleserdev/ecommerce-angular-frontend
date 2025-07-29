@@ -17,7 +17,9 @@ import { FormModalService } from '../../services/form-modal.service';
 import { MediaType } from '../../models/medias';
 import { MediaSelectorComponent } from '../media-selector/media-selector.component';
 import { CommonModule } from '@angular/common';
-import { ModalService } from '../../services/modal.service';
+import { Inject, Optional } from '@angular/core';
+import { MODAL_DATA } from '../modal/modal.component';
+
 MediaSelectorComponent;
 interface FormField {
   label: string;
@@ -32,7 +34,7 @@ interface FormField {
 @Component({
   selector: 'app-form-modal',
   templateUrl: './form-modal.component.html',
-  imports: [MediaSelectorComponent, ReactiveFormsModule, CommonModule], // <-- IMPORTER ICI LE COMPONENT STANDALONE
+  imports: [MediaSelectorComponent, ReactiveFormsModule, CommonModule],
   standalone: true, // <---- ici
 })
 export class FormModalComponent implements OnInit {
@@ -44,13 +46,20 @@ export class FormModalComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public formModalService: FormModalService
-  ) {}
+    public formModalService: FormModalService,
+    @Optional() @Inject(MODAL_DATA) public modalData: any
+  ) {
+    if (modalData?.fields) {
+      this.fields = modalData.fields;
+    }
+  }
 
   imagePreviewUrl: string | null = null;
 
   ngOnInit() {
     this.buildForm();
+    console.log('buildé');
+    console.log('Fields reçus :', this.fields);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -107,6 +116,11 @@ export class FormModalComponent implements OnInit {
           field.value || '',
           field.required ? Validators.required : [],
         ];
+
+        // 👇 Si c'est une image déjà uploadée, on prépare l'aperçu
+        if (field.type === 'file' && typeof field.value === 'string') {
+          this.imagePreviewUrl = field.value;
+        }
       }
     });
 
@@ -114,6 +128,7 @@ export class FormModalComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log('soumis');
     if (this.form.valid) {
       const processedValue = { ...this.form.value };
 
@@ -125,6 +140,11 @@ export class FormModalComponent implements OnInit {
           );
         }
       });
+
+      // 👉 Exécute onSubmit s’il est présent dans modalData
+      if (this.modalData?.onSubmit) {
+        this.modalData.onSubmit(processedValue);
+      }
 
       this.submitForm.emit(processedValue);
     } else {
@@ -162,7 +182,9 @@ export class FormModalComponent implements OnInit {
     this.imagePreviewUrl = null;
 
     // Réinitialisation manuelle des champs <input type="file">
-    const fileInputs = document.querySelectorAll('input[type="file"]') as NodeListOf<HTMLInputElement>;
+    const fileInputs = document.querySelectorAll(
+      'input[type="file"]'
+    ) as NodeListOf<HTMLInputElement>;
     fileInputs.forEach((input) => {
       input.value = '';
     });

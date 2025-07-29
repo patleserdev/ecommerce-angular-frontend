@@ -67,7 +67,7 @@ export class AdminProductsComponent {
     this.productsService.getProducts().subscribe({
       next: (data) => {
         this.products = data.sort((a, b) => a.name.localeCompare(b.name));
-        console.log(data);
+        // console.log(data);
       },
       error: (err) => {
         console.error('Erreur lors du fetch des produits', err);
@@ -84,7 +84,7 @@ export class AdminProductsComponent {
           label: c.name,
           value: c.id,
         }));
-        console.log(data);
+        // console.log(data);
       },
       error: (err) => {
         console.error('Erreur lors du fetch des catégories', err);
@@ -101,7 +101,7 @@ export class AdminProductsComponent {
           label: c.name,
           value: c.id,
         }));
-        console.log(data);
+        // console.log(data);
       },
       error: (err) => {
         console.error('Erreur lors du fetch des marques', err);
@@ -114,6 +114,7 @@ export class AdminProductsComponent {
     //   withCredentials: true,
     // });
     return this.productsService.addProduct(datas);
+
   }
 
   addProduct() {
@@ -157,7 +158,7 @@ export class AdminProductsComponent {
           ...data,
           variations: data.variations || [],
         };
-
+        this.modalService.setLoading(true)
         this.addProductAction(productToSend).subscribe({
           next: (res) => {
             console.log('Produit ajouté :', res);
@@ -166,10 +167,12 @@ export class AdminProductsComponent {
             this.fetchBrands();
             this.modalService.close();
             this.formModalService.close();
+            this.modalService.setLoading(false)
           },
           error: (err) => {
             const msg = err?.error?.message || 'Erreur lors de l’ajout.';
             this.formModalService.setError(msg);
+            this.modalService.setLoading(false)
           },
         });
       },
@@ -239,10 +242,12 @@ export class AdminProductsComponent {
       ],
       onSubmit: (data) => {
         const updated = { ...product, ...data };
-        this.http
-          .patch(`${environment.apiUrl}/products/${product.id}`, updated, {
-            withCredentials: true,
-          })
+        // this.http
+        //   .patch(`${environment.apiUrl}/products/${product.id}`, updated, {
+        //     withCredentials: true,
+        //   })
+        if(product.id)
+        this.productsService.updateProduct(product.id,updated)
           .subscribe({
             next: () => {
               this.fetchProducts();
@@ -262,11 +267,15 @@ export class AdminProductsComponent {
   }
 
   deleteProduct(product: ProductType) {
+    if(product.id)
     if (confirm(`Supprimer le produit "${product.name}" ?`)) {
-      this.http
-        .delete(`${environment.apiUrl}/products/${product.id}`, {
-          withCredentials: true,
-        })
+      // this.http
+      //   .delete(`${environment.apiUrl}/products/${product.id}`, {
+      //     withCredentials: true,
+      //   })
+
+      this.productsService.deleteProduct(product.id)
+
         .subscribe({
           next: () => this.fetchProducts(),
           error: (err) => {

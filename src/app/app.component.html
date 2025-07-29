@@ -1,5 +1,5 @@
 
-<app-modal [visible]="(visible$ | async) || false" [title]="title$ | async">
+<app-modal [title]="title$ | async">
   <app-form-modal [fields]="(fields$ | async) || []" (submitForm)="formModalService.submit($event)"></app-form-modal>
 </app-modal>
 

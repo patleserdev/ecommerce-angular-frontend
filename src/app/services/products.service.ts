@@ -24,14 +24,14 @@ export class ProductsService {
   }
 
 
-  updateProduct(id: string, data: Partial<ProductType>) {
+  updateProduct(id: number, data: Partial<ProductType>) {
     return this.http.patch(`${this.baseUrl}/${id}`, data, {
       withCredentials: true,
     });
   }
 
   // Supprimer un lien
-  deleteProduct(id: string): Observable<void> {
+  deleteProduct(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

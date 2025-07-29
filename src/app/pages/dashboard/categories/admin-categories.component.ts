@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { MediaLinkService } from '../../../services/media-link.service.js';
+import { CategoriesService } from '../../../services/categories.service.js';
 @Component({
   selector: 'app-admin-categories',
   standalone: true,
@@ -18,7 +19,8 @@ export class AdminCategoriesComponent {
     private modalService: ModalService,
     private formModalService: FormModalService,
     private http: HttpClient,
-    private mediaLinkService : MediaLinkService
+    private mediaLinkService : MediaLinkService,
+    private categoriesService: CategoriesService
   ) {}
 
   /**
@@ -48,12 +50,12 @@ export class AdminCategoriesComponent {
    */
 
   fetchCategories() {
-    this.http
-      .get<any[]>(`${environment.apiUrl}/categories`, { withCredentials: true })
+    // this.http.get<any[]>(`${environment.apiUrl}/categories`, { withCredentials: true })
+    this.categoriesService.getCategories()
       .subscribe({
         next: (data) => {
           this.categories = data.sort((a, b) => a.name.localeCompare(b.name));
-          console.log(data);
+          // console.log(data);
         },
         error: (err) => {
           console.error('Erreur lors du fetch des catégories', err);
@@ -75,9 +77,10 @@ export class AdminCategoriesComponent {
     //       this.formModalService.setError(msg);
     //     },
     //   });
-    return this.http.post<any>(`${environment.apiUrl}/categories`, datas, {
-      withCredentials: true,
-    });
+    // return this.http.post<any>(`${environment.apiUrl}/categories`, datas, {
+    //   withCredentials: true,
+    // });
+    return this.categoriesService.addCategory(datas)
   }
 
   addCategory() {
@@ -127,10 +130,11 @@ export class AdminCategoriesComponent {
       ],
       onSubmit: (data) => {
         const updated = { ...cat, ...data };
-        this.http
-          .patch(`${environment.apiUrl}/categories/${cat.id}`, updated, {
-            withCredentials: true,
-          })
+        // this.http
+        //   .patch(`${environment.apiUrl}/categories/${cat.id}`, updated, {
+        //     withCredentials: true,
+        //   })
+        this.categoriesService.updateCategory(cat.id,updated)
           .subscribe({
             next: () => {
               this.fetchCategories();
@@ -149,8 +153,9 @@ export class AdminCategoriesComponent {
 
   deleteCategory(cat: CategoryType) {
     if (confirm(`Supprimer la catégorie "${cat.name}" ?`)) {
-      this.http
-        .delete(`${environment.apiUrl}/categories/${cat.id}`, { withCredentials: true })
+      // this.http
+      //   .delete(`${environment.apiUrl}/categories/${cat.id}`, { withCredentials: true })
+      this.categoriesService.deleteCategory(cat.id)
         .subscribe({
           next: () => this.fetchCategories(),
           error: (err) => {
