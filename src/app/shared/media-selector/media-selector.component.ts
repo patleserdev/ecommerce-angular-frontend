@@ -53,6 +53,7 @@ export class MediaSelectorComponent implements OnInit, OnChanges {
   }
 
   openAddMediaModal() {
+
     this.mediaDialogService.openMediaModal((newMedia) => {
       // Ajoute automatiquement le média dans la sélection
       this.selectedMedia.push(newMedia);
@@ -95,7 +96,7 @@ export class MediaSelectorComponent implements OnInit, OnChanges {
    */
   ngOnInit() {
     this.getMedias();
-    console.log(this.selectedMedia);
+    // console.log(this.selectedMedia);
     this.refreshAvailableMedia();
     // 🔁 S’abonne à l’affichage du modal pour détecter les retours
     this.modalSub = this.modalService.visible$.subscribe((visible) => {
@@ -123,7 +124,7 @@ export class MediaSelectorComponent implements OnInit, OnChanges {
         selected = selected[0]; // dé-nesting
       }
 
-      console.log('🔍 Valeurs initiales passées à selectedMedia :', selected);
+      // console.log('🔍 Valeurs initiales passées à selectedMedia :', selected);
       this.selectedMedia = selected || [];
     }
   }
@@ -175,8 +176,8 @@ export class MediaSelectorComponent implements OnInit, OnChanges {
         }
 
 
-        console.log('🎯 Medias après synchro :', this.medias);
-        console.log('✅ SelectedMedia mis à jour :', this.selectedMedia);
+        // console.log('🎯 Medias après synchro :', this.medias);
+        // console.log('✅ SelectedMedia mis à jour :', this.selectedMedia);
       },
       error: (err) => {
         console.error('Erreur lors du fetch des médias', err);

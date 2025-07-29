@@ -58,8 +58,8 @@ export class FormModalComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
-    console.log('buildé');
-    console.log('Fields reçus :', this.fields);
+    // console.log('buildé');
+    // console.log('Fields reçus :', this.fields);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -128,7 +128,6 @@ export class FormModalComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('soumis');
     if (this.form.valid) {
       const processedValue = { ...this.form.value };
 

@@ -34,7 +34,7 @@ export class ModalComponent {
         providers: [{ provide: MODAL_DATA, useValue: data }],
         parent: this.injector,
       });
-      console.log(data)
+      // console.log(data)
     });
   }
 

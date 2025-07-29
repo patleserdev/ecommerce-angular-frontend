@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { MediaLinkService } from '../../../services/media-link.service';
 import { BrandsService } from '../../../services/brands.service.js';
+import { FormModalComponent } from '../../../shared/form-modal/form-modal.component.js';
 @Component({
   selector: 'app-admin-brands',
   standalone: true,
@@ -115,40 +116,75 @@ export class AdminBrandsComponent {
   }
 
   editBrand(brand: BrandType) {
-    this.modalService.open('Modifier une marque');
-    this.formModalService.openFormModal({
-      title: 'Modifier une marque',
-      fields: [
-        {
-          label: 'Nom',
-          name: 'name',
-          type: 'text',
-          required: true,
-          value: brand.name,
+    this.modalService.openWithComponent(
+      'Modifier une marque',
+      FormModalComponent,{
+        title: 'Modifier une marque',
+        fields: [
+          {
+            label: 'Nom',
+            name: 'name',
+            type: 'text',
+            required: true,
+            value: brand.name,
+          },
+        ],
+        onSubmit: (data:any) => {
+          const updated = { ...brand, ...data };
+          // this.http
+          //   .patch(`${environment.apiUrl}/brands/${brand.id}`, updated, {
+          //     withCredentials: true,
+          //   })
+          if(brand.id)
+          this.brandsService.updateBrand(brand.id,updated)
+            .subscribe({
+              next: () => {
+                this.fetchBrands();
+                this.modalService.close();
+                this.formModalService.close();
+              },
+              error: (err) => {
+                const msg =
+                  err?.error?.message || 'Erreur lors de la mise à jour.';
+                this.formModalService.setError(msg);
+              },
+            });
         },
-      ],
-      onSubmit: (data) => {
-        const updated = { ...brand, ...data };
-        // this.http
-        //   .patch(`${environment.apiUrl}/brands/${brand.id}`, updated, {
-        //     withCredentials: true,
-        //   })
-        if(brand.id)
-        this.brandsService.updateBrand(brand.id,updated)
-          .subscribe({
-            next: () => {
-              this.fetchBrands();
-              this.modalService.close();
-              this.formModalService.close();
-            },
-            error: (err) => {
-              const msg =
-                err?.error?.message || 'Erreur lors de la mise à jour.';
-              this.formModalService.setError(msg);
-            },
-          });
-      },
-    });
+      })
+    // this.modalService.open('Modifier une marque');
+    // this.formModalService.openFormModal({
+    //   title: 'Modifier une marque',
+    //   fields: [
+    //     {
+    //       label: 'Nom',
+    //       name: 'name',
+    //       type: 'text',
+    //       required: true,
+    //       value: brand.name,
+    //     },
+    //   ],
+    //   onSubmit: (data) => {
+    //     const updated = { ...brand, ...data };
+    //     // this.http
+    //     //   .patch(`${environment.apiUrl}/brands/${brand.id}`, updated, {
+    //     //     withCredentials: true,
+    //     //   })
+    //     if(brand.id)
+    //     this.brandsService.updateBrand(brand.id,updated)
+    //       .subscribe({
+    //         next: () => {
+    //           this.fetchBrands();
+    //           this.modalService.close();
+    //           this.formModalService.close();
+    //         },
+    //         error: (err) => {
+    //           const msg =
+    //             err?.error?.message || 'Erreur lors de la mise à jour.';
+    //           this.formModalService.setError(msg);
+    //         },
+    //       });
+    //   },
+    // });
   }
 
   deleteBrand(brand: BrandType) {
@@ -167,9 +203,7 @@ export class AdminBrandsComponent {
   }
 
   openMediaSelector(brand: BrandType) {
-    this.modalService.open('Sélectionner un média pour le produit ' + brand.name);
-
-    this.formModalService.openFormModal({
+    this.modalService.openWithComponent('Sélectionner un média pour le produit ' + brand.name,FormModalComponent,{
       title: 'Sélectionner un média pour ' + brand.name,
       fields: [
         {
@@ -179,7 +213,7 @@ export class AdminBrandsComponent {
           value: brand.medias ?? [],
         },
       ],
-      onSubmit: (data) => {
+      onSubmit: (data:any) => {
         this.modalService.setLoading(true); // ⏳ spinner ON
 
 
@@ -245,7 +279,86 @@ export class AdminBrandsComponent {
           this.modalService.close();
           this.formModalService.close();
       },
-    });
+    })
+    // this.modalService.open('Sélectionner un média pour le produit ' + brand.name);
+
+    // this.formModalService.openFormModal({
+    //   title: 'Sélectionner un média pour ' + brand.name,
+    //   fields: [
+    //     {
+    //       label: 'Médias liés',
+    //       name: 'mediaLinks',
+    //       type: 'mediaSelector',
+    //       value: brand.medias ?? [],
+    //     },
+    //   ],
+    //   onSubmit: (data) => {
+    //     this.modalService.setLoading(true); // ⏳ spinner ON
+
+
+    //       const currentMedias = brand.medias ?? [];
+    //       const selectedMediaIds = new Set<string>(data.mediaLinks);
+
+    //       const existingMediaIds = new Set<string>(
+    //         currentMedias.map((m) => m.id)
+    //       );
+
+    //       // ✅ Médias à ajouter
+    //       const newMediaIds = data.mediaLinks.filter(
+    //         (id: string) => !existingMediaIds.has(id)
+    //       );
+
+    //       // ❌ Médias à supprimer
+    //       const removedMediaIds = currentMedias
+    //         .filter((m) => !selectedMediaIds.has(m.id))
+    //         .map((m) => m.id);
+
+    //       // Création des nouveaux liens
+    //       for (const id of newMediaIds) {
+    //         const link = {
+    //           mediaId: id,
+    //           linkedType: 'brand',
+    //           linkedId: brand.id,
+    //           role: 'gallery' as const,
+    //         };
+
+    //         this.mediaLinkService.createMediaLink(link).subscribe({
+    //           next: (res) => {
+    //             console.log('Lien créé :', res);
+    //             this.fetchBrands();
+    //             this.modalService.setLoading(false); // ✅ spinner OFF
+
+    //           },
+    //           error: (err) => {
+    //             console.error('Erreur création lien :', err)
+    //             this.modalService.setLoading(false); // ✅ spinner OFF
+    //           }
+    //         });
+    //       }
+
+    //       // Suppression des anciens liens
+    //       for (const mediaId of removedMediaIds) {
+    //         if(brand.id)
+    //         this.mediaLinkService
+    //           .deleteMediaLinkByLinkedIdAndMediaId(brand.id, mediaId)
+    //           .subscribe({
+    //             next: () => {
+    //               console.log(`Lien supprimé : media ${mediaId} de product ${brand.id}`);
+    //               this.fetchBrands();
+    //               this.modalService.setLoading(false); // ✅ spinner OFF
+
+    //             },
+    //             error: (err) => {
+    //               console.error('Erreur suppression lien :', err)
+    //               this.modalService.setLoading(false); // ✅ spinner OFF
+    //             }
+    //           });
+    //       }
+
+    //       this.modalService.close();
+    //       this.formModalService.close();
+    //   },
+    // });
   }
 
 }
