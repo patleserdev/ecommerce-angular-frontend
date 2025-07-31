@@ -14,6 +14,7 @@ export class FormModalService {
   public title$ = new BehaviorSubject<string>('');
   public fields$ = new BehaviorSubject<any[]>([]);
   public errorMessage$ = new BehaviorSubject<string | null>(null);
+  public refresh$ = new BehaviorSubject<void>(undefined);
 
   private onSubmitCallback: ((data: any) => void) | null = null;
   private formComponentRef: FormModalComponent | null = null;
@@ -38,20 +39,28 @@ export class FormModalService {
     this.fields$.next(config.fields);
     this.onSubmitCallback = config.onSubmit;
     this.visible$.next(true);
+    this.refresh$.next();
   }
 
   /** 👇 Push : sauvegarde le formulaire courant avant d’en ouvrir un autre */
   pushFormModal(config: FormModalConfig) {
     const currentConfig = this.getCurrentConfig();
+    console.log('🔁 pushing current config:', currentConfig);
+
     if (currentConfig) {
-      this.formStack.push(currentConfig); // sauvegarde
+      this.formStack.push(currentConfig); // sauvegarde le formulaire courant
+    } else {
+      console.warn('❌ getCurrentConfig() returned null, nothing pushed');
     }
     this.openFormModal(config); // nouveau
+    this.refresh$.next();
+
   }
 
   /** 👇 Pop : restaure le formulaire précédent */
   popFormModal() {
     const previous = this.formStack.pop();
+    console.log("previous",previous)
     if (previous) {
       this.openFormModal(previous);
     } else {
@@ -88,6 +97,10 @@ export class FormModalService {
     const title = this.title$.getValue();
     const fields = this.fields$.getValue();
     const onSubmit = this.onSubmitCallback;
+
+    console.log('📦 getCurrentConfig()', { title, fields, onSubmit });
+
+
     if (!title || !fields || !onSubmit) return null;
     return { title, fields, onSubmit };
   }

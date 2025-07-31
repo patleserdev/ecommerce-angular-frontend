@@ -118,6 +118,7 @@ export class AdminProductsComponent {
   }
 
   addProduct() {
+
     this.modalService.openWithComponent(
       'Ajouter un produit',
       FormModalComponent,

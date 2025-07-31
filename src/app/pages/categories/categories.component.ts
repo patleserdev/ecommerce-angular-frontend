@@ -23,7 +23,7 @@ export class CategoriesComponent {
 
   fetchCategories() {
     this.isLoading=true
-    this.http.get<any[]>(`${environment.apiUrl}/categories`, { withCredentials: true }).subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/categories`).subscribe({
       next: (data) => {
         this.categories = data;
         this.isLoading=false

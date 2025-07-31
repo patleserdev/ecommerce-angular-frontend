@@ -1,7 +1,6 @@
 import { Component, Input, Type, Injector, InjectionToken } from '@angular/core';
 import { ModalService } from '../../services/modal.service';
-import { FormModalService } from '../../services/form-modal.service.js';
-
+import { FormModalService } from '../../services/form-modal.service';
 export const MODAL_DATA = new InjectionToken<any>('MODAL_DATA');
 
 @Component({

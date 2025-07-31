@@ -57,9 +57,30 @@ export class FormModalComponent implements OnInit {
   imagePreviewUrl: string | null = null;
 
   ngOnInit() {
+    // Réagit aux changements de formulaire (pushFormModal, etc.)
+    this.formModalService.refresh$.subscribe(() => {
+      const newFields = this.formModalService.fields$.getValue();
+      this.fields = newFields;
+      this.buildForm();
+    });
+
+    // Initialise le formulaire une première fois si les champs sont passés en @Input ou modalData
+    const initialFields = this.modalData?.fields || this.fields;
+    if (initialFields && initialFields.length > 0) {
+      this.fields = initialFields;
+      this.buildForm();
+    }
+
     this.buildForm();
-    // console.log('buildé');
-    // console.log('Fields reçus :', this.fields);
+
+    // 👇 Injecte dynamiquement comme "form courant"
+  if (this.modalData?.onSubmit) {
+    this.formModalService.openFormModal({
+      title: this.modalData?.title || '',
+      fields: this.fields,
+      onSubmit: this.modalData.onSubmit,
+    });
+  }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -141,9 +162,8 @@ export class FormModalComponent implements OnInit {
       });
 
       // 👉 Exécute onSubmit s’il est présent dans modalData
-      if (this.modalData?.onSubmit) {
-        this.modalData.onSubmit(processedValue);
-      }
+      this.formModalService.submit(processedValue);
+
 
       this.submitForm.emit(processedValue);
     } else {

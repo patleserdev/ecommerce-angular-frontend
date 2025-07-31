@@ -5,8 +5,8 @@ import { FormModalService } from '../../../services/form-modal.service';
 import { MediaType } from '../../../models/medias';
 import { MediasService } from '../../../services/medias.service';
 import { FormsModule } from '@angular/forms';
-import { PictureModalComponent } from '../../../shared/picture-modal/picture-modal.component';
-import { FormModalComponent } from '../../../shared/form-modal/form-modal.component.js';
+import { PictureModalComponent } from '../../../picture-modal/picture-modal.component';
+import { FormModalComponent } from '../../../shared/form-modal/form-modal.component';
 @Component({
   selector: 'app-admin-medias',
   standalone: true,

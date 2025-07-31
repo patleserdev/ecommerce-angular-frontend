@@ -1,6 +1,7 @@
 import { Injectable,Type } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FormModalService } from './form-modal.service.js';
+import { FormModalService } from './form-modal.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -31,13 +32,16 @@ setModalData(data: any) {
   }
 
   openWithComponent(title: string, component: Type<any>, data?: any) {
-    this.modalVisibility.next(false);
     this.modalTitle.next(title);
-
     this.setDynamicComponent(component);
-    this.setModalData(data || null);
-    setTimeout(() => this.modalVisibility.next(true), 0);
+
+    Promise.resolve().then(() => {
+      this.setModalData(data || null);
+      this.modalVisibility.next(true);
+    });
   }
+
+
 
   open(title: string = '') {
     this.modalVisibility.next(false); // <-- Forcer le changement

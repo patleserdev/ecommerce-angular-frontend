@@ -54,7 +54,7 @@ export class CategoryDetailComponent {
         next: (data) => {
           this.category = data;
           this.isLoading = false;
-          console.log(data);
+          console.log("categorydetailsfetch",data);
         },
         error: (err) => {
           console.error('Erreur lors du fetch de la catégorie :', err);

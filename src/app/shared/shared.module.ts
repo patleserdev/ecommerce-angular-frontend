@@ -5,7 +5,7 @@ import { FormModalComponent } from './form-modal/form-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MediaSelectorComponent } from './media-selector/media-selector.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PictureModalComponent } from './picture-modal/picture-modal.component';
+import { PictureModalComponent } from '../picture-modal/picture-modal.component';
 
 @NgModule({
   declarations: [ModalComponent,PictureModalComponent],

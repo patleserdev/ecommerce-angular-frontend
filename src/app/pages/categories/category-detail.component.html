@@ -8,10 +8,11 @@
 </div>
 
 <div *ngIf="!isLoading && !hasError">
-  <h2 class="text-2xl font-bold mb-4 capitalize align-baseline ">
-    <img src="{{category.medias[0]?.url}}"/>
+  <h2 class="text-2xl font-bold mb-4 capitalize align-baseline flex flex-row items-center gap-5">
+    <img src={{category.medias[0]?.url}} height="50" width="50" />
     {{ category.name }} ({{ category.products?.length || 0
-    }})</h2>
+    }})
+  </h2>
   <!-- <p>Slug: {{ category.slug }}</p> -->
   <!-- <p>Produits: {{ category.products?.length || 0 }}</p> -->
 
@@ -21,11 +22,17 @@
     <div *ngFor="let product of category.products"
       class="p-4 border rounded-xl shadow hover:shadow-md transition-all cursor-pointer bg-white flex flex-row justify-between">
       <a [routerLink]="['/products', product.slug]">
-        <div class="flex flex-col w-[50%]">
+        <div class="flex flex-col item w-[100%] gap-2">
           <h3 class="capitalize">{{product.name}}</h3>
           <h3 class="text-2xl font-bold">{{product?.price}} €</h3>
+
+          <div *ngIf="product.medias == 0">
+            <img src="assets/placeholder.jpg" class="object-cover" />
+          </div>
+          <div *ngIf="product.medias != 0" class="w-full flex items-center justify-center">
+            <img src={{product.medias[0]?.url}} class="object-cover w-[50%]"/>
+          </div>
         </div>
-        <div><img src="https://placehold.co/300x200" class="object-cover" /></div>
       </a>
     </div>
   </div>

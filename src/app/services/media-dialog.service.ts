@@ -32,7 +32,11 @@ export class MediaDialogService {
         this.mediaService.addMedia(formData).subscribe({
           next: (newMedia) => {
             onMediaAdded(newMedia);
+            console.log("onMediaAdded ok ")
             this.formModalService.popFormModal(); // 👈 on revient au formulaire précédent
+            console.log("formModalService.popFormModal ok ")
+            this.formModalService.refresh$.next();
+
           },
           error: (err) => {
             this.formModalService.setError(

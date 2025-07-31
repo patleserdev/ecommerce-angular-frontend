@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { RouterOutlet,RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common'; // ✅
 import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
-import { AuthService } from './services/auth.service.js';
-import { ModalService } from './services/modal.service.js';
-import { SharedModule } from './shared/shared.module.js';
-import { FormModalService } from './services/form-modal.service.js';
+import { AuthService } from './services/auth.service';
+import { ModalService } from './services/modal.service';
+import { SharedModule } from './shared/shared.module';
+import { FormModalService } from './services/form-modal.service';
 
 @Component({
   selector: 'app-root',
@@ -47,5 +47,7 @@ export class AppComponent {
         // Non connecté, peut rediriger ou faire autre chose
       }
     });
+
+
   }
 }

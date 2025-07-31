@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MODAL_DATA } from '../modal/modal.component'; // ajuster le chemin selon ton projet
+import { MODAL_DATA } from '../shared/modal/modal.component';// ajuster le chemin selon ton projet
 
 @Component({
   selector: 'app-picture-modal',
