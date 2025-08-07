@@ -9,6 +9,7 @@ export type MediaType = {
   file?: File | null;
   height?:number,
   width?:number
+  position?:number
 };
 
 export type MediaLinkType = {

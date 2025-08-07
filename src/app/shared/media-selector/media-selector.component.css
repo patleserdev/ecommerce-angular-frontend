@@ -1,0 +1,11 @@
+.cdk-drag-preview {
+  border: 2px dashed #999;
+  background: white;
+  opacity: 0.8;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.2;
+  border: 2px dashed #aaa;
+}

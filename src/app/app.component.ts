@@ -6,6 +6,7 @@ import { AuthService } from './services/auth.service';
 import { ModalService } from './services/modal.service';
 import { SharedModule } from './shared/shared.module';
 import { FormModalService } from './services/form-modal.service';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { FormModalService } from './services/form-modal.service';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    DragDropModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

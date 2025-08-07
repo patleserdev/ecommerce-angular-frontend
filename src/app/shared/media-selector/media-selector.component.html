@@ -1,11 +1,9 @@
-
 <div class="flex flex-row items-center justify-between">
   <h2 class="font-bold">Médias liés ({{selectedMedia.length}})</h2>
-  <button type="button"
-        class="bg-indigo-500 text-white px-3 py-1 rounded shadow hover:bg-indigo-600 mb-2"
-        (click)="openAddMediaModal()">
-  Ajouter un média
-</button>
+  <button type="button" class="bg-indigo-500 text-white px-3 py-1 rounded shadow hover:bg-indigo-600 mb-2"
+    (click)="openAddMediaModal()">
+    Ajouter un média
+  </button>
 </div>
 
 
@@ -18,31 +16,58 @@
 </div>
 
 
-
-<div
-  class="grid gap-5"
+<div class="flex flex-col gap-5">
+  <!-- Pouvoir changer la position  -->
+  <div
+  class="grid gap-5 border"
+  *ngIf="selectedMediaSorted"
   [ngClass]="gridColsClass[selectedOption]"
->
-  <div *ngFor="let media of medias"
-       (click)="toggleMediaSelection(media)"
-       class="relative border rounded-lg shadow-sm p-2 flex flex-col bg-white cursor-pointer transition-all duration-200 mb-4"
-       [ngClass]="{
+  cdkDropList
+  (cdkDropListDropped)="drop($event)">
+
+  <div
+  *ngFor="let item of selectedMediaSorted; let i = index"
+
+    cdkDrag
+    class="relative border rounded-lg shadow-sm p-2 flex flex-col items-center bg-white cursor-move transition-all duration-200 mb-4">
+
+    <h3 *ngIf="i === 0">Mise en avant</h3>
+    <h3 *ngIf="i > 0">Image {{ i + 1 }}</h3>
+
+    <img
+      [src]="getOptimizedImageUrl(item.url, 400, 250)"
+      alt="media"
+      class="w-full h-auto rounded object-cover"
+      loading="lazy" />
+  </div>
+</div>
+
+  <!-- Grille de sélection -->
+  <label for="mediasGrid">
+    <h2 class="font-bold">Choisir les médias</h2>
+  </label>
+  <div id="mediasGrid" class="grid gap-5" [ngClass]="gridColsClass[selectedOption]">
+    <div *ngFor="let media of medias" (click)="toggleMediaSelection(media)"
+      class="relative border rounded-lg shadow-sm p-2 flex flex-col bg-white cursor-pointer transition-all duration-200 mb-4"
+      [ngClass]="{
          'ring-4 ring-indigo-500 border-indigo-600': isSelected(media),
          'hover:ring-2 hover:ring-indigo-300': !isSelected(media)
        }">
 
-    <img [src]="getOptimizedImageUrl(media.url, 400, 250)"
-         alt="media"
-         class="w-full h-auto rounded object-cover"
-         loading="lazy" />
+      <img [src]="getOptimizedImageUrl(media.url, 400, 250)" alt="media" class="w-full h-auto rounded object-cover"
+        loading="lazy" />
 
-    <div class="text-center font-medium capitalize text-gray-800 mt-2">
-      {{ media.title }}
+      <div class="text-center font-medium capitalize text-gray-800 mt-2">
+        {{ media.title }}
+      </div>
+
+      <div *ngIf="isSelected(media)" class="absolute top-2 right-2 bg-indigo-600 text-white rounded-full p-1">
+        <span class="material-icons text-sm">check</span>
+      </div>
     </div>
 
-    <div *ngIf="isSelected(media)" class="absolute top-2 right-2 bg-indigo-600 text-white rounded-full p-1">
-      <span class="material-icons text-sm">check</span>
-    </div>
   </div>
-</div>
 
+
+
+</div>

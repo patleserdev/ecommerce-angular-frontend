@@ -27,9 +27,11 @@ interface FormField {
   name: string;
   type: string;
   required?: boolean;
-  options?: { label: string; value: string }[]; // pour les <select>
-  fields?: FormField[]; // ✅ pour les champs de type 'array'
+  options?: { label: string; value: string }[];
+  fields?: FormField[];
+  returnFullObject?: boolean; // <-- ajout ici
 }
+
 
 @Component({
   selector: 'app-form-modal',
@@ -155,9 +157,15 @@ export class FormModalComponent implements OnInit {
       // Si tu veux filtrer pour n’envoyer que les ids :
       this.fields.forEach((field) => {
         if (field.type === 'mediaSelector') {
-          processedValue[field.name] = (processedValue[field.name] || []).map(
-            (media: MediaType) => media.id
-          );
+          if (field.returnFullObject) {
+            // Tu gardes les objets complets
+            processedValue[field.name] = processedValue[field.name] || [];
+          } else {
+            // Sinon tu transformes en tableau d'IDs (comportement par défaut)
+            processedValue[field.name] = (processedValue[field.name] || []).map(
+              (media: MediaType) => media.id
+            );
+          }
         }
       });
 

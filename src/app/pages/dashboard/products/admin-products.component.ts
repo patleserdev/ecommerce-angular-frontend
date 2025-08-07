@@ -12,6 +12,7 @@ import { CategoriesService } from '../../../services/categories.service';
 import { BrandsService } from '../../../services/brands.service';
 import { MediaLinkService } from '../../../services/media-link.service.js';
 import { FormModalComponent } from '../../../shared/form-modal/form-modal.component.js';
+import { MediaType } from '../../../models/medias.js';
 
 @Component({
   selector: 'app-admin-products',
@@ -68,7 +69,7 @@ export class AdminProductsComponent {
     this.productsService.getProducts().subscribe({
       next: (data) => {
         this.products = data.sort((a, b) => a.name.localeCompare(b.name));
-        // console.log(data);
+        console.log("récupération des produits ",data);
       },
       error: (err) => {
         console.error('Erreur lors du fetch des produits', err);
@@ -186,66 +187,6 @@ export class AdminProductsComponent {
         },
       }
     );
-
-    // this.modalService.open('Ajouter un produit');
-    // this.formModalService.openFormModal({
-    //   title: 'Ajouter un produit',
-    //   fields: [
-    //     { label: 'Nom', name: 'name', type: 'text', required: true },
-    //     { label: 'Description', name: 'description', type: 'textarea' },
-    //     { label: 'Prix', name: 'price', type: 'number', required: true },
-    //     { label: 'SKU', name: 'sku', type: 'string', required: true },
-    //     {
-    //       label: 'Catégorie',
-    //       name: 'category',
-    //       type: 'select',
-    //       required: true,
-    //       options: this.categoriesToSelect,
-    //     },
-    //     {
-    //       label: 'Marques',
-    //       name: 'brand',
-    //       type: 'select',
-    //       required: true,
-    //       options: this.brandsToSelect,
-    //     },
-    //     {
-    //       label: 'Variations',
-    //       name: 'variations',
-    //       type: 'array',
-    //       fields: [
-    //         { label: 'Genre', name: 'gender', type: 'text', required: true },
-    //         { label: 'Taille', name: 'size', type: 'text', required: true },
-    //         { label: 'Couleur', name: 'color', type: 'color', required: true },
-    //         { label: 'Stock', name: 'stock', type: 'number', required: true },
-    //       ],
-    //     },
-    //   ],
-    //   onSubmit: async (data) => {
-    //     console.log('Produit reçu :', data);
-    //     const productToSend = {
-    //       ...data,
-    //       variations: data.variations || [],
-    //     };
-    //     this.modalService.setLoading(true)
-    //     this.addProductAction(productToSend).subscribe({
-    //       next: (res) => {
-    //         console.log('Produit ajouté :', res);
-    //         this.fetchProducts();
-    //         this.fetchCategories();
-    //         this.fetchBrands();
-    //         this.modalService.close();
-    //         this.formModalService.close();
-    //         this.modalService.setLoading(false)
-    //       },
-    //       error: (err) => {
-    //         const msg = err?.error?.message || 'Erreur lors de l’ajout.';
-    //         this.formModalService.setError(msg);
-    //         this.modalService.setLoading(false)
-    //       },
-    //     });
-    //   },
-    // });
   }
 
   editProduct(product: ProductType) {
@@ -318,10 +259,6 @@ export class AdminProductsComponent {
         ],
         onSubmit: (data: any) => {
           const updated = { ...product, ...data };
-          // this.http
-          //   .patch(`${environment.apiUrl}/products/${product.id}`, updated, {
-          //     withCredentials: true,
-          //   })
           if (product.id)
             this.productsService.updateProduct(product.id, updated).subscribe({
               next: () => {
@@ -340,91 +277,6 @@ export class AdminProductsComponent {
         },
       }
     );
-
-    // this.modalService.open('Modifier un produit');
-    // this.formModalService.openFormModal({
-    //   title: 'Modifier un produit',
-    //   fields: [
-    //     {
-    //       label: 'Nom',
-    //       name: 'name',
-    //       type: 'text',
-    //       required: true,
-    //       value: product.name,
-    //     },
-    //     {
-    //       label: 'Description',
-    //       name: 'description',
-    //       type: 'textarea',
-    //       value: product.description,
-    //     },
-    //     {
-    //       label: 'Prix',
-    //       name: 'price',
-    //       type: 'number',
-    //       required: true,
-    //       value: product.price,
-    //     },
-    //     {
-    //       label: 'SKU',
-    //       name: 'sku',
-    //       type: 'string',
-    //       required: true,
-    //       value: product.sku,
-    //     },
-    //     {
-    //       label: 'Catégorie',
-    //       name: 'category',
-    //       type: 'select',
-    //       required: true,
-    //       options: this.categoriesToSelect,
-    //       value: product.category?.id,
-    //     },
-    //     {
-    //       label: 'Marques',
-    //       name: 'brand',
-    //       type: 'select',
-    //       required: true,
-    //       options: this.brandsToSelect,
-    //       value: product.brand?.id,
-    //     },
-    //     {
-    //       label: 'Variations',
-    //       name: 'variations',
-    //       type: 'array',
-    //       fields: [
-    //         { label: 'Genre', name: 'gender', type: 'text', required: true },
-    //         { label: 'Taille', name: 'size', type: 'text', required: true },
-    //         { label: 'Couleur', name: 'color', type: 'color', required: true },
-    //         { label: 'Stock', name: 'stock', type: 'number', required: true },
-    //       ],
-    //       value: product.variations,
-    //     },
-    //   ],
-    //   onSubmit: (data) => {
-    //     const updated = { ...product, ...data };
-    //     // this.http
-    //     //   .patch(`${environment.apiUrl}/products/${product.id}`, updated, {
-    //     //     withCredentials: true,
-    //     //   })
-    //     if(product.id)
-    //     this.productsService.updateProduct(product.id,updated)
-    //       .subscribe({
-    //         next: () => {
-    //           this.fetchProducts();
-    //           this.fetchCategories();
-    //           this.fetchBrands();
-    //           this.modalService.close();
-    //           this.formModalService.close();
-    //         },
-    //         error: (err) => {
-    //           const msg =
-    //             err?.error?.message || 'Erreur lors de la mise à jour.';
-    //           this.formModalService.setError(msg);
-    //         },
-    //       });
-    //   },
-    // });
   }
 
   deleteProduct(product: ProductType) {
@@ -458,155 +310,112 @@ export class AdminProductsComponent {
             label: 'Médias liés',
             name: 'mediaLinks',
             type: 'mediaSelector',
-            value: product.medias ?? [],
+            value: product.medias ?? [], // doit contenir id + position
+            returnFullObject: true, // ✅ ajout
+
           },
         ],
         onSubmit: (data: any) => {
-          this.modalService.setLoading(true); // ⏳ spinner ON
+          this.modalService.setLoading(true);
+          console.log('en sortie du media selector', data);
 
-          const currentMedias = product.medias ?? [];
-          const selectedMediaIds = new Set<string>(data.mediaLinks);
+          const currentMedias = product.medias ?? []; // anciens liens
+          const selectedMedia: MediaType[] = data.mediaLinks; // objets complets avec id + position
 
-          const existingMediaIds = new Set<string>(
-            currentMedias.map((m) => m.id)
+          const currentMediaMap = new Map(
+            currentMedias.map((m) => [m.id, m.position ?? 0])
           );
 
-          // ✅ Médias à ajouter
-          const newMediaIds = data.mediaLinks.filter(
-            (id: string) => !existingMediaIds.has(id)
-          );
+          const selectedIds = new Set(selectedMedia.map((m) => m.id));
+          const currentIds = new Set(currentMedias.map((m) => m.id));
 
-          // ❌ Médias à supprimer
+          // Médias supprimés
           const removedMediaIds = currentMedias
-            .filter((m) => !selectedMediaIds.has(m.id))
+            .filter((m) => !selectedIds.has(m.id))
             .map((m) => m.id);
 
-          // Création des nouveaux liens
-          for (const id of newMediaIds) {
-            const link = {
-              mediaId: id,
-              linkedType: 'product',
-              linkedId: product.id,
-              role: 'gallery' as const,
-            };
+          // Médias sélectionnés (ajoutés OU mis à jour)
+          for (const [index, media] of selectedMedia.entries()) {
+            const mediaId = media.id;
+            const newPosition = index;
+            if(mediaId)
+            {
+              if (!currentIds.has(mediaId)) {
+                // ✅ nouveau média → créer lien avec position
+                const link = {
+                  mediaId,
+                  linkedType: 'product',
+                  linkedId: product.id,
+                  role: 'gallery' as const,
+                  position: newPosition,
+                };
 
-            this.mediaLinkService.createMediaLink(link).subscribe({
-              next: (res) => {
-                console.log('Lien créé :', res);
-                this.fetchProducts();
-                this.modalService.setLoading(false); // ✅ spinner OFF
-              },
-              error: (err) => {
-                console.error('Erreur création lien :', err);
-                this.modalService.setLoading(false); // ✅ spinner OFF
-              },
-            });
-          }
-
-          // Suppression des anciens liens
-          for (const mediaId of removedMediaIds) {
-            if (product.id)
-              this.mediaLinkService
-                .deleteMediaLinkByLinkedIdAndMediaId(product.id, mediaId)
-                .subscribe({
+                this.mediaLinkService.createMediaLink(link).subscribe({
                   next: () => {
-                    console.log(
-                      `Lien supprimé : media ${mediaId} de product ${product.id}`
-                    );
-                    this.fetchProducts();
-                    this.modalService.setLoading(false); // ✅ spinner OFF
+                    console.log('Lien créé :', mediaId);
                   },
                   error: (err) => {
-                    console.error('Erreur suppression lien :', err);
-                    this.modalService.setLoading(false); // ✅ spinner OFF
+                    console.error('Erreur création lien :', err);
                   },
                 });
+              } else {
+                // 🎯 média déjà lié → vérifier si la position a changé
+                const oldPosition = currentMediaMap.get(mediaId);
+                if (oldPosition !== newPosition) {
+                  this.mediaLinkService
+                    .updateMediaLink({
+                      mediaId,
+                      linkedId: product.id,
+                      linkedType: 'product',
+                      position: newPosition,
+                    })
+                    .subscribe({
+                      next: () =>
+                        console.log(
+                          `Position mise à jour : media ${mediaId} → ${newPosition}`
+                        ),
+                      error: (err) =>
+                        console.error(
+                          `Erreur mise à jour position media ${mediaId}`,
+                          err
+                        ),
+                    });
+                }
+              }
+            }
+
+
           }
 
+          // Suppression des médias retirés
+          for (const mediaId of removedMediaIds) {
+            if(product.id)
+            {
+              this.mediaLinkService
+              .deleteMediaLinkByLinkedIdAndMediaId(product.id, mediaId)
+              .subscribe({
+                next: () =>
+                  console.log(
+                    `Lien supprimé : media ${mediaId} de product ${product.id}`
+                  ),
+                error: (err) =>
+                  console.error(
+                    `Erreur suppression lien media ${mediaId}`,
+                    err
+                  ),
+              });
+          }
+            }
+
+
+          // Nettoyage final
+          this.fetchProducts();
+          this.modalService.setLoading(false);
           this.modalService.close();
           this.formModalService.close();
         },
       }
     );
-
-    // this.modalService.open('Sélectionner un média pour le produit ' + product.name);
-
-    // this.formModalService.openFormModal({
-    //   title: 'Sélectionner un média pour ' + product.name,
-    //   fields: [
-    //     {
-    //       label: 'Médias liés',
-    //       name: 'mediaLinks',
-    //       type: 'mediaSelector',
-    //       value: product.medias ?? [],
-    //     },
-    //   ],
-    //   onSubmit: (data) => {
-    //     this.modalService.setLoading(true); // ⏳ spinner ON
-
-    //       const currentMedias = product.medias ?? [];
-    //       const selectedMediaIds = new Set<string>(data.mediaLinks);
-
-    //       const existingMediaIds = new Set<string>(
-    //         currentMedias.map((m) => m.id)
-    //       );
-
-    //       // ✅ Médias à ajouter
-    //       const newMediaIds = data.mediaLinks.filter(
-    //         (id: string) => !existingMediaIds.has(id)
-    //       );
-
-    //       // ❌ Médias à supprimer
-    //       const removedMediaIds = currentMedias
-    //         .filter((m) => !selectedMediaIds.has(m.id))
-    //         .map((m) => m.id);
-
-    //       // Création des nouveaux liens
-    //       for (const id of newMediaIds) {
-    //         const link = {
-    //           mediaId: id,
-    //           linkedType: 'product',
-    //           linkedId: product.id,
-    //           role: 'gallery' as const,
-    //         };
-
-    //         this.mediaLinkService.createMediaLink(link).subscribe({
-    //           next: (res) => {
-    //             console.log('Lien créé :', res);
-    //             this.fetchProducts();
-    //             this.modalService.setLoading(false); // ✅ spinner OFF
-
-    //           },
-    //           error: (err) => {
-    //             console.error('Erreur création lien :', err)
-    //             this.modalService.setLoading(false); // ✅ spinner OFF
-    //           }
-    //         });
-    //       }
-
-    //       // Suppression des anciens liens
-    //       for (const mediaId of removedMediaIds) {
-    //         if(product.id)
-    //         this.mediaLinkService
-    //           .deleteMediaLinkByLinkedIdAndMediaId(product.id, mediaId)
-    //           .subscribe({
-    //             next: () => {
-    //               console.log(`Lien supprimé : media ${mediaId} de product ${product.id}`);
-    //               this.fetchProducts();
-    //               this.modalService.setLoading(false); // ✅ spinner OFF
-
-    //             },
-    //             error: (err) => {
-    //               console.error('Erreur suppression lien :', err)
-    //               this.modalService.setLoading(false); // ✅ spinner OFF
-    //             }
-    //           });
-    //       }
-
-    //       this.modalService.close();
-    //       this.formModalService.close();
-
-    //   },
-    // });
   }
+
 }

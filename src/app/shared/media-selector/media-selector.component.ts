@@ -14,20 +14,27 @@ import {
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { MediaType } from '../../models/medias.js';
+import { MediaLinkType, MediaType } from '../../models/medias.js';
 import { MediasService } from '../../services/medias.service';
 import { MediaDialogService } from '../../services/media-dialog.service';
 import { ModalService } from '../../services/modal.service';
 import { FormModalService } from '../../services/form-modal.service';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-media-selector',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './media-selector.component.html',
   styleUrl: './media-selector.component.css',
 })
-export class MediaSelectorComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class MediaSelectorComponent
+  implements OnInit, AfterViewInit, OnChanges, OnDestroy
+{
   @Input() selectedMedia: MediaType[] = [];
   @Output() selectionChange = new EventEmitter<MediaType[]>();
 
@@ -43,6 +50,20 @@ export class MediaSelectorComponent implements OnInit, AfterViewInit, OnChanges,
     '6': 'sm:grid-cols-1 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6',
   };
 
+  drop(event: CdkDragDrop<MediaType[]>) {
+    moveItemInArray(
+      this.selectedMedia,
+      event.previousIndex,
+      event.currentIndex
+    );
+    // Réattribuer les positions
+    this.selectedMedia = this.selectedMedia.map((media, index) => ({
+      ...media,
+      position: index,
+    }));
+    this.selectionChange.emit(this.selectedMedia); // 🔁 renvoyer les objets complets avec `position`
+  }
+
   private modalSub?: Subscription;
   private formSub?: Subscription;
 
@@ -53,6 +74,19 @@ export class MediaSelectorComponent implements OnInit, AfterViewInit, OnChanges,
     private formModalService: FormModalService,
     private cdr: ChangeDetectorRef
   ) {}
+
+  get selectedMediaSorted(): MediaType[] {
+    console.log('selectedMediaNonSorted', this.selectedMedia);
+    console.log(
+      'selectedMediaSorted',
+      [...this.selectedMedia].sort(
+        (a, b) => (a.position ?? 0) - (b.position ?? 0)
+      )
+    );
+    return [...this.selectedMedia].sort(
+      (a, b) => (a.position ?? 0) - (b.position ?? 0)
+    );
+  }
 
   ngOnInit(): void {
     this.modalSub = this.modalService.visible$.subscribe((visible) => {
@@ -73,8 +107,11 @@ export class MediaSelectorComponent implements OnInit, AfterViewInit, OnChanges,
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedMedia']) {
       const selected = changes['selectedMedia'].currentValue;
-      this.selectedMedia = Array.isArray(selected?.[0]) ? selected[0] : selected || [];
+      this.selectedMedia = Array.isArray(selected?.[0])
+        ? selected[0]
+        : selected || [];
     }
+    console.log('au changement dans mediaselector', this.selectedMedia);
   }
 
   ngOnDestroy(): void {
@@ -85,11 +122,14 @@ export class MediaSelectorComponent implements OnInit, AfterViewInit, OnChanges,
   loadMedias(): void {
     this.mediaService.getMedias().subscribe({
       next: (mediaList) => {
-        // this.medias = mediaList.sort((a, b) => a.title.localeCompare(b.title));
-        this.medias = mediaList
+        this.medias = mediaList;
         if (this.selectedMedia?.length) {
           const selectedIds = new Set(this.selectedMedia.map((m) => m.id));
-          this.selectedMedia = this.medias.filter((m) => selectedIds.has(m.id));
+          this.selectedMedia = this.selectedMedia.map((old) => {
+            const fresh = this.medias.find((m) => m.id === old.id);
+            return fresh ? { ...fresh, position: old.position } : old;
+          });
+
           this.selectionChange.emit(this.selectedMedia);
         }
 
@@ -109,7 +149,12 @@ export class MediaSelectorComponent implements OnInit, AfterViewInit, OnChanges,
       // Ajout à la sélection si nouveau
       if (!this.selectedMedia.some((m) => m.id === newMedia.id)) {
         this.selectedMedia = [...this.selectedMedia, newMedia];
-        this.selectionChange.emit(this.selectedMedia);
+        this.selectionChange.emit(
+          this.selectedMedia.map((m, i) => ({
+            ...m,
+            position: i,
+          }))
+        );
       }
 
       // Mise à jour des données
@@ -121,23 +166,44 @@ export class MediaSelectorComponent implements OnInit, AfterViewInit, OnChanges,
     return !!media?.id && this.selectedMedia.some((m) => m.id === media.id);
   }
 
-
   toggleMediaSelection(media: MediaType): void {
     const exists = this.isSelected(media);
 
-    this.selectedMedia = exists
-      ? this.selectedMedia.filter((m) => m.id !== media.id)
-      : [...this.selectedMedia, media];
+    if (exists) {
+      this.selectedMedia = this.selectedMedia.filter((m) => m.id !== media.id);
+    } else {
+      this.selectedMedia = [...this.selectedMedia, media];
+    }
 
-    this.selectionChange.emit(this.selectedMedia);
+    // 🧠 Réassigner les positions après chaque changement
+    this.selectedMedia = this.selectedMedia.map((m, index) => ({
+      ...m,
+      position: index,
+    }));
+
+    this.selectionChange.emit(
+      this.selectedMedia.map((m, i) => ({
+        ...m,
+        position: i,
+      }))
+    );
   }
 
   onSelectMedia(selection: MediaType[]): void {
     this.selectedMedia = selection;
-    this.selectionChange.emit(this.selectedMedia);
+    this.selectionChange.emit(
+      this.selectedMedia.map((m, i) => ({
+        ...m,
+        position: i,
+      }))
+    );
   }
 
-  getOptimizedImageUrl(url: string | undefined, width: number, height: number): string {
+  getOptimizedImageUrl(
+    url: string | undefined,
+    width: number,
+    height: number
+  ): string {
     return url
       ? url.replace('/upload/', `/upload/w_${width},h_${height},c_fill/`)
       : '';

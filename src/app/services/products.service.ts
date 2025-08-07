@@ -24,8 +24,9 @@ export class ProductsService {
     return this.http.get<ProductType[]>(`${this.baseUrl}`);
   }
 
-  getProductBySlug(slug:string)
-  {return this.http.get<ProductType[]>(`${this.baseUrl}/slug/${slug}`); }
+  getProductBySlug(slug:string){
+    return this.http.get<ProductType[]>(`${this.baseUrl}/slug/${slug}`);
+  }
 
 
   updateProduct(id: number, data: Partial<ProductType>) {

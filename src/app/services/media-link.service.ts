@@ -19,6 +19,13 @@ export class MediaLinkService {
     });
   }
 
+  updateMediaLink(mediaLink: MediaLinkType): Observable<MediaLinkType> {
+    return this.http.patch<MediaLinkType>(`${this.baseUrl}?linkedId=${mediaLink.linkedId}&mediaId=${mediaLink.mediaId}`, mediaLink, {
+      withCredentials: true,
+    });
+  }
+
+
   // Récupérer les liens pour un produit ou catégorie
   getMediaLinks(
     linkedType: 'product' | 'category' | 'brand',
@@ -28,6 +35,8 @@ export class MediaLinkService {
       `${this.baseUrl}?entityType=${linkedType}&entityId=${entityId}`
     );
   }
+
+
 
   // Supprimer un lien
   deleteMediaLink(id: string): Observable<void> {
