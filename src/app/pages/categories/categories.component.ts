@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CategoriesService } from '../../services/categories.service.js';
 @Component({
   selector: 'app-categories',
   standalone: true,
@@ -15,7 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class CategoriesComponent {
   categories: any[] = [];
   isLoading = false;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private categoriesService : CategoriesService) {}
 
   ngOnInit() {
     this.fetchCategories();
@@ -23,7 +24,7 @@ export class CategoriesComponent {
 
   fetchCategories() {
     this.isLoading=true
-    this.http.get<any[]>(`${environment.apiUrl}/categories`).subscribe({
+    this.categoriesService.getCategories().subscribe({
       next: (data) => {
         this.categories = data;
         this.isLoading=false

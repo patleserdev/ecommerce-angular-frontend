@@ -24,6 +24,10 @@ export class CategoriesService {
     return this.http.get<CategoryType[]>(`${this.baseUrl}`);
   }
 
+  getCategoriesBySlug(slug:string): Observable<CategoryType[]> {
+    return this.http.get<CategoryType[]>(`${this.baseUrl}/slug/${slug}`);
+  }
+
   getCategoriesToSelect(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}`);
   }

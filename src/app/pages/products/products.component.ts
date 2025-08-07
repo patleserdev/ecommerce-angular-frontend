@@ -8,6 +8,7 @@ import { ProductType, ProductVariationsType } from '../../models/product';
 import { CartService } from '../../services/cart.service';
 import { MediaLinkService } from '../../services/media-link.service';
 import { MediaLinkType } from '../../models/medias';
+import { ProductsService } from '../../services/products.service.js';
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -19,23 +20,17 @@ export class ProductsComponent {
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
 
-  constructor(private cartService: CartService, private mediaLinkService: MediaLinkService) {
-
-  }
+  constructor(
+    private cartService: CartService,
+    private mediaLinkService: MediaLinkService,
+    private productService : ProductsService)
+    {}
 
   product: any = null;
   isLoading = false;
   hasError = false;
   mediaLinks: MediaLinkType[] = [];
 
-  // ngOnInit() {
-  //   this.route.paramMap.subscribe(params => {
-  //     const slug = params.get('slug');
-  //     if (slug) {
-  //      console.log(slug)
-  //     }
-  //   });
-  // }
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -62,10 +57,12 @@ export class ProductsComponent {
     this.hasError = false;
     this.product = null;
 
-    this.http
-      .get(`${environment.apiUrl}/products/slug/${slug}`, {
-        withCredentials: true,
-      })
+    this.productService.getProductBySlug(slug)
+
+    // this.http
+    //   .get(`${environment.apiUrl}/products/slug/${slug}`, {
+    //     withCredentials: true,
+    //   })
       .subscribe({
         next: (data) => {
           this.product = data;

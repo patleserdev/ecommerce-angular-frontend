@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CategoriesService } from '../../services/categories.service.js';
 @Component({
   selector: 'app-category-detail',
   standalone: true,
@@ -13,6 +14,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 })
 export class CategoryDetailComponent {
+
+  constructor(private categoriesService:CategoriesService ){}
   private route = inject(ActivatedRoute);
   private http = inject(HttpClient);
 
@@ -48,13 +51,13 @@ export class CategoryDetailComponent {
     this.category = null;
 
 
-      this.http
-      .get(`${environment.apiUrl}/categories/slug/${slug}`, { withCredentials: true })
+      // this.http.get(`${environment.apiUrl}/categories/slug/${slug}`, { withCredentials: true })
+      this.categoriesService.getCategoriesBySlug(slug)
       .subscribe({
         next: (data) => {
           this.category = data;
           this.isLoading = false;
-          console.log("categorydetailsfetch",data);
+          // console.log("categorydetailsfetch",data);
         },
         error: (err) => {
           console.error('Erreur lors du fetch de la catégorie :', err);
