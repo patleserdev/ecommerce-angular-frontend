@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MediaLinkType } from '../models/medias.js';
-
-
+import { MediaLinkType } from '../models/medias';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MediaLinkService {
-  private baseUrl = '/api/media-links'; // adapte selon ton backend
+  private baseUrl = `${environment.apiUrl}/media-links`;
 
   constructor(private http: HttpClient) {}
 
@@ -21,8 +20,13 @@ export class MediaLinkService {
   }
 
   // Récupérer les liens pour un produit ou catégorie
-  getMediaLinks(linkedType: 'product' | 'category' | 'brand', entityId: string): Observable<MediaLinkType[]> {
-    return this.http.get<MediaLinkType[]>(`${this.baseUrl}?entityType=${linkedType}&entityId=${entityId}`);
+  getMediaLinks(
+    linkedType: 'product' | 'category' | 'brand',
+    entityId: string
+  ): Observable<MediaLinkType[]> {
+    return this.http.get<MediaLinkType[]>(
+      `${this.baseUrl}?entityType=${linkedType}&entityId=${entityId}`
+    );
   }
 
   // Supprimer un lien
@@ -32,9 +36,15 @@ export class MediaLinkService {
     });
   }
 
-  deleteMediaLinkByLinkedIdAndMediaId(linkedId: number,mediaId:string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}?linkedId=${linkedId}&mediaId=${mediaId}`, {
-      withCredentials: true,
-    });
+  deleteMediaLinkByLinkedIdAndMediaId(
+    linkedId: number,
+    mediaId: string
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}?linkedId=${linkedId}&mediaId=${mediaId}`,
+      {
+        withCredentials: true,
+      }
+    );
   }
 }

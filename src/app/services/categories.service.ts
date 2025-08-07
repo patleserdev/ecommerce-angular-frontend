@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CategoryType } from '../models/categorie';
+import { environment } from '../../environments/environment'
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesService {
-  private baseUrl = '/api/categories'; // adapte selon ton backend
+  private baseUrl = `${environment.apiUrl}/categories`;
 
   constructor(private http: HttpClient) {}
 

@@ -10,7 +10,8 @@ import { throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = environment.apiUrl; // ton backend
+
+  private baseUrl = `${environment.apiUrl}/users`;
 
   private loggedIn$ = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.loggedIn$.asObservable();
@@ -27,7 +28,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/users/login`, credentials, {
+    return this.http.post(`${this.baseUrl}/login`, credentials, {
       withCredentials: true, // nécessaire pour cookie HTTP-only
     }).pipe(
       tap((user) => {
@@ -48,7 +49,7 @@ export class AuthService {
     email: string;
     password: string;
   }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/users/register`, credentials, {
+    return this.http.post(`${this.baseUrl}/register`, credentials, {
       withCredentials: true, // nécessaire pour cookie HTTP-only
     });
   }
@@ -61,7 +62,7 @@ export class AuthService {
 
   checkAuth() {
     return this.http
-      .get<{ role: string }>(`${this.baseUrl}/users/check`, {
+      .get<{ role: string }>(`${this.baseUrl}/check`, {
         withCredentials: true, // nécessaire pour cookie HTTP-only
       })
       .pipe(
@@ -81,7 +82,7 @@ export class AuthService {
   logout() {
     return this.http
       .post(
-        `${this.baseUrl}/users/logout`,
+        `${this.baseUrl}/logout`,
         {},
         {
           withCredentials: true,
@@ -103,7 +104,7 @@ export class AuthService {
 
   fetchUserProfile() {
     return this.http
-      .get<UserType>(`${this.baseUrl}/users/me`, { withCredentials: true })
+      .get<UserType>(`${this.baseUrl}/me`, { withCredentials: true })
       .pipe(tap((user) => this.userSubject.next(user)));
   }
 

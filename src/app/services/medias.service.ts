@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MediaType } from '../models/medias';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MediasService {
-  private baseUrl = '/api/medias'; // adapte selon ton backend
-
+  private baseUrl = `${environment.apiUrl}/medias`;
   constructor(private http: HttpClient) {}
 
   // Créer un lien

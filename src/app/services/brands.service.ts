@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BrandType } from '../models/brands.js';
+import { environment } from './../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BrandsService {
-  private baseUrl = '/api/brands'; // adapte selon ton backend
+  private baseUrl = `${environment.apiUrl}/brands`;
 
   constructor(private http: HttpClient) {}
 

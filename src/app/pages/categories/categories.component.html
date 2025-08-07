@@ -8,10 +8,11 @@
   >
     <a
       [routerLink]="['/categories', cat.slug]"
-      class="text-lg font-semibold text-indigo-600 hover:text-indigo-800 block capitalize flex items-center justify-center text-center"
+      class="text-lg font-semibold text-indigo-600 hover:text-indigo-800 block capitalize flex flex-col items-center justify-center text-center"
     >
       {{ cat.name }}
-    </a>
+
     <img [src]="cat?.medias[0]?.url ?? '/assets/placeholder.jpg'" height="50" width="50"/>
+  </a>
   </div>
 </div>

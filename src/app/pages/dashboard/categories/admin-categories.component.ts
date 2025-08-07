@@ -56,7 +56,7 @@ export class AdminCategoriesComponent {
       .subscribe({
         next: (data) => {
           this.categories = data.sort((a, b) => a.name.localeCompare(b.name));
-          // console.log(data);
+          console.log("categories for admin",data);
         },
         error: (err) => {
           console.error('Erreur lors du fetch des catégories', err);
