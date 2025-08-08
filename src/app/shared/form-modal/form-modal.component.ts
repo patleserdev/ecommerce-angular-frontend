@@ -38,6 +38,7 @@ interface FormField {
   templateUrl: './form-modal.component.html',
   imports: [MediaSelectorComponent, ReactiveFormsModule, CommonModule],
   standalone: true, // <---- ici
+
 })
 export class FormModalComponent implements OnInit {
   @Input() fields: FormField[] = [];
@@ -76,13 +77,15 @@ export class FormModalComponent implements OnInit {
     this.buildForm();
 
     // 👇 Injecte dynamiquement comme "form courant"
-  if (this.modalData?.onSubmit) {
-    this.formModalService.openFormModal({
-      title: this.modalData?.title || '',
-      fields: this.fields,
-      onSubmit: this.modalData.onSubmit,
+    setTimeout(() => {
+      if (this.modalData?.onSubmit) {
+        this.formModalService.openFormModal({
+          title: this.modalData?.title || '',
+          fields: this.fields,
+          onSubmit: this.modalData.onSubmit,
+        });
+      }
     });
-  }
   }
 
   ngOnChanges(changes: SimpleChanges) {

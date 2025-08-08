@@ -4,15 +4,15 @@ import { ModalService } from '../../../services/modal.service';
 import { FormModalService } from '../../../services/form-modal.service';
 import { HttpClient } from '@angular/common/http';
 import { ProductType } from '../../../models/product';
-import { environment } from '../../../../environments/environment';
-import { CategoryToSelectType } from '../../../models/categorie.js';
+import { CategoryToSelectType } from '../../../models/categorie';
 import { BrandToSelectType } from '../../../models/brands';
 import { ProductsService } from '../../../services/products.service';
 import { CategoriesService } from '../../../services/categories.service';
 import { BrandsService } from '../../../services/brands.service';
-import { MediaLinkService } from '../../../services/media-link.service.js';
-import { FormModalComponent } from '../../../shared/form-modal/form-modal.component.js';
-import { MediaType } from '../../../models/medias.js';
+import { MediaLinkService } from '../../../services/media-link.service';
+import { FormModalComponent } from '../../../shared/form-modal/form-modal.component';
+import { MediaType } from '../../../models/medias';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-admin-products',
@@ -78,7 +78,7 @@ export class AdminProductsComponent {
   }
 
   fetchCategories() {
-    this.categoriesService.getCategories().subscribe({
+    this.categoriesService.getCategoriesToAdministrate().subscribe({
       next: (data) => {
         const rawCategories = data.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -315,12 +315,12 @@ export class AdminProductsComponent {
 
           },
         ],
-        onSubmit: (data: any) => {
+        onSubmit: async (data: any) => {
           this.modalService.setLoading(true);
-          console.log('en sortie du media selector', data);
+          // console.log('en sortie du media selector', data);
 
-          const currentMedias = product.medias ?? []; // anciens liens
-          const selectedMedia: MediaType[] = data.mediaLinks; // objets complets avec id + position
+          const currentMedias = product.medias ?? [];
+          const selectedMedia: MediaType[] = data.mediaLinks;
 
           const currentMediaMap = new Map(
             currentMedias.map((m) => [m.id, m.position ?? 0])
@@ -334,86 +334,70 @@ export class AdminProductsComponent {
             .filter((m) => !selectedIds.has(m.id))
             .map((m) => m.id);
 
-          // Médias sélectionnés (ajoutés OU mis à jour)
           for (const [index, media] of selectedMedia.entries()) {
             const mediaId = media.id;
             const newPosition = index;
-            if(mediaId)
-            {
-              if (!currentIds.has(mediaId)) {
-                // ✅ nouveau média → créer lien avec position
-                const link = {
-                  mediaId,
-                  linkedType: 'product',
-                  linkedId: product.id,
-                  role: 'gallery' as const,
-                  position: newPosition,
-                };
 
-                this.mediaLinkService.createMediaLink(link).subscribe({
-                  next: () => {
-                    console.log('Lien créé :', mediaId);
-                  },
-                  error: (err) => {
-                    console.error('Erreur création lien :', err);
-                  },
-                });
-              } else {
-                // 🎯 média déjà lié → vérifier si la position a changé
-                const oldPosition = currentMediaMap.get(mediaId);
-                if (oldPosition !== newPosition) {
-                  this.mediaLinkService
-                    .updateMediaLink({
+            if (!mediaId) continue;
+
+            if (!currentIds.has(mediaId)) {
+              // Création d'un nouveau lien
+              const link = {
+                mediaId,
+                linkedType: 'product',
+                linkedId: product.id,
+                role: 'gallery' as const,
+                position: newPosition,
+              };
+
+              try {
+                await firstValueFrom(this.mediaLinkService.createMediaLink(link));
+                console.log('Lien créé :', mediaId);
+              } catch (err) {
+                console.error('Erreur création lien :', err);
+              }
+            } else {
+              const oldPosition = currentMediaMap.get(mediaId);
+              if (oldPosition !== newPosition) {
+                try {
+                  await firstValueFrom(
+                    this.mediaLinkService.updateMediaLink({
                       mediaId,
                       linkedId: product.id,
                       linkedType: 'product',
                       position: newPosition,
                     })
-                    .subscribe({
-                      next: () =>
-                        console.log(
-                          `Position mise à jour : media ${mediaId} → ${newPosition}`
-                        ),
-                      error: (err) =>
-                        console.error(
-                          `Erreur mise à jour position media ${mediaId}`,
-                          err
-                        ),
-                    });
+                  );
+                  console.log(`Position mise à jour : media ${mediaId} → ${newPosition}`);
+                } catch (err) {
+                  console.error(`Erreur mise à jour position media ${mediaId}`, err);
                 }
               }
             }
-
-
           }
 
-          // Suppression des médias retirés
           for (const mediaId of removedMediaIds) {
             if(product.id)
             {
-              this.mediaLinkService
-              .deleteMediaLinkByLinkedIdAndMediaId(product.id, mediaId)
-              .subscribe({
-                next: () =>
-                  console.log(
-                    `Lien supprimé : media ${mediaId} de product ${product.id}`
-                  ),
-                error: (err) =>
-                  console.error(
-                    `Erreur suppression lien media ${mediaId}`,
-                    err
-                  ),
-              });
-          }
+              try {
+                await firstValueFrom(
+                  this.mediaLinkService.deleteMediaLinkByLinkedIdAndMediaId(product.id, mediaId)
+                );
+                console.log(`Lien supprimé : media ${mediaId} de product ${product.id}`);
+              } catch (err) {
+                console.error(`Erreur suppression lien media ${mediaId}`, err);
+              }
             }
 
+          }
 
-          // Nettoyage final
-          this.fetchProducts();
+          // ✅ Maintenant que tout est terminé, tu peux refetch
+          await this.fetchProducts();
+
           this.modalService.setLoading(false);
           this.modalService.close();
           this.formModalService.close();
-        },
+        }
       }
     );
   }

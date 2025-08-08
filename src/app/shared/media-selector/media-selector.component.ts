@@ -76,13 +76,13 @@ export class MediaSelectorComponent
   ) {}
 
   get selectedMediaSorted(): MediaType[] {
-    console.log('selectedMediaNonSorted', this.selectedMedia);
-    console.log(
-      'selectedMediaSorted',
-      [...this.selectedMedia].sort(
-        (a, b) => (a.position ?? 0) - (b.position ?? 0)
-      )
-    );
+    // console.log('selectedMediaNonSorted', this.selectedMedia);
+    // console.log(
+    //   'selectedMediaSorted',
+    //   [...this.selectedMedia].sort(
+    //     (a, b) => (a.position ?? 0) - (b.position ?? 0)
+    //   )
+    // );
     return [...this.selectedMedia].sort(
       (a, b) => (a.position ?? 0) - (b.position ?? 0)
     );
@@ -111,7 +111,7 @@ export class MediaSelectorComponent
         ? selected[0]
         : selected || [];
     }
-    console.log('au changement dans mediaselector', this.selectedMedia);
+    // console.log('au changement dans mediaselector', this.selectedMedia);
   }
 
   ngOnDestroy(): void {
@@ -122,11 +122,13 @@ export class MediaSelectorComponent
   loadMedias(): void {
     this.mediaService.getMedias().subscribe({
       next: (mediaList) => {
+        // console.log("mediaList",mediaList)
         this.medias = mediaList;
         if (this.selectedMedia?.length) {
           const selectedIds = new Set(this.selectedMedia.map((m) => m.id));
           this.selectedMedia = this.selectedMedia.map((old) => {
             const fresh = this.medias.find((m) => m.id === old.id);
+            // console.log("fresh",fresh)
             return fresh ? { ...fresh, position: old.position } : old;
           });
 

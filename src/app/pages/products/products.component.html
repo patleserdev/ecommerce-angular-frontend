@@ -35,13 +35,20 @@
       <p class="text-3xl">{{product?.price}} €</p>
     </div>
     <div *ngIf="product && product.medias.length > 0" class="flex flex-col gap-5">
-      <div class="">
-        <img [src]="product.medias[0].url" class="w-[100%]" />
+      <div class="firstImage relative w-full h-[400px] overflow-hidden">
+        <img
+          *ngFor="let media of product.medias; let i = index"
+          [src]="media.url"
+          [class.opacity-100]="i === firstMedia"
+          [class.opacity-0]="i !== firstMedia"
+          class="transition-opacity duration-500 absolute top-0 left-0 w-full h-full object-contain"
+        />
       </div>
       <div class="flex flex-row gap-2 items-center justify-center" *ngIf="product && product.medias.length > 0">
-        <span class="material-icons no-underline cursor-pointer">chevron_left</span>
-        <img [src]="media.url" *ngFor="let media of product.medias" class="w-[25%] cursor-pointer" />
-        <span class="material-icons no-underline cursor-pointer">chevron_right</span>
+        <span class="material-icons no-underline cursor-pointer" (click)="prevImage()">chevron_left</span>
+        <img [src]="media.url" *ngFor="let media of product.medias; let i = index" class="w-[15%] cursor-pointer border-2"
+          (click)="selectImage(i)" [class.border-blue-500]="i === firstMedia" />
+        <span class="material-icons no-underline cursor-pointer" (click)="nextImage()">chevron_right</span>
       </div>
 
       <!-- Sinon, message s'il n'y a pas de médias -->

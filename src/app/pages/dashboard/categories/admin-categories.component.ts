@@ -52,7 +52,7 @@ export class AdminCategoriesComponent {
 
   fetchCategories() {
     // this.http.get<any[]>(`${environment.apiUrl}/categories`, { withCredentials: true })
-    this.categoriesService.getCategories()
+    this.categoriesService.getCategoriesToAdministrate()
       .subscribe({
         next: (data) => {
           this.categories = data.sort((a, b) => a.name.localeCompare(b.name));

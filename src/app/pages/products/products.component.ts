@@ -23,14 +23,32 @@ export class ProductsComponent {
   constructor(
     private cartService: CartService,
     private mediaLinkService: MediaLinkService,
-    private productService : ProductsService)
-    {}
+    private productService: ProductsService
+  ) {}
 
   product: any = null;
   isLoading = false;
   hasError = false;
   mediaLinks: MediaLinkType[] = [];
+  firstMedia: number = 0;
 
+  prevImage() {
+    if (!this.product || !this.product.medias.length) return;
+
+    this.firstMedia =
+      (this.firstMedia - 1 + this.product.medias.length) %
+      this.product.medias.length;
+  }
+
+  nextImage() {
+    if (!this.product || !this.product.medias.length) return;
+
+    this.firstMedia = (this.firstMedia + 1) % this.product.medias.length;
+  }
+
+  selectImage(index: number) {
+    this.firstMedia = index;
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -41,9 +59,7 @@ export class ProductsComponent {
     });
   }
 
-
-
-  addProductToCart(product:ProductType, variation: ProductVariationsType) {
+  addProductToCart(product: ProductType, variation: ProductVariationsType) {
     //console.log(productId, variation);
     this.cartService.add({ product, variation });
   }
@@ -57,12 +73,13 @@ export class ProductsComponent {
     this.hasError = false;
     this.product = null;
 
-    this.productService.getProductBySlug(slug)
+    this.productService
+      .getProductBySlug(slug)
 
-    // this.http
-    //   .get(`${environment.apiUrl}/products/slug/${slug}`, {
-    //     withCredentials: true,
-    //   })
+      // this.http
+      //   .get(`${environment.apiUrl}/products/slug/${slug}`, {
+      //     withCredentials: true,
+      //   })
       .subscribe({
         next: (data) => {
           this.product = data;
@@ -79,13 +96,15 @@ export class ProductsComponent {
   }
 
   loadMediaLinks(productId: string | number) {
-    this.mediaLinkService.getMediaLinks('product', productId.toString()).subscribe({
-      next: (links) => {
-        this.mediaLinks = links;
-      },
-      error: (err) => {
-        console.error('Erreur lors du fetch des mediaLinks :', err);
-      },
-    });
+    this.mediaLinkService
+      .getMediaLinks('product', productId.toString())
+      .subscribe({
+        next: (links) => {
+          this.mediaLinks = links;
+        },
+        error: (err) => {
+          console.error('Erreur lors du fetch des mediaLinks :', err);
+        },
+      });
   }
 }

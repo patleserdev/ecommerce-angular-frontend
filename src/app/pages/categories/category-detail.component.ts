@@ -36,6 +36,7 @@ export class CategoryDetailComponent {
   //   });
   // }
 
+
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const slug = params.get('slug');
@@ -65,8 +66,14 @@ export class CategoryDetailComponent {
           this.isLoading = false;
         }
       });
-
-
   }
+
+  getFirstMediaUrl(product: any): string | null {
+    if (!product?.medias?.length) return null;
+
+    const media = product.medias.find((m: any) => m.position === 0);
+    return media ? media.url : null;
+  }
+
 
 }

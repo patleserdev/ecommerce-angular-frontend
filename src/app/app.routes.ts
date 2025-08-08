@@ -62,5 +62,6 @@ export const routes: Routes = [
   // },
   // { path: '**', redirectTo: 'not-found' },
 
-  { path: '**', component: PageNotFoundComponent  },
+  { path: '**', component: MainLayoutComponent ,children: [
+    { path: '**', component: PageNotFoundComponent }] },
 ];

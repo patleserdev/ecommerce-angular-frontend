@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { RouterOutlet,RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common'; // ✅
 import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
@@ -7,6 +7,7 @@ import { ModalService } from './services/modal.service';
 import { SharedModule } from './shared/shared.module';
 import { FormModalService } from './services/form-modal.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -23,8 +24,13 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
-  constructor(private authService: AuthService,private modalService: ModalService,public formModalService: FormModalService) {}
+export class AppComponent implements AfterViewInit  {
+  constructor(
+    private authService: AuthService,
+    private modalService: ModalService,
+    public formModalService: FormModalService,
+    private cdref: ChangeDetectorRef
+  ) {}
 
   visible$ = this.modalService.visible$;
   title$ = this.modalService.title$;
@@ -49,7 +55,11 @@ export class AppComponent {
         // Non connecté, peut rediriger ou faire autre chose
       }
     });
-
-
   }
+
+  ngAfterViewInit() {
+    this.cdref.detectChanges();
+  }
+
+
 }

@@ -1,8 +1,9 @@
 
 <app-modal [title]="title$ | async">
-  <app-form-modal [fields]="(fields$ | async) || []" (submitForm)="formModalService.submit($event)"></app-form-modal>
+  <ng-container *ngIf="(fields$ | async) as fields">
+    <app-form-modal [fields]="fields" (submitForm)="formModalService.submit($event)"></app-form-modal>
+  </ng-container>
 </app-modal>
-
 
 
 <router-outlet></router-outlet>
