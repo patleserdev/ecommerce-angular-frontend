@@ -24,6 +24,10 @@ export class ProductsService {
     return this.http.get<ProductType[]>(`${this.baseUrl}`);
   }
 
+  getNewProducts(quantity:number = 0): Observable<ProductType[]> {
+    return this.http.get<ProductType[]>(`${this.baseUrl}/new/${quantity}`);
+  }
+
   getProductBySlug(slug:string){
     return this.http.get<ProductType[]>(`${this.baseUrl}/slug/${slug}`);
   }

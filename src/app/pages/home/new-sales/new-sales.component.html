@@ -11,8 +11,13 @@
       <!-- Grille produits -->
       <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 
+        <div *ngFor="let product of products">
+          {{product.name}}
+        </div>
+
           <!-- Carte produit -->
           <div
+
               class="group relative bg-white border rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition">
               <img src="https://placehold.co/400x400" alt="Produit 1" class="w-full object-cover">
               <div class="p-4">
