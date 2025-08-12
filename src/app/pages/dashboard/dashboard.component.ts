@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet,NavigationStart ,NavigationEnd,NavigationCancel,NavigationError} from '@angular/router';
-import { HeaderComponent } from '../../shared/header/header.component';
-import { FooterComponent } from '../../shared/footer/footer.component';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { NavigationStart ,NavigationEnd,NavigationCancel,NavigationError} from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { links } from './links';
@@ -44,7 +40,7 @@ export class DashboardComponent {
   getLinkClasses(path: string): Record<string, boolean> {
     const isActive = this.router.url === path;
     return {
-      'text-white bg-blue-600 font-semibold': isActive,
+      'text-white bg-teal-600 font-semibold': isActive,
       'text-gray-600 hover:bg-gray-100': !isActive,
     };
   }

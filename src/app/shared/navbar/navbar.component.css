@@ -31,3 +31,16 @@
   animation: slideUp 0.3s ease-in forwards;
 }
 
+/** Couleur de contenu du badge **/
+.mat-badge-content {
+  color: white !important;
+  background: rgb(13 148 136 / var(--tw-bg-opacity)) !important;
+}
+
+@media only screen and (max-width: 667px)
+{
+.mat-badge-content {
+  background: white !important;
+  color: rgb(13 148 136 / var(--tw-bg-opacity)) !important;
+}
+}

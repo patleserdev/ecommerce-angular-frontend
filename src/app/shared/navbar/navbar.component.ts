@@ -15,6 +15,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { CartService } from '../../services/cart.service.js';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { ResponsiveService } from '../../services/responsive.service.js';
 
 @Component({
   selector: 'app-navbar',
@@ -35,7 +36,8 @@ export class NavbarComponent {
     public authService: AuthService,
     private router: Router,
     private http: HttpClient,
-    private cartService: CartService
+    private cartService: CartService,
+    private responsiveService : ResponsiveService
   ) {
     this.cartLength$ = this.cartService.cartLength$;
 
@@ -43,6 +45,13 @@ export class NavbarComponent {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => this.closeMobileMenu());
+
+      this.responsiveService.isMobile$.subscribe(isMobile => {
+       if(!isMobile)
+       {
+        this.isMenuOpen=false
+       }
+      });
   }
 
   cartLength$: Observable<number>;

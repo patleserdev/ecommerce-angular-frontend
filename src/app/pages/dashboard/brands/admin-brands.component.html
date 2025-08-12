@@ -1,6 +1,6 @@
 <p>Ajouter une marque , modifier supprimer marque</p>
 <button (click)="addBrand()"
-  class="border p-2 px-4 my-2 bg-indigo-500 font-bold text-white hover:bg-indigo-800 transition-all">Ajouter une
+  class="border p-2 px-4 my-2 bg-teal-600 font-bold text-white hover:bg-teal-800 transition-all">Ajouter une
   marque</button>
 
   <ul class="space-y-2">
@@ -8,7 +8,7 @@
       <div>{{ brand.name }}</div>
       <div class="flex flex-row gap-5">
         <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all" (click)="editBrand(brand)">edit</span>
-        <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all" (click)="deleteBrand(brand)">delete</span>
+        <span class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] hover:text-red-500 transition-all" (click)="deleteBrand(brand)">delete</span>
         <div class="relative inline-block">
           <span
             class="material-icons cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
@@ -19,7 +19,7 @@
 
           <span
             *ngIf="brand.medias?.length"
-            class="absolute -top-3 -right-3 text-[10px] font-bold bg-indigo-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+            class="absolute -top-3 -right-3 text-[10px] font-bold bg-teal-600 text-white rounded-full w-5 h-5 flex items-center justify-center"
           >
             {{ brand.medias?.length }}
           </span>

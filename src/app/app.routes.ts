@@ -8,6 +8,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CartComponent } from './cart/cart.component';
 import { RoadmapComponent } from './pages/roadmap/roadmap.component';
+import { HomeComponent } from './pages/home/home.component.js';
 export const routes: Routes = [
   {
     path: 'dashboard',
@@ -22,7 +23,7 @@ export const routes: Routes = [
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: '', redirectTo: 'categories', pathMatch: 'full' },
+      { path: '',  component: HomeComponent  },
       { path: 'tasks', component: TasksComponent },
       { path: 'categories', component: CategoriesComponent },
       { path: 'cart', component: CartComponent },

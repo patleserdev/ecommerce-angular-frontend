@@ -5,6 +5,7 @@ export const links = [
     { path: '/dashboard/products', label: 'Produits' , roles: ['admin']},
     { path: '/dashboard/orders', label: 'Commandes', roles: ['admin'] },
     { path: '/dashboard/invoices', label: 'Factures', roles: ['admin'] },
+    { path: '/dashboard/promotions', label: 'Promotions', roles: ['admin'] },
     { path: '/dashboard/medias', label: 'Médiathèque', roles: ['admin'] },
   ];
 
