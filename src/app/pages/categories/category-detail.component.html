@@ -7,7 +7,7 @@
   ❌ Catégorie introuvable ou erreur serveur.
 </div>
 
-<div *ngIf="!isLoading && !hasError" class="p-16">
+<div *ngIf="!isLoading && !hasError" class="p-4 md:p-16">
   <h2 class="text-2xl font-bold mb-4 capitalize align-baseline flex flex-row items-center gap-5">
     <img src={{category.medias[0]?.url}} height="50" width="50" />
     {{ category.name }} ({{ category.products?.length || 0

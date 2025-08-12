@@ -1,7 +1,7 @@
 <div *ngIf="isLoading" class="border-red-500 flex items-center justify-center p-2 mb-2"><mat-spinner></mat-spinner>
 </div>
 
-<div *ngIf="!isLoading && product" class="p-16">
+<div *ngIf="!isLoading && product" class="p-4 md:p-16">
   <div class="bg-teal-600 text-white p-2 mb-2">
     <p class="text-xl capitalize italic">{{product?.category?.name}}</p>
   </div>
