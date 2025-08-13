@@ -2,13 +2,12 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../environments/environment';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProductType, ProductVariationsType } from '../../models/product';
 import { CartService } from '../../services/cart.service';
 import { MediaLinkService } from '../../services/media-link.service';
 import { MediaLinkType } from '../../models/medias';
-import { ProductsService } from '../../services/products.service.js';
+import { ProductsService } from '../../services/products.service';
 @Component({
   selector: 'app-products',
   standalone: true,

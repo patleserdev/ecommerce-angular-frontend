@@ -1,0 +1,9 @@
+<span
+  *ngIf="showScrollTop && !isMobile"
+  (click)="scrollToTop()"
+  class="fixed right-[5%] bottom-[10%] material-icons text-4xl border-2 border-teal-600 text-teal-600 rounded-full p-1 cursor-pointer">keyboard_arrow_up</span>
+
+  <span
+  *ngIf="isMobile"
+  (click)="scrollToTop()"
+  class="fixed w-full left-0 bottom-0 material-icons text-4xl bg-teal-600 text-white text-center cursor-pointer">keyboard_arrow_up</span>

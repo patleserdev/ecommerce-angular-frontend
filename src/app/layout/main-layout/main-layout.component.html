@@ -1,10 +1,11 @@
 <div class="flex flex-col min-h-screen">
   <app-header></app-header>
 
-  <main class="flex-grow flex flex-col items-center justify-center bg-gray-50 overflow-hidden">
+  <main class="flex-grow flex flex-col items-center justify-center bg-gray-50 overflow-hidden relative">
     <div class="w-full h-full bg-white overflow-hidden">
       <router-outlet></router-outlet>
     </div>
+    <app-back-to-top></app-back-to-top>
   </main>
 
   <app-footer></app-footer>

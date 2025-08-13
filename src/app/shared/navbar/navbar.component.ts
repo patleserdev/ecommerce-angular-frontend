@@ -6,7 +6,7 @@ import {
   NavigationEnd,
 } from '@angular/router';
 import { AuthService } from '../../services/auth.service.js';
-import { CommonModule } from '@angular/common';
+import { CommonModule, ViewportScroller } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,7 +37,8 @@ export class NavbarComponent {
     private router: Router,
     private http: HttpClient,
     private cartService: CartService,
-    private responsiveService : ResponsiveService
+    private responsiveService : ResponsiveService,
+    private viewportScroller: ViewportScroller
   ) {
     this.cartLength$ = this.cartService.cartLength$;
 
@@ -120,6 +121,13 @@ export class NavbarComponent {
         console.log('Déconnexion réussie');
         this.router.navigate(['/auth/login']);
       }
+    });
+  }
+
+  goToSection(fragment: string) {
+    this.router.navigate(['/'], { fragment }).then(() => {
+      // Attendre que la navigation soit terminée avant de scroller
+      this.viewportScroller.scrollToAnchor(fragment);
     });
   }
 }

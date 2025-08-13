@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { ProductsService } from '../../../services/products.service.js';
 import { ProductType } from '../../../models/product.js';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-new-sales',
   standalone: true,
-  imports: [],
+  imports: [CommonModule,RouterLink],
   templateUrl: './new-sales.component.html',
   styleUrl: './new-sales.component.css'
 })
