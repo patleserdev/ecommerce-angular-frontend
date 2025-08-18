@@ -34,7 +34,7 @@ export class NewSalesComponent {
       next: (data) => {
         this.products = data;
         this.isLoading = false;
-        console.log("nouveaux produits",data);
+        //console.log("nouveaux produits",data);
       },
       error: (err) => {
         console.error('Erreur lors du fetch des produits :', err);

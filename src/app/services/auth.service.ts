@@ -10,12 +10,10 @@ import { throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-
   private baseUrl = `${environment.apiUrl}/users`;
 
   private loggedIn$ = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.loggedIn$.asObservable();
-
 
   private _role$ = new BehaviorSubject<string | null>(null);
   public get role$() {
@@ -28,20 +26,19 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, credentials, {
-      withCredentials: true, // nécessaire pour cookie HTTP-only
-    }).pipe(
-      tap((user) => {
-        this.loggedIn$.next(true);
-
-      }),
-      catchError((err) => {
-        this.loggedIn$.next(false);
-        return throwError(() => err); // ⚠️ Propagation de l'erreur ici
-
+    return this.http
+      .post(`${this.baseUrl}/login`, credentials, {
+        withCredentials: true, // nécessaire pour cookie HTTP-only
       })
-    );
-
+      .pipe(
+        tap((user) => {
+          this.loggedIn$.next(true);
+        }),
+        catchError((err) => {
+          this.loggedIn$.next(false);
+          return throwError(() => err); // ⚠️ Propagation de l'erreur ici
+        })
+      );
   }
 
   register(credentials: {
@@ -64,6 +61,8 @@ export class AuthService {
     return this.http
       .get<{ role: string }>(`${this.baseUrl}/check`, {
         withCredentials: true, // nécessaire pour cookie HTTP-only
+        headers: { 'Cache-Control': 'no-cache' },
+
       })
       .pipe(
         tap((user) => {
@@ -74,7 +73,6 @@ export class AuthService {
           this.loggedIn$.next(false);
           this._role$.next(null);
           return throwError(() => err); // ⚠️ Propagation de l'erreur ici
-
         })
       );
   }
@@ -104,7 +102,10 @@ export class AuthService {
 
   fetchUserProfile() {
     return this.http
-      .get<UserType>(`${this.baseUrl}/me`, { withCredentials: true })
+      .get<UserType>(`${this.baseUrl}/me`, {
+        withCredentials: true,
+        headers: { 'Cache-Control': 'no-cache' },
+      })
       .pipe(tap((user) => this.userSubject.next(user)));
   }
 

@@ -65,6 +65,10 @@ export class NavbarComponent {
 
   ngOnInit() {
     this.fetchCategories();
+
+  }
+
+  ngAfterViewInit(){
     this.authService.fetchUserProfile().subscribe((user) => {
       this.username = user.username;
     });

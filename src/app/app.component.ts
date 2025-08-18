@@ -47,12 +47,17 @@ export class AppComponent implements AfterViewInit  {
   //   this.authService.checkAuth();
   // }
   ngOnInit() {
-    this.authService.checkAuth().subscribe();
-
-    this.authService.fetchUserProfile().subscribe({
-      next: () => {},
+    this.authService.checkAuth().subscribe({
+      next: () => {
+        this.authService.fetchUserProfile().subscribe({
+          next: () => {},
+          error: () => {
+            // Non connecté
+          }
+        });
+      },
       error: () => {
-        // Non connecté, peut rediriger ou faire autre chose
+        // Pas connecté
       }
     });
   }

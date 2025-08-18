@@ -7,6 +7,7 @@ export const links = [
     { path: '/dashboard/invoices', label: 'Factures', roles: ['admin'] },
     { path: '/dashboard/promotions', label: 'Promotions', roles: ['admin'] },
     { path: '/dashboard/medias', label: 'Médiathèque', roles: ['admin'] },
+    { path: '/dashboard/users', label: 'Utilisateurs', roles: ['admin'] },
   ];
 
   export type linksType ={

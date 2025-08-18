@@ -15,6 +15,7 @@ import { AdminMediasComponent } from './medias/admin-medias.component';
 import { DashboardHomeComponent } from './home/home.component';
 import { adminGuard } from '../../guards/auth.guard';
 import { AdminPromotionsComponent } from './promotions/admin-promotions.component.js';
+import { AdminUsersComponent } from './users/admin-users.component.js';
 
 const routes: Routes = [
   {
@@ -28,7 +29,8 @@ const routes: Routes = [
       { path: 'orders', component: AdminOrdersComponent, canActivate: [adminGuard] },
       { path: 'invoices', component: AdminInvoicesComponent, canActivate: [adminGuard] },
       { path: 'promotions', component: AdminPromotionsComponent, canActivate: [adminGuard] },
-      { path: 'medias', component: AdminMediasComponent, canActivate: [adminGuard] }
+      { path: 'medias', component: AdminMediasComponent, canActivate: [adminGuard] },
+      { path: 'users', component: AdminUsersComponent, canActivate: [adminGuard] }
     ]
   }
 ];
