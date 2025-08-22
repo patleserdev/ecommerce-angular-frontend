@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { ProductsService } from '../../../services/products.service.js';
 import { ProductType } from '../../../models/product.js';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router,RouterLink } from '@angular/router';
+
 
 @Component({
   selector: 'app-new-sales',
@@ -12,17 +13,18 @@ import { RouterLink } from '@angular/router';
   styleUrl: './new-sales.component.css'
 })
 export class NewSalesComponent {
-  constructor(private productsService: ProductsService) {}
+  constructor(private productsService: ProductsService,private router:Router) {}
 
   products:ProductType[]=[]
   isLoading=false
   hasError=false
 
   ngOnInit() {
-
         this.fetchNewsProducts();
+  }
 
-
+  goToProduct(slug: string) {
+    this.router.navigate(['/products', slug]);
   }
 
   fetchNewsProducts() {

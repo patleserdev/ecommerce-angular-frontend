@@ -1,0 +1,65 @@
+<div class="grid md:grid-cols-2 gap-6 p-6">
+
+  <!-- 🏠 Bloc Adresse -->
+  <div class="border rounded-lg p-4 shadow-sm bg-white">
+    <h3 class="text-xl font-semibold mb-4">Adresse de livraison</h3>
+
+    <div *ngFor="let address of addresses" class="mb-3">
+      <label class="flex items-center space-x-3 cursor-pointer">
+        <input
+          type="radio"
+          name="address"
+          [value]="address.id"
+          [(ngModel)]="selectedAddress"
+          class="text-teal-600 focus:ring-teal-500"
+        />
+        <div class="flex flex-col">
+          <span class="font-medium">{{ address.label }}</span>
+          <span class="text-sm text-gray-600">{{ address.full }}</span>
+        </div>
+      </label>
+    </div>
+
+    <div class="mt-4 flex items-center space-x-2">
+      <input
+        type="checkbox"
+        id="billing"
+        [(ngModel)]="billingSameAsDelivery"
+        class="text-teal-600 focus:ring-teal-500"
+      />
+      <label for="billing" class="text-sm text-gray-700">Utiliser comme adresse de facturation</label>
+    </div>
+  </div>
+
+  <!-- 🚚 Bloc Transporteur -->
+  <div class="border rounded-lg p-4 shadow-sm bg-white">
+    <h3 class="text-xl font-semibold mb-4">Mode de livraison</h3>
+
+    <div *ngFor="let carrier of carriers" class="mb-3">
+      <label class="flex items-center space-x-3 cursor-pointer p-2 border rounded hover:border-teal-500 transition">
+        <input
+          type="radio"
+          name="carrier"
+          [value]="carrier.id"
+          [(ngModel)]="selectedCarrier"
+          class="text-teal-600 focus:ring-teal-500"
+        />
+        <div class="flex flex-col">
+          <span class="font-medium">{{ carrier.name }}</span>
+          <span class="text-sm text-gray-600">{{ carrier.description }}</span>
+        </div>
+        <span class="ml-auto font-semibold text-teal-600">{{ carrier.price }} €</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Bouton confirmation -->
+<div class="mt-6 flex justify-end p-6">
+  <button
+    (click)="confirmSelection()"
+    class="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition"
+  >
+    Confirmer et continuer
+  </button>
+</div>

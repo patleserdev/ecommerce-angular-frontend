@@ -6,9 +6,15 @@ import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component'
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { CartComponent } from './cart/cart.component';
+import { CartCheckoutComponent } from './pages/checkout/cart/cart.component';
 import { RoadmapComponent } from './pages/roadmap/roadmap.component';
-import { HomeComponent } from './pages/home/home.component.js';
+import { HomeComponent } from './pages/home/home.component';
+import { PaymentCheckoutComponent } from './pages/checkout/payment/payment.component';
+import { ConfirmationCheckoutComponent } from './pages/checkout/confirmation/confirmation.component';
+import { CheckoutLayoutComponent } from './layout/checkout-layout/checkout-layout.component';
+import { DeliveryCheckoutComponent } from './pages/checkout/delivery/delivery.component';
+import { adminGuard } from './guards/auth.guard.js';
+import { customerGuard } from './guards/customer.guard.js';
 export const routes: Routes = [
   {
     path: 'dashboard',
@@ -26,7 +32,7 @@ export const routes: Routes = [
       { path: '',  component: HomeComponent  },
       { path: 'tasks', component: TasksComponent },
       { path: 'categories', component: CategoriesComponent },
-      { path: 'cart', component: CartComponent },
+      // { path: 'cart', component: CartComponent },
       { path: 'roadmap', component: RoadmapComponent },
       // autres routes...
       /** routes spécifiques */
@@ -52,6 +58,17 @@ export const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
+    ],
+  },
+  {
+    path: 'checkout',
+    component: CheckoutLayoutComponent,
+    children: [
+      { path: 'cart', component: CartCheckoutComponent },
+      { path: 'delivery', component: DeliveryCheckoutComponent , canActivate: [customerGuard]},
+      { path: 'payment', component: PaymentCheckoutComponent, canActivate: [customerGuard] },
+      { path: 'confirmation', component: ConfirmationCheckoutComponent, canActivate: [customerGuard] },
+
     ],
   },
 

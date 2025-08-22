@@ -15,6 +15,9 @@
       <div *ngFor="let product of products"
         class="group relative bg-white border rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition">
 
+        <a [routerLink]="['/products', product.slug]"
+        >
+
         <img [src]="product.medias?.[0]?.url || 'assets/placeholder.jpg'" alt="{{ product.name }}"
           class="w-full object-cover h-1/2">
 
@@ -30,10 +33,11 @@
 
           <div class="h-1/4 flex flex-row items-center justify-between">
             <span class="text-lg font-bold text-teal-600">{{product.price}}€</span>
-                 <a [routerLink]="['/products', product.slug]"
-              class="px-3 py-1 bg-teal-600 text-white rounded-md text-sm hover:bg-teal-700 transition">Voir</a>
+            <div
+            class="px-3 py-1 bg-teal-600 text-white rounded-md text-sm hover:bg-teal-700 transition">Voir</div>
           </div>
         </div>
+      </a>
       </div>
     </div>
   </div>

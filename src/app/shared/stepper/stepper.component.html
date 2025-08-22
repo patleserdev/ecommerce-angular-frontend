@@ -1,0 +1,26 @@
+<div class="flex items-center px-2 justify-center md:space-x-8 py-2 md:py-6">
+  <ng-container *ngFor="let step of steps; let last = last">
+    <a [routerLink]="step.url" routerLinkActive="router-link-active">
+    <div class="flex flex-col items-center space-y-2">
+      <div
+        [ngClass]="
+          step.url === currentUrl
+            ? 'w-8 h-8 rounded-full border-2 border-green-500 text-green-500 flex items-center justify-center font-semibold'
+            : 'w-8 h-8 rounded-full border-2 border-gray-300 text-gray-400 flex items-center justify-center font-semibold'
+        "
+      >
+        {{ step.id }}
+      </div>
+      <span
+        [ngClass]="
+          step.url === currentUrl
+            ? 'text-green-600 font-medium capitalize'
+            : 'capitalize'
+        "
+      >
+        {{ step.name }}
+      </span>
+    </div></a>
+    <div *ngIf="!last" class="flex-1 h-px bg-gray-300"></div>
+  </ng-container>
+</div>

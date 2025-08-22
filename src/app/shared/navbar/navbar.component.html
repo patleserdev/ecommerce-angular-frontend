@@ -42,7 +42,7 @@
     <!-- <a routerLink="/categories" routerLinkActive="underline font-semibold" class="py-2">Catégories</a> -->
     <!-- <a routerLink="/auth/login" routerLinkActive="underline">Se connecter</a> -->
      <div class="flex flex-row items-center justify-center gap-5">
-      <a [routerLink]="['/cart']" routerLinkActive="underline font-semibold">
+      <a [routerLink]="['/checkout/cart']" routerLinkActive="underline font-semibold">
         <span class="material-icons no-underline" [matBadge]="cartLength$ | async" matBadgeColor="primary"
           matBadgeOverlap="false">
           shopping_cart
@@ -118,7 +118,7 @@
     <a *ngIf="authService.isLoggedIn$ | async" (click)="logout()" routerLinkActive="underline font-semibold"
       class="cursor-pointer py-2">Se déconnecter</a>
 
-    <a [routerLink]="['/cart']" routerLinkActive="underline font-semibold">
+    <a [routerLink]="['/checkout/cart']" routerLinkActive="underline font-semibold">
       <span class="material-icons no-underline" [matBadge]="cartLength$ | async" matBadgeColor="primary"
         matBadgeOverlap="false">
         shopping_cart
